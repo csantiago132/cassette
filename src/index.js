@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
 import PlayPauseButton from './controls/PlayPauseButton';
+import AudioProgress from './controls/AudioProgress';
 import Spacer from './controls/Spacer';
 import getDisplayText from './utils/getDisplayText';
 
@@ -13,15 +14,6 @@ import './index.scss';
 const log = console.log;
 const logError = console.error || log;
 const logWarning = console.warn || log;
-
-/* converts given number of seconds to standard time display format
- * http://goo.gl/kEvnKn
- */
-function convertToTime (number) {
-  const mins = Math.floor(number / 60);
-  const secs = (number % 60).toFixed();
-  return `${ mins < 10 ? '0' : '' }${ mins }:${ secs < 10 ? '0' : '' }${ secs }`;
-}
 
 /*
  * AudioPlayer
@@ -68,10 +60,6 @@ class AudioPlayer extends React.Component {
   constructor (props) {
     super(props);
 
-    /* true if the user is currently dragging the mouse
-     * to seek a new track position
-     */
-    this.seekInProgress = false;
     // index matching requested track (whether track has loaded or not)
     this.currentTrackIndex = 0;
 
@@ -88,33 +76,26 @@ class AudioPlayer extends React.Component {
        * the new time is visually previewed before the
        * audio seeks.
        */
-      displayedTime: 0
+      displayedTime: 0,
+      /* true if the user is currently dragging the mouse
+       * to seek a new track position
+       */
+      seekInProgress: false
     };
 
     this.state = this.defaultState;
 
     // html audio element used for playback
     this.audio = null;
-    this.audioProgressContainer = null;
-    /* bounding rectangle used for calculating seek
-     * position from mouse/touch coordinates
-     */
-    this.audioProgressBoundingRect = null;
-
-    // called by React render to set this.audioProgressContainer
-    this.setAudioProgressContainerRef = ref => {
-      this.audioProgressContainer = ref;
-    };
 
     // bind methods fired on React events
     this.togglePause = this.togglePause.bind(this);
     this.skipToNextTrack = this.skipToNextTrack.bind(this);
     this.backSkip = this.backSkip.bind(this);
-    this.adjustDisplayedTime = this.adjustDisplayedTime.bind(this);
+    this.handleSeekPreview = this.handleSeekPreview.bind(this);
+    this.handleSeekComplete = this.handleSeekComplete.bind(this);
 
-    // event listeners to add on mount and remove on unmount
-    this.seekReleaseListener = e => this.seek(e);
-    this.resizeListener = () => this.fetchAudioProgressBoundingRect();
+    // audio event listeners to add on mount and remove on unmount
     this.audioPlayListener = () => this.setState({ paused: false });
     this.audioPauseListener = () => this.setState({ paused: true });
     this.audioEndListener = () => {
@@ -130,12 +111,6 @@ class AudioPlayer extends React.Component {
   }
 
   componentDidMount () {
-    // add event listeners bound outside the scope of our component
-    window.addEventListener('mouseup', this.seekReleaseListener);
-    document.addEventListener('touchend', this.seekReleaseListener);
-    window.addEventListener('resize', this.resizeListener);
-    this.resizeListener();
-
     const audio = this.audio = document.createElement('audio');
 
     // add event listeners on the audio element
@@ -202,11 +177,6 @@ class AudioPlayer extends React.Component {
   }
 
   componentWillUnmount () {
-    // remove event listeners bound outside the scope of our component
-    window.removeEventListener('mouseup', this.seekReleaseListener);
-    document.removeEventListener('touchend', this.seekReleaseListener);
-    window.removeEventListener('resize', this.resizeListener);
-
     // remove event listeners on the audio element
     this.audio.removeEventListener('play', this.audioPlayListener);
     this.audio.removeEventListener('pause', this.audioPauseListener);
@@ -215,6 +185,7 @@ class AudioPlayer extends React.Component {
     this.audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
     this.audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
     this.removeMediaEventListeners(this.props.onMediaEvent);
+
     clearTimeout(this.gapLengthTimeout);
     clearTimeout(this.delayTimeout);
 
@@ -321,58 +292,29 @@ class AudioPlayer extends React.Component {
     this.audio.src = this.props.playlist[this.currentTrackIndex].url;
   }
 
-  fetchAudioProgressBoundingRect () {
-    this.audioProgressBoundingRect = this.audioProgressContainer.getBoundingClientRect();
-  }
-
   handleTimeUpdate () {
-    if (!this.seekInProgress && this.audio) {
+    if (!this.state.seekInProgress && this.audio) {
       this.setState({
         displayedTime: this.audio.currentTime
       });
     }
   }
 
-  adjustDisplayedTime (event) {
-    if (!this.props.playlist || !this.props.playlist.length || this.props.disableSeek) {
+  handleSeekPreview (progress) {
+    if (this.isSeekUnavailable()) {
       return;
     }
-    // make sure we don't select stuff in the background while seeking
-    if (event.type === 'mousedown' || event.type === 'touchstart') {
-      this.seekInProgress = true;
-      document.body.classList.add('noselect');
-    } else if (!this.seekInProgress) {
-      return;
-    }
-    /* we don't want mouse handlers to receive the event
-     * after touch handlers if we're seeking.
-     */
-    event.preventDefault();
-    const boundingRect = this.audioProgressBoundingRect;
-    const isTouch = event.type.slice(0, 5) === 'touch';
-    const pageX = isTouch ? event.targetTouches.item(0).pageX : event.pageX;
-    const position = pageX - boundingRect.left - document.body.scrollLeft;
-    const containerWidth = boundingRect.width;
-    const progressPercentage = position / containerWidth;
+    const progressInBounds = Math.max(0, Math.min(progress, 1));
     this.setState({
-      displayedTime: progressPercentage * this.audio.duration
+      displayedTime: progressInBounds * this.audio.duration,
+      seekInProgress: true
     });
   }
 
-  seek (event) {
-    /* this function is activated when the user lets
-     * go of the mouse, so if .noselect was applied
-     * to the document body, get rid of it.
-     */
-    document.body.classList.remove('noselect');
-    if (!this.seekInProgress) {
-      return;
-    }
-    /* we don't want mouse handlers to receive the event
-     * after touch handlers if we're seeking.
-     */
-    event.preventDefault();
-    this.seekInProgress = false;
+  handleSeekComplete () {
+    this.setState({
+      seekInProgress: false
+    });
     const displayedTime = this.state.displayedTime;
     if (isNaN(displayedTime)) {
       return;
@@ -380,23 +322,23 @@ class AudioPlayer extends React.Component {
     this.audio.currentTime = displayedTime;
   }
 
+  isSeekUnavailable () {
+    return Boolean(
+      !this.props.playlist ||
+      !this.props.playlist.length ||
+      this.props.disableSeek
+    );
+  }
+
   render () {
-    const displayText = getDisplayText(this.props.playlist, this.state.activeTrackIndex);
-
-    const displayedTime = this.state.displayedTime;
-    const duration = this.audio && this.audio.duration || 0;
-
-    const elapsedTime = convertToTime(displayedTime);
-    const fullTime = convertToTime(duration);
-    const timeRatio = `${ elapsedTime } / ${ fullTime }`;
-
-    const progressBarWidth = `${ (displayedTime / duration) * 100 }%`;
-
+    const { playlist, style } = this.props;
+    const { activeTrackIndex, paused, displayedTime, seekInProgress } = this.state;
+    const seekUnavailable = this.isSeekUnavailable();
     return (
       <div
         className="audio_player"
-        title={displayText}
-        style={this.props.style}
+        title={getDisplayText(playlist, activeTrackIndex)}
+        style={style}
       >
 
         <Spacer />
@@ -407,32 +349,16 @@ class AudioPlayer extends React.Component {
         />
         <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
         <Spacer />
-
-        <div
-          className="audio_progress_container"
-          ref={this.setAudioProgressContainerRef}
-          onMouseDown={this.adjustDisplayedTime}
-          onMouseMove={this.adjustDisplayedTime}
-          onTouchStart={this.adjustDisplayedTime}
-          onTouchMove={this.adjustDisplayedTime}
-        >
-          <div
-            className="audio_progress"
-            style={{ width: progressBarWidth }}></div>
-          <div className="audio_progress_overlay">
-            <div className="audio_info_marquee">
-              <div className="audio_info noselect" draggable="false">
-                {displayText}
-              </div>
-            </div>
-            <div
-              className="audio_time_progress noselect"
-              draggable="false"
-            >
-              {timeRatio}
-            </div>
-          </div>
-        </div>
+        <AudioProgress
+          playlist={playlist}
+          activeTrackIndex={activeTrackIndex}
+          displayedTime={displayedTime}
+          seekInProgress={seekInProgress}
+          seekUnavailable={seekUnavailable}
+          audio={this.audio}
+          onSeekPreview={this.handleSeekPreview}
+          onSeekComplete={this.handleSeekComplete}
+        />
 
       </div>
     );

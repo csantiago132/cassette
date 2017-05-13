@@ -105,6 +105,17 @@ class AudioPlayer extends React.Component {
      */
     this.audioProgressBoundingRect = null;
 
+    // called by React render to set this.audioProgressContainer
+    this.setAudioProgressContainerRef = ref => {
+      this.audioProgressContainer = ref;
+    };
+
+    // bind methods fired on React events
+    this.togglePause = this.togglePause.bind(this);
+    this.skipToNextTrack = this.skipToNextTrack.bind(this);
+    this.backSkip = this.backSkip.bind(this);
+    this.adjustDisplayedTime = this.adjustDisplayedTime.bind(this);
+
     // event listeners to add on mount and remove on unmount
     this.seekReleaseListener = e => this.seek(e);
     this.resizeListener = () => this.fetchAudioProgressBoundingRect();
@@ -388,8 +399,6 @@ class AudioPlayer extends React.Component {
 
     const progressBarWidth = `${ (displayedTime / duration) * 100 }%`;
 
-    const adjustDisplayedTime = e => this.adjustDisplayedTime(e);
-
     return (
       <div
         className="audio_player"
@@ -399,26 +408,26 @@ class AudioPlayer extends React.Component {
 
         <div className="audio_controls">
           <BackSkipButton
-            onBackSkip={() => this.backSkip()}
+            onBackSkip={this.backSkip}
             hidden={Boolean(this.props.hideBackSkip)}
           />
           <PlayPauseButton
             paused={this.state.paused}
-            onTogglePause={() => this.togglePause()}
+            onTogglePause={this.togglePause}
           />
           <ForwardSkipButton
-            onForwardSkip={() => this.skipToNextTrack()}
+            onForwardSkip={this.skipToNextTrack}
             hidden={Boolean(this.props.hideForwardSkip)}
           />
         </div>
 
         <div
           className="audio_progress_container"
-          ref={(ref) => this.audioProgressContainer = ref}
-          onMouseDown={adjustDisplayedTime}
-          onMouseMove={adjustDisplayedTime}
-          onTouchStart={adjustDisplayedTime}
-          onTouchMove={adjustDisplayedTime}
+          ref={this.setAudioProgressContainerRef}
+          onMouseDown={this.adjustDisplayedTime}
+          onMouseMove={this.adjustDisplayedTime}
+          onTouchStart={this.adjustDisplayedTime}
+          onTouchMove={this.adjustDisplayedTime}
         >
           <div
             className="audio_progress"

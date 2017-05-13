@@ -6,6 +6,7 @@ import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
 import PlayPauseButton from './controls/PlayPauseButton';
 import Spacer from './controls/Spacer';
+import getDisplayText from './utils/getDisplayText';
 
 import './index.scss';
 
@@ -380,10 +381,7 @@ class AudioPlayer extends React.Component {
   }
 
   render () {
-    const activeIndex = this.state.activeTrackIndex;
-    const displayText = this.props.playlist ? (
-      activeIndex < 0 ? null : this.props.playlist[activeIndex].displayText
-    ) : 'Please load a playlist';
+    const displayText = getDisplayText(this.props.playlist, this.state.activeTrackIndex);
 
     const displayedTime = this.state.displayedTime;
     const duration = this.audio && this.audio.duration || 0;

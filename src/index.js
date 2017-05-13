@@ -2,6 +2,10 @@ import React from 'react';
 import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
+import BackSkipButton from './controls/BackSkipButton';
+import ForwardSkipButton from './controls/ForwardSkipButton';
+import PlayPauseButton from './controls/PlayPauseButton';
+
 import './index.scss';
 
 const log = console.log.bind(console);
@@ -394,41 +398,18 @@ class AudioPlayer extends React.Component {
       >
 
         <div className="audio_controls">
-          <div
-            className={classNames('skip_button back audio_button', {
-              'hidden': this.props.hideBackSkip
-            })}
-            onClick={() => this.backSkip()}
-          >
-            <div className="skip_button_inner">
-              <div className="right_facing_triangle"></div>
-              <div className="right_facing_triangle"></div>
-            </div>
-          </div>
-          <div
-            className={classNames('play_pause_button', 'audio_button', {
-              'paused': this.state.paused
-            })}
-            onClick={() => this.togglePause()}
-          >
-            <div className="play_pause_inner">
-              <div className="left"></div>
-              <div className="right"></div>
-              <div className="triangle_1"></div>
-              <div className="triangle_2"></div>
-            </div>
-          </div>
-          <div
-            className={classNames('skip_button audio_button', {
-              'hidden': this.props.hideForwardSkip
-            })}
-            onClick={() => this.skipToNextTrack()}
-          >
-            <div className="skip_button_inner">
-              <div className="right_facing_triangle"></div>
-              <div className="right_facing_triangle"></div>
-            </div>
-          </div>
+          <BackSkipButton
+            onBackSkip={() => this.backSkip()}
+            hidden={Boolean(this.props.hideBackSkip)}
+          />
+          <PlayPauseButton
+            paused={this.state.paused}
+            onTogglePause={() => this.togglePause()}
+          />
+          <ForwardSkipButton
+            onForwardSkip={() => this.skipToNextTrack()}
+            hidden={Boolean(this.props.hideForwardSkip)}
+          />
         </div>
 
         <div

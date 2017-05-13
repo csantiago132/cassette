@@ -155,31 +155,6 @@ class AudioPlayer extends React.Component {
     }
   }
 
-  componentWillUnmount () {
-    // remove event listeners bound outside the scope of our component
-    window.removeEventListener('mouseup', this.seekReleaseListener);
-    document.removeEventListener('touchend', this.seekReleaseListener);
-    window.removeEventListener('resize', this.resizeListener);
-
-    // remove event listeners on the audio element
-    this.audio.removeEventListener('play', this.audioPlayListener);
-    this.audio.removeEventListener('pause', this.audioPauseListener);
-    this.audio.removeEventListener('ended', this.audioEndListener);
-    this.audio.removeEventListener('stalled', this.audioStallListener);
-    this.audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
-    this.audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
-    this.removeMediaEventListeners(this.props.onMediaEvent);
-    clearTimeout(this.gapLengthTimeout);
-    clearTimeout(this.delayTimeout);
-
-    // pause the audio element before we unmount
-    this.audio.pause();
-
-    if (this.props.audioElementRef) {
-      this.props.audioElementRef(this.audio);
-    }
-  }
-
   componentWillReceiveProps (nextProps) {
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(this.props.onMediaEvent);
@@ -210,6 +185,40 @@ class AudioPlayer extends React.Component {
     }
   }
 
+  componentDidUpdate () {
+    /* if we loaded a new playlist and reset the current track marker, we
+     * should load up the first one.
+     */
+    if (this.audio && this.currentTrackIndex === -1) {
+      this.skipToNextTrack(false);
+    }
+  }
+
+  componentWillUnmount () {
+    // remove event listeners bound outside the scope of our component
+    window.removeEventListener('mouseup', this.seekReleaseListener);
+    document.removeEventListener('touchend', this.seekReleaseListener);
+    window.removeEventListener('resize', this.resizeListener);
+
+    // remove event listeners on the audio element
+    this.audio.removeEventListener('play', this.audioPlayListener);
+    this.audio.removeEventListener('pause', this.audioPauseListener);
+    this.audio.removeEventListener('ended', this.audioEndListener);
+    this.audio.removeEventListener('stalled', this.audioStallListener);
+    this.audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
+    this.audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
+    this.removeMediaEventListeners(this.props.onMediaEvent);
+    clearTimeout(this.gapLengthTimeout);
+    clearTimeout(this.delayTimeout);
+
+    // pause the audio element before we unmount
+    this.audio.pause();
+
+    if (this.props.audioElementRef) {
+      this.props.audioElementRef(this.audio);
+    }
+  }
+
   addMediaEventListeners (mediaEvents) {
     if (!mediaEvents) {
       return;
@@ -232,15 +241,6 @@ class AudioPlayer extends React.Component {
       }
       this.audio.removeEventListener(type, mediaEvents[type]);
     });
-  }
-
-  componentDidUpdate () {
-    /* if we loaded a new playlist and reset the current track marker, we
-     * should load up the first one.
-     */
-    if (this.audio && this.currentTrackIndex === -1) {
-      this.skipToNextTrack(false);
-    }
   }
 
   togglePause (value) {

@@ -388,7 +388,6 @@ class AudioPlayer extends React.Component {
 
     return (
       <div
-        id="audio_player"
         className="audio_player"
         title={displayText}
         style={this.props.style}
@@ -396,7 +395,6 @@ class AudioPlayer extends React.Component {
 
         <div className="audio_controls">
           <div
-            id="skip_button"
             className={classNames('skip_button back audio_button', {
               'hidden': this.props.hideBackSkip
             })}
@@ -408,7 +406,6 @@ class AudioPlayer extends React.Component {
             </div>
           </div>
           <div
-            id="play_pause_button"
             className={classNames('play_pause_button', 'audio_button', {
               'paused': this.state.paused
             })}
@@ -422,7 +419,6 @@ class AudioPlayer extends React.Component {
             </div>
           </div>
           <div
-            id="skip_button"
             className={classNames('skip_button audio_button', {
               'hidden': this.props.hideForwardSkip
             })}
@@ -436,7 +432,6 @@ class AudioPlayer extends React.Component {
         </div>
 
         <div
-          id="audio_progress_container"
           className="audio_progress_container"
           ref={(ref) => this.audioProgressContainer = ref}
           onMouseDown={adjustDisplayedTime}
@@ -445,17 +440,15 @@ class AudioPlayer extends React.Component {
           onTouchMove={adjustDisplayedTime}
         >
           <div
-            id="audio_progress"
             className="audio_progress"
             style={{ width: progressBarWidth }}></div>
-          <div id="audio_progress_overlay" className="audio_progress_overlay">
+          <div className="audio_progress_overlay">
             <div className="audio_info_marquee">
-              <div id="audio_info" className="audio_info noselect" draggable="false">
+              <div className="audio_info noselect" draggable="false">
                 {displayText}
               </div>
             </div>
             <div
-              id="audio_time_progress"
               className="audio_time_progress noselect"
               draggable="false"
             >

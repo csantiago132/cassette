@@ -3,10 +3,10 @@ import classNames from 'classnames';
 
 class SkipButton extends Component {
   render () {
-    const { back, hidden, onClick } = this.props;
+    const { back, onClick } = this.props;
     return (
       <div
-        className={classNames('skip_button audio_button', { back, hidden })}
+        className={classNames('skip_button audio_button', { back })}
         onClick={onClick}
       >
         <div className="skip_button_inner">
@@ -20,7 +20,6 @@ class SkipButton extends Component {
 
 SkipButton.propTypes = {
   back: PropTypes.bool,
-  hidden: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

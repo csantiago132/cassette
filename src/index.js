@@ -39,12 +39,6 @@ function convertToTime (number) {
  * Specifies gap at end of one track before next
  * track begins (ignored for manual skip).
  *
- * Accepts 'hideBackSkip' prop (default false,
- * hides back skip button if true).
- *
- * Accepts 'hideForwardSkip' prop (default false,
- * hides forward skip button if true).
- *
  * Accepts 'disableSeek' prop (default false,
  * disables seeking through the audio if true).
  *
@@ -407,18 +401,12 @@ class AudioPlayer extends React.Component {
       >
 
         <div className="audio_controls">
-          <BackSkipButton
-            onBackSkip={this.backSkip}
-            hidden={Boolean(this.props.hideBackSkip)}
-          />
+          <BackSkipButton onBackSkip={this.backSkip} />
           <PlayPauseButton
             paused={this.state.paused}
             onTogglePause={this.togglePause}
           />
-          <ForwardSkipButton
-            onForwardSkip={this.skipToNextTrack}
-            hidden={Boolean(this.props.hideForwardSkip)}
-          />
+          <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
         </div>
 
         <div
@@ -458,8 +446,6 @@ AudioPlayer.propTypes = {
   autoplay: React.PropTypes.bool,
   autoplayDelayInSeconds: React.PropTypes.number,
   gapLengthInSeconds: React.PropTypes.number,
-  hideBackSkip: React.PropTypes.bool,
-  hideForwardSkip: React.PropTypes.bool,
   cycle: React.PropTypes.bool,
   disableSeek: React.PropTypes.bool,
   stayOnBackSkipThreshold: React.PropTypes.number,

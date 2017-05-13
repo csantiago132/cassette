@@ -35,7 +35,7 @@ var playlist =
    { url: 'audio/track2.mp3',
      displayText: 'Some Other Artist - Track 2' }];
 ReactDOM.render(
-  <AudioPlayer playlist={playlist} hideBackSkip={true} />,
+  <AudioPlayer playlist={playlist} />,
   document.getElementById('audio_player_container')
 );
 ```
@@ -45,8 +45,7 @@ JavaScript (without JSX):
 ...
 ReactDOM.render(
   React.createElement(AudioPlayer, {
-    playlist: playlist,
-    hideBackSkip: true
+    playlist: playlist
   }),
   document.getElementById('audio_player_container')
 );
@@ -115,10 +114,6 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 * `autoplayDelayInSeconds`: a number value that represents the number of seconds to wait until beginning autoplay. Will be ignored if `autoplay` is false. **0** by default. *NOTE:* Delay is managed by `setTimeout` and is therefore inexact. If you need to time an autoplay exactly, find a different module that uses the [WebAudio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for playback (or fork this one!).
 
 * `gapLengthInSeconds`: a number value that represents the number of seconds to wait at the end of a track before beginning the next one in the playlist. Not applicable for manually-initiated skip. **0** by default. *NOTE:* Like `autoplayDelayInSeconds`, this delay is inexact.
-
-* `hideBackSkip`: a boolean value that if true disables the back skip button by hiding it from view. **false** by default.
-
-* `hideForwardSkip`: a boolean value that if true disables the forward skip button by hiding it from view. **false** by default.
 
 * `disableSeek`: a boolean value that if true prevents seeking. **false** by default.
 

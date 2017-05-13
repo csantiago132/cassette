@@ -4,13 +4,11 @@ import SkipButton from './common/SkipButton';
 
 class ForwardSkipButton extends Component {
   render () {
-    const { hidden, onForwardSkip } = this.props;
-    return <SkipButton hidden={hidden} onClick={onForwardSkip} />;
+    return <SkipButton onClick={this.props.onForwardSkip} />;
   }
 }
 
 ForwardSkipButton.propTypes = {
-  hidden: PropTypes.bool.isRequired,
   onForwardSkip: PropTypes.func.isRequired,
 };
 

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
 import PlayPauseButton from './controls/PlayPauseButton';
+import Spacer from './controls/Spacer';
 
 import './index.scss';
 
@@ -400,14 +401,14 @@ class AudioPlayer extends React.Component {
         style={this.props.style}
       >
 
-        <div className="audio_controls">
-          <BackSkipButton onBackSkip={this.backSkip} />
-          <PlayPauseButton
-            paused={this.state.paused}
-            onTogglePause={this.togglePause}
-          />
-          <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
-        </div>
+        <Spacer />
+        <BackSkipButton onBackSkip={this.backSkip} />
+        <PlayPauseButton
+          paused={this.state.paused}
+          onTogglePause={this.togglePause}
+        />
+        <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
+        <Spacer />
 
         <div
           className="audio_progress_container"

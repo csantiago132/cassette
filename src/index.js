@@ -83,10 +83,11 @@ class AudioPlayer extends React.Component {
       seekInProgress: false
     };
 
-    this.state = this.defaultState;
-
-    // html audio element used for playback
-    this.audio = null;
+    this.state = {
+      ...this.defaultState,
+      // html audio element used for playback
+      audio: null
+    };
 
     // bind methods fired on React events
     this.togglePause = this.togglePause.bind(this);
@@ -111,26 +112,29 @@ class AudioPlayer extends React.Component {
   }
 
   componentDidMount () {
-    const audio = this.audio = document.createElement('audio');
+    const audio = document.createElement('audio');
+    this.setState({ audio }, () => {
 
-    // add event listeners on the audio element
-    audio.preload = 'metadata';
-    audio.addEventListener('play', this.audioPlayListener);
-    audio.addEventListener('pause', this.audioPauseListener);
-    audio.addEventListener('ended', this.audioEndListener);
-    audio.addEventListener('stalled', this.audioStallListener);
-    audio.addEventListener('timeupdate', this.audioTimeUpdateListener);
-    audio.addEventListener('loadedmetadata', this.audioMetadataLoadedListener);
-    this.addMediaEventListeners(this.props.onMediaEvent);
+      // add event listeners on the audio element
+      audio.preload = 'metadata';
+      audio.addEventListener('play', this.audioPlayListener);
+      audio.addEventListener('pause', this.audioPauseListener);
+      audio.addEventListener('ended', this.audioEndListener);
+      audio.addEventListener('stalled', this.audioStallListener);
+      audio.addEventListener('timeupdate', this.audioTimeUpdateListener);
+      audio.addEventListener('loadedmetadata', this.audioMetadataLoadedListener);
+      this.addMediaEventListeners(this.props.onMediaEvent);
 
-    if (this.props.playlist && this.props.playlist.length) {
-      this.updateSource();
-      if (this.props.autoplay) {
-        const delay = this.props.autoplayDelayInSeconds || 0;
-        clearTimeout(this.delayTimeout);
-        this.delayTimeout = setTimeout(() => this.togglePause(false), delay * 1000);
+      if (this.props.playlist && this.props.playlist.length) {
+        this.updateSource();
+        if (this.props.autoplay) {
+          const delay = this.props.autoplayDelayInSeconds || 0;
+          clearTimeout(this.delayTimeout);
+          this.delayTimeout = setTimeout(() => this.togglePause(false), delay * 1000);
+        }
       }
-    }
+
+    });
 
     if (this.props.audioElementRef) {
       this.props.audioElementRef(audio);
@@ -144,9 +148,7 @@ class AudioPlayer extends React.Component {
 
     const newPlaylist = nextProps.playlist;
     if (!newPlaylist || !newPlaylist.length) {
-      if (this.audio) {
-        this.audio.src = '';
-      }
+      this.state.audio.src = '';
       this.currentTrackIndex = 0;
       return this.setState(this.defaultState);
     }
@@ -171,29 +173,30 @@ class AudioPlayer extends React.Component {
     /* if we loaded a new playlist and reset the current track marker, we
      * should load up the first one.
      */
-    if (this.audio && this.currentTrackIndex === -1) {
+    if (this.currentTrackIndex === -1) {
       this.skipToNextTrack(false);
     }
   }
 
   componentWillUnmount () {
+    const { audio } = this.state;
     // remove event listeners on the audio element
-    this.audio.removeEventListener('play', this.audioPlayListener);
-    this.audio.removeEventListener('pause', this.audioPauseListener);
-    this.audio.removeEventListener('ended', this.audioEndListener);
-    this.audio.removeEventListener('stalled', this.audioStallListener);
-    this.audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
-    this.audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
-    this.removeMediaEventListeners(this.props.onMediaEvent);
+    audio.removeEventListener('play', this.audioPlayListener);
+    audio.removeEventListener('pause', this.audioPauseListener);
+    audio.removeEventListener('ended', this.audioEndListener);
+    audio.removeEventListener('stalled', this.audioStallListener);
+    audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
+    audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
+    removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
     clearTimeout(this.delayTimeout);
 
     // pause the audio element before we unmount
-    this.audio.pause();
+    audio.pause();
 
     if (this.props.audioElementRef) {
-      this.props.audioElementRef(this.audio);
+      this.props.audioElementRef(audio);
     }
   }
 
@@ -205,7 +208,7 @@ class AudioPlayer extends React.Component {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
-      this.audio.addEventListener(type, mediaEvents[type]);
+      this.state.audio.addEventListener(type, mediaEvents[type]);
     });
   }
 
@@ -217,23 +220,25 @@ class AudioPlayer extends React.Component {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
-      this.audio.removeEventListener(type, mediaEvents[type]);
+      this.state.audio.removeEventListener(type, mediaEvents[type]);
     });
   }
 
   togglePause (value) {
-    if (!this.audio) {
+    const { playlist } = this.props;
+    const { audio, paused } = this.state;
+    if (!audio) {
       return;
     }
-    const pause = typeof value === 'boolean' ? value : !this.state.paused;
+    const pause = typeof value === 'boolean' ? value : !paused;
     if (pause) {
-      return this.audio.pause();
+      return audio.pause();
     }
-    if (!this.props.playlist || !this.props.playlist.length) {
+    if (!playlist || !playlist.length) {
       return;
     }
     try {
-      this.audio.play();
+      audio.play();
     } catch (error) {
       logError(error);
       const warningMessage =
@@ -245,15 +250,17 @@ class AudioPlayer extends React.Component {
   }
 
   skipToNextTrack (shouldPlay) {
-    if (!this.audio) {
+    const { playlist, cycle } = this.props;
+    const { audio } = this.state;
+    if (!audio) {
       return;
     }
-    this.audio.pause();
-    if (!this.props.playlist || !this.props.playlist.length) {
+    audio.pause();
+    if (!playlist || !playlist.length) {
       return;
     }
     let i = this.currentTrackIndex + 1;
-    if (i >= this.props.playlist.length) {
+    if (i >= playlist.length) {
       i = 0;
     }
     this.currentTrackIndex = i;
@@ -262,40 +269,42 @@ class AudioPlayer extends React.Component {
       displayedTime: 0
     }, () => {
       this.updateSource();
-      const shouldPauseOnCycle = (!this.props.cycle && i === 0);
+      const shouldPauseOnCycle = (!cycle && i === 0);
       const shouldPause = shouldPauseOnCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
       this.togglePause(shouldPause);
     });
   }
 
   backSkip () {
-    if (!this.props.playlist || !this.props.playlist.length) {
+    const { playlist, stayOnBackSkipThreshold } = this.props;
+    const { audio } = this.state;
+    if (!playlist || !playlist.length) {
       return;
     }
-    const audio = this.audio;
-    let stayOnBackSkipThreshold = this.props.stayOnBackSkipThreshold;
-    if (isNaN(stayOnBackSkipThreshold)) {
-      stayOnBackSkipThreshold = 5;
+    let stayThreshold = stayOnBackSkipThreshold;
+    if (isNaN(stayThreshold)) {
+      stayThreshold = 5;
     }
-    if (audio.currentTime >= stayOnBackSkipThreshold) {
+    if (audio.currentTime >= stayThreshold) {
       return audio.currentTime = 0;
     }
     let i = this.currentTrackIndex - 1;
     if (i < 0) {
-      i = this.props.playlist.length - 1;
+      i = playlist.length - 1;
     }
     this.currentTrackIndex = i - 1;
     this.skipToNextTrack();
   }
 
   updateSource () {
-    this.audio.src = this.props.playlist[this.currentTrackIndex].url;
+    this.state.audio.src = this.props.playlist[this.currentTrackIndex].url;
   }
 
   handleTimeUpdate () {
-    if (!this.state.seekInProgress && this.audio) {
+    const { seekInProgress, audio } = this.state;
+    if (!seekInProgress && audio) {
       this.setState({
-        displayedTime: this.audio.currentTime
+        displayedTime: audio.currentTime
       });
     }
   }
@@ -306,7 +315,7 @@ class AudioPlayer extends React.Component {
     }
     const progressInBounds = Math.max(0, Math.min(progress, 1));
     this.setState({
-      displayedTime: progressInBounds * this.audio.duration,
+      displayedTime: progressInBounds * this.state.audio.duration,
       seekInProgress: true
     });
   }
@@ -319,7 +328,7 @@ class AudioPlayer extends React.Component {
     if (isNaN(displayedTime)) {
       return;
     }
-    this.audio.currentTime = displayedTime;
+    this.state.audio.currentTime = displayedTime;
   }
 
   isSeekUnavailable () {
@@ -332,8 +341,13 @@ class AudioPlayer extends React.Component {
 
   render () {
     const { playlist, style } = this.props;
-    const { activeTrackIndex, paused, displayedTime, seekInProgress } = this.state;
-    const seekUnavailable = this.isSeekUnavailable();
+    const {
+      activeTrackIndex,
+      paused,
+      displayedTime,
+      seekInProgress,
+      audio
+    } = this.state;
     return (
       <div
         className="audio_player"
@@ -343,10 +357,7 @@ class AudioPlayer extends React.Component {
 
         <Spacer />
         <BackSkipButton onBackSkip={this.backSkip} />
-        <PlayPauseButton
-          paused={this.state.paused}
-          onTogglePause={this.togglePause}
-        />
+        <PlayPauseButton paused={paused} onTogglePause={this.togglePause} />
         <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
         <Spacer />
         <AudioProgress
@@ -354,8 +365,8 @@ class AudioPlayer extends React.Component {
           activeTrackIndex={activeTrackIndex}
           displayedTime={displayedTime}
           seekInProgress={seekInProgress}
-          seekUnavailable={seekUnavailable}
-          audio={this.audio}
+          seekUnavailable={this.isSeekUnavailable()}
+          audio={audio}
           onSeekPreview={this.handleSeekPreview}
           onSeekComplete={this.handleSeekComplete}
         />

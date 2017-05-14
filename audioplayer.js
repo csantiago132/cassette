@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -182,6 +182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.audioProgressBoundingRect = null;
 
 	    // event listeners to add on mount and remove on unmount
+	    _this.adjustDisplayedTime = _this.adjustDisplayedTime.bind(_this);
 	    _this.seekReleaseListener = function (e) {
 	      return _this.seek(e);
 	    };
@@ -221,6 +222,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this2 = this;
 
 	      // add event listeners bound outside the scope of our component
+	      window.addEventListener('mousemove', this.adjustDisplayedTime);
+	      document.addEventListener('touchmove', this.adjustDisplayedTime);
 	      window.addEventListener('mouseup', this.seekReleaseListener);
 	      document.addEventListener('touchend', this.seekReleaseListener);
 	      window.addEventListener('resize', this.resizeListener);
@@ -257,6 +260,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      // remove event listeners bound outside the scope of our component
+	      window.removeEventListener('mousemove', this.adjustDisplayedTime);
+	      document.removeEventListener('touchmove', this.adjustDisplayedTime);
 	      window.removeEventListener('mouseup', this.seekReleaseListener);
 	      document.removeEventListener('touchend', this.seekReleaseListener);
 	      window.removeEventListener('resize', this.resizeListener);
@@ -504,10 +509,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var progressBarWidth = displayedTime / duration * 100 + '%';
 
-	      var adjustDisplayedTime = function adjustDisplayedTime(e) {
-	        return _this6.adjustDisplayedTime(e);
-	      };
-
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -584,10 +585,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ref: function ref(_ref) {
 	              return _this6.audioProgressContainer = _ref;
 	            },
-	            onMouseDown: adjustDisplayedTime,
-	            onMouseMove: adjustDisplayedTime,
-	            onTouchStart: adjustDisplayedTime,
-	            onTouchMove: adjustDisplayedTime
+	            onMouseDown: this.adjustDisplayedTime,
+	            onTouchStart: this.adjustDisplayedTime
 	          },
 	          _react2.default.createElement('div', {
 	            id: 'audio_progress',
@@ -644,15 +643,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = AudioPlayer;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	module.exports = function (arr, predicate, ctx) {
@@ -681,9 +680,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	  Copyright (c) 2016 Jed Watson.
@@ -735,13 +734,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}());
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

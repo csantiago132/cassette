@@ -189,7 +189,6 @@
     float: left;
     background-color: #fff;
     width: 36%;
-    -webkit-transition: all 0.25s ease;
     transition: all 0.25s ease;
     overflow: hidden; }
   .audio_player .play_pause_button .triangle_1 {
@@ -209,7 +208,6 @@
     border-right: 30px solid #333;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
-    -webkit-transition: -webkit-transform 0.25s ease;
     transition: -webkit-transform 0.25s ease;
     transition: transform 0.25s ease;
     transition: transform 0.25s ease, -webkit-transform 0.25s ease; }
@@ -218,7 +216,6 @@
     float: right;
     width: 36%;
     background-color: #fff;
-    -webkit-transition: all 0.25s ease;
     transition: all 0.25s ease; }
   .audio_player .play_pause_button.paused .left {
     width: 50%; }

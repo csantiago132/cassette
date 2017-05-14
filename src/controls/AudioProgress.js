@@ -25,6 +25,8 @@ class AudioProgress extends Component {
 
   componentDidMount () {
     // add event listeners bound outside the scope of our component
+    window.addEventListener('mousemove', this.handleSeekPreview);
+    document.addEventListener('touchmove', this.handleSeekPreview);
     window.addEventListener('mouseup', this.handleSeekComplete);
     document.addEventListener('touchend', this.handleSeekComplete);
     window.addEventListener('resize', this.fetchAudioProgressBoundingRect);
@@ -33,6 +35,8 @@ class AudioProgress extends Component {
 
   componentWillUnmount () {
     // remove event listeners bound outside the scope of our component
+    window.removeEventListener('mousemove', this.handleSeekPreview);
+    document.removeEventListener('touchmove', this.handleSeekPreview);
     window.removeEventListener('mouseup', this.handleSeekComplete);
     document.removeEventListener('touchend', this.handleSeekComplete);
     window.removeEventListener('resize', this.fetchAudioProgressBoundingRect);
@@ -92,9 +96,7 @@ class AudioProgress extends Component {
         className="audio_progress_container"
         ref={this.setAudioProgressContainerRef}
         onMouseDown={this.handleSeekPreview}
-        onMouseMove={this.handleSeekPreview}
         onTouchStart={this.handleSeekPreview}
-        onTouchMove={this.handleSeekPreview}
       >
         <div
           className="audio_progress"

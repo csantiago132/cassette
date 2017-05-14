@@ -42,7 +42,7 @@ gulp.task('styles:main', function () {
     .pipe(gulp.dest('dist/'), { cwd: '../../' });
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', ['default'], function () {
   gulp.watch('src/css/*.css', ['styles:main']);
   gulp.watch([
     'node_modules/react-responsive-audio-player/dist/*.css'
@@ -53,4 +53,4 @@ gulp.task('watch', function () {
   ], ['browserify']);
 });
 
-gulp.task('default', ['browserify', 'styles', 'watch']);
+gulp.task('default', ['browserify', 'styles']);

@@ -80,7 +80,12 @@ class AudioPlayer extends React.Component {
       /* true if the user is currently dragging the mouse
        * to seek a new track position
        */
-      seekInProgress: false
+      seekInProgress: false,
+      /* true if audio was playing when seek previewing began,
+       * it was paused, and it should be resumed on seek
+       * complete
+       */
+      awaitingResumeOnSeekComplete: false
     };
 
     this.state = {
@@ -310,8 +315,15 @@ class AudioPlayer extends React.Component {
   }
 
   handleSeekPreview (progress) {
+    const { paused, awaitingResumeOnSeekComplete, audio } = this.state;
     if (this.isSeekUnavailable()) {
       return;
+    }
+    if (!paused && this.props.pauseOnSeekPreview && !awaitingResumeOnSeekComplete) {
+      this.setState({
+        awaitingResumeOnSeekComplete: true
+      });
+      this.togglePause(true);
     }
     const progressInBounds = Math.max(0, Math.min(progress, 1));
     this.setState({
@@ -321,14 +333,20 @@ class AudioPlayer extends React.Component {
   }
 
   handleSeekComplete () {
+    const { displayedTime, awaitingResumeOnSeekComplete, audio } = this.state;
     this.setState({
       seekInProgress: false
     });
-    const displayedTime = this.state.displayedTime;
     if (isNaN(displayedTime)) {
       return;
     }
-    this.state.audio.currentTime = displayedTime;
+    audio.currentTime = displayedTime;
+    if (awaitingResumeOnSeekComplete) {
+      audio.play();
+      this.setState({
+        awaitingResumeOnSeekComplete: false
+      });
+    }
   }
 
   isSeekUnavailable () {
@@ -346,6 +364,7 @@ class AudioPlayer extends React.Component {
       paused,
       displayedTime,
       seekInProgress,
+      awaitingResumeOnSeekComplete,
       audio
     } = this.state;
     return (
@@ -357,7 +376,11 @@ class AudioPlayer extends React.Component {
 
         <Spacer />
         <BackSkipButton onBackSkip={this.backSkip} />
-        <PlayPauseButton paused={paused} onTogglePause={this.togglePause} />
+        <PlayPauseButton
+          paused={paused}
+          awaitingResumeOnSeekComplete={awaitingResumeOnSeekComplete}
+          onTogglePause={this.togglePause}
+        />
         <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
         <Spacer />
         <AudioProgress
@@ -383,6 +406,7 @@ AudioPlayer.propTypes = {
   autoplayDelayInSeconds: React.PropTypes.number,
   gapLengthInSeconds: React.PropTypes.number,
   cycle: React.PropTypes.bool,
+  pauseOnSeekPreview: React.PropTypes.bool,
   disableSeek: React.PropTypes.bool,
   stayOnBackSkipThreshold: React.PropTypes.number,
   style: React.PropTypes.object,
@@ -391,7 +415,8 @@ AudioPlayer.propTypes = {
 };
 
 AudioPlayer.defaultProps = {
-  cycle: true
+  cycle: true,
+  pauseOnSeekPreview: true
 };
 
 module.exports = AudioPlayer;

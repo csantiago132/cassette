@@ -3,10 +3,12 @@ import classNames from 'classnames';
 
 class PlayPauseButton extends PureComponent {
   render () {
-    const { paused, onTogglePause } = this.props;
+    const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (
       <div
-        className={classNames('play_pause_button', 'audio_button', { paused })}
+        className={classNames('play_pause_button', 'audio_button', {
+          paused: paused && !awaitingResumeOnSeekComplete
+        })}
         onClick={onTogglePause}
       >
         <div className="play_pause_inner">
@@ -22,7 +24,8 @@ class PlayPauseButton extends PureComponent {
 
 PlayPauseButton.propTypes = {
   paused: PropTypes.bool.isRequired,
-  onTogglePause: PropTypes.func.isRequired,
+  awaitingResumeOnSeekComplete: PropTypes.bool.isRequired,
+  onTogglePause: PropTypes.func.isRequired
 };
 
 module.exports = PlayPauseButton;

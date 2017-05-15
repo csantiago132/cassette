@@ -2,12 +2,8 @@ import React from 'react';
 import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
-import BackSkipButton from './controls/BackSkipButton';
-import ForwardSkipButton from './controls/ForwardSkipButton';
-import PlayPauseButton from './controls/PlayPauseButton';
-import AudioProgress from './controls/AudioProgress';
-import Spacer from './controls/Spacer';
 import getDisplayText from './utils/getDisplayText';
+import getControlComponent from './utils/getControlComponent';
 
 import './index.scss';
 
@@ -358,7 +354,7 @@ class AudioPlayer extends React.Component {
   }
 
   render () {
-    const { playlist, style } = this.props;
+    const { playlist, controls, style } = this.props;
     const {
       activeTrackIndex,
       paused,
@@ -367,33 +363,37 @@ class AudioPlayer extends React.Component {
       awaitingResumeOnSeekComplete,
       audio
     } = this.state;
+    const controlComponentProps = {
+      audio,
+      playlist,
+      activeTrackIndex,
+      paused,
+      displayedTime,
+      seekInProgress,
+      awaitingResumeOnSeekComplete,
+      seekUnavailable: this.isSeekUnavailable(),
+      onTogglePause: this.togglePause,
+      onBackSkip: this.backSkip,
+      onForwardSkip: this.skipToNextTrack,
+      onSeekPreview: this.handleSeekPreview,
+      onSeekComplete: this.handleSeekComplete
+    };
     return (
       <div
         className="audio_player"
         title={getDisplayText(playlist, activeTrackIndex)}
         style={style}
       >
-
-        <Spacer />
-        <BackSkipButton onBackSkip={this.backSkip} />
-        <PlayPauseButton
-          paused={paused}
-          awaitingResumeOnSeekComplete={awaitingResumeOnSeekComplete}
-          onTogglePause={this.togglePause}
-        />
-        <ForwardSkipButton onForwardSkip={this.skipToNextTrack} />
-        <Spacer />
-        <AudioProgress
-          playlist={playlist}
-          activeTrackIndex={activeTrackIndex}
-          displayedTime={displayedTime}
-          seekInProgress={seekInProgress}
-          seekUnavailable={this.isSeekUnavailable()}
-          audio={audio}
-          onSeekPreview={this.handleSeekPreview}
-          onSeekComplete={this.handleSeekComplete}
-        />
-
+        {controls.map((control, index) => {
+          const ControlComponent = getControlComponent(control);
+          if (!ControlComponent) {
+            if (typeof control === 'string') {
+              logWarning(`Provided control "${control}" could not be matched.`);
+            }
+            return null;
+          }
+          return <ControlComponent key={index} {...controlComponentProps} />;
+        })}
       </div>
     );
   }
@@ -402,6 +402,7 @@ class AudioPlayer extends React.Component {
 
 AudioPlayer.propTypes = {
   playlist: React.PropTypes.array,
+  controls: React.PropTypes.array,
   autoplay: React.PropTypes.bool,
   autoplayDelayInSeconds: React.PropTypes.number,
   gapLengthInSeconds: React.PropTypes.number,
@@ -415,6 +416,14 @@ AudioPlayer.propTypes = {
 };
 
 AudioPlayer.defaultProps = {
+  controls: [
+    'spacer',
+    'backskip',
+    'playpause',
+    'forwardskip',
+    'spacer',
+    'progress'
+  ],
   cycle: true,
   pauseOnSeekPreview: true
 };

@@ -105,9 +105,10 @@ class AudioPlayer extends React.Component {
     this.audioPlayListener = () => this.setState({ paused: false });
     this.audioPauseListener = () => this.setState({ paused: true });
     this.audioEndListener = () => {
-      const gapLengthInSeconds = this.props.gapLengthInSeconds || 0;
       clearTimeout(this.gapLengthTimeout);
-      this.gapLengthTimeout = setTimeout(() => this.skipToNextTrack(), gapLengthInSeconds * 1000);
+      this.gapLengthTimeout = setTimeout(() => {
+        this.skipToNextTrack();
+      }, this.props.gapLengthInSeconds * 1000);
     };
     this.audioStallListener = () => this.togglePause(true);
     this.audioTimeUpdateListener = () => this.handleTimeUpdate();
@@ -133,9 +134,10 @@ class AudioPlayer extends React.Component {
       if (this.props.playlist && this.props.playlist.length) {
         this.updateSource();
         if (this.props.autoplay) {
-          const delay = this.props.autoplayDelayInSeconds || 0;
           clearTimeout(this.delayTimeout);
-          this.delayTimeout = setTimeout(() => this.togglePause(false), delay * 1000);
+          this.delayTimeout = setTimeout(() => {
+            this.togglePause(false);
+          }, this.props.autoplayDelayInSeconds * 1000);
         }
       }
 
@@ -286,11 +288,7 @@ class AudioPlayer extends React.Component {
     if (!playlist || !playlist.length) {
       return;
     }
-    let stayThreshold = stayOnBackSkipThreshold;
-    if (isNaN(stayThreshold)) {
-      stayThreshold = 5;
-    }
-    if (audio.currentTime >= stayThreshold) {
+    if (audio.currentTime >= stayOnBackSkipThreshold) {
       return audio.currentTime = 0;
     }
     let i = this.currentTrackIndex - 1;
@@ -428,8 +426,13 @@ AudioPlayer.defaultProps = {
     'spacer',
     'progress'
   ],
+  autoplay: false,
+  autoplayDelayInSeconds: 0,
+  gapLengthInSeconds: 0,
   cycle: true,
-  pauseOnSeekPreview: true
+  pauseOnSeekPreview: true,
+  disableSeek: false,
+  stayOnBackSkipThreshold: 5
 };
 
 module.exports = AudioPlayer;

@@ -93,7 +93,11 @@ class AudioPlayer extends Component {
       /* the TimeRanges object representing the played sections of the
        * loaded track
        */
-      played: null
+      played: null,
+      // whether to loop the current track
+      loop: true,
+      // Rate at which audio should be played. 1.0 is normal speed.
+      playbackRate: 1.0
     };
 
     this.state = this.defaultState;

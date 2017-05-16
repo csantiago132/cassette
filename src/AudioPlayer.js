@@ -380,16 +380,6 @@ class AudioPlayer extends Component {
 
   render () {
     const { playlist, controls, style } = this.props;
-    const controlComponentProps = {
-      playlist,
-      seekUnavailable: this.isSeekUnavailable(),
-      onTogglePause: this.togglePause,
-      onBackSkip: this.backSkip,
-      onForwardSkip: this.skipToNextTrack,
-      onSeekPreview: this.seekPreview,
-      onSeekComplete: this.seekComplete,
-      ...this.state
-    };
     return (
       <div
         className="audio_player"
@@ -401,7 +391,19 @@ class AudioPlayer extends Component {
           if (!ControlComponent) {
             return null;
           }
-          return <ControlComponent key={index} {...controlComponentProps} />;
+          return (
+            <ControlComponent
+              key={index}
+              playlist={playlist}
+              seekUnavailable={this.isSeekUnavailable()}
+              onTogglePause={this.togglePause}
+              onBackSkip={this.backSkip}
+              onForwardSkip={this.skipToNextTrack}
+              onSeekPreview={this.seekPreview}
+              onSeekComplete={this.seekComplete}
+              {...this.state}
+            />
+          );
         })}
       </div>
     );

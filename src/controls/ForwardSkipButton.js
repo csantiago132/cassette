@@ -10,7 +10,7 @@ class ForwardSkipButton extends PurePropTypesComponent {
 }
 
 ForwardSkipButton.propTypes = {
-  onForwardSkip: PropTypes.func.isRequired,
+  onForwardSkip: PropTypes.func.isRequired
 };
 
 module.exports = ForwardSkipButton;

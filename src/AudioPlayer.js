@@ -380,35 +380,20 @@ class AudioPlayer extends Component {
 
   render () {
     const { playlist, controls, style } = this.props;
-    const {
-      activeTrackIndex,
-      paused,
-      currentTime,
-      seekPreviewTime,
-      seekInProgress,
-      awaitingResumeOnSeekComplete,
-      audio
-    } = this.state;
     const controlComponentProps = {
-      audio,
       playlist,
-      activeTrackIndex,
-      paused,
-      currentTime,
-      seekPreviewTime,
-      seekInProgress,
-      awaitingResumeOnSeekComplete,
       seekUnavailable: this.isSeekUnavailable(),
       onTogglePause: this.togglePause,
       onBackSkip: this.backSkip,
       onForwardSkip: this.skipToNextTrack,
       onSeekPreview: this.seekPreview,
-      onSeekComplete: this.seekComplete
+      onSeekComplete: this.seekComplete,
+      ...this.state
     };
     return (
       <div
         className="audio_player"
-        title={getDisplayText(playlist, activeTrackIndex)}
+        title={getDisplayText(playlist, this.state.activeTrackIndex)}
         style={style}
       >
         {controls.map((control, index) => {

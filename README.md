@@ -115,9 +115,11 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `gapLengthInSeconds`: a number value that represents the number of seconds to wait at the end of a track before beginning the next one in the playlist. Not applicable for manually-initiated skip. **0** by default. *NOTE:* Like `autoplayDelayInSeconds`, this delay is inexact.
 
-* `disableSeek`: a boolean value that if true prevents seeking. **false** by default.
-
 * `cycle`: a boolean value that if true continues playing from the beginning after the playlist has completed. **true** by default.
+
+* 'pauseOnSeekPreview' a boolean value that if true pauses audio while the user is selecting new timestamp for playback. true by default.
+
+* `disableSeek`: a boolean value that if true prevents seeking. **false** by default.
 
 * `stayOnBackSkipThreshold`: a number value that represents the number of seconds of progress after which pressing the back button will simply restart the current track. **5** by default.
 

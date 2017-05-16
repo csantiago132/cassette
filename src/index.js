@@ -29,12 +29,16 @@ const logWarning = console.warn || log;
  * Specifies gap at end of one track before next
  * track begins (ignored for manual skip).
  *
- * Accepts 'disableSeek' prop (default false,
- * disables seeking through the audio if true).
- *
  * Accepts 'cycle' prop (default true,
  * starts playing at the beginning of the playlist
  * when finished if true).
+ *
+ * Accepts 'pauseOnSeekPreview' prop (default true,
+ * pauses audio while user is selecting new time
+ * for playback)
+ *
+ * Accepts 'disableSeek' prop (default false,
+ * disables seeking through the audio if true).
  *
  * Accepts 'stayOnBackSkipThreshold' prop, default 5,
  * is number of seconds to progress until pressing back skip

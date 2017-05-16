@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
@@ -55,7 +55,7 @@ const logWarning = console.warn || log;
  * internally-referenced HTML audio element as its only parameter.
  * Similar to: https://facebook.github.io/react/docs/refs-and-the-dom.html
  */
-class AudioPlayer extends React.Component {
+class AudioPlayer extends Component {
 
   constructor (props) {
     super(props);
@@ -389,9 +389,6 @@ class AudioPlayer extends React.Component {
         {controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
           if (!ControlComponent) {
-            if (typeof control === 'string') {
-              logWarning(`Provided control "${control}" could not be matched.`);
-            }
             return null;
           }
           return <ControlComponent key={index} {...controlComponentProps} />;
@@ -403,18 +400,30 @@ class AudioPlayer extends React.Component {
 }
 
 AudioPlayer.propTypes = {
-  playlist: React.PropTypes.array,
-  controls: React.PropTypes.array,
-  autoplay: React.PropTypes.bool,
-  autoplayDelayInSeconds: React.PropTypes.number,
-  gapLengthInSeconds: React.PropTypes.number,
-  cycle: React.PropTypes.bool,
-  pauseOnSeekPreview: React.PropTypes.bool,
-  disableSeek: React.PropTypes.bool,
-  stayOnBackSkipThreshold: React.PropTypes.number,
-  style: React.PropTypes.object,
-  onMediaEvent: React.PropTypes.object,
-  audioElementRef: React.PropTypes.func
+  playlist: PropTypes.arrayOf(PropTypes.shape({
+    url: PropTypes.string,
+    displayText: PropTypes.string
+  })),
+  controls: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.oneOf([
+      'playpause',
+      'backskip',
+      'forwardskip',
+      'progress',
+      'spacer'
+    ])
+  ])),
+  autoplay: PropTypes.bool,
+  autoplayDelayInSeconds: PropTypes.number,
+  gapLengthInSeconds: PropTypes.number,
+  cycle: PropTypes.bool,
+  pauseOnSeekPreview: PropTypes.bool,
+  disableSeek: PropTypes.bool,
+  stayOnBackSkipThreshold: PropTypes.number,
+  style: PropTypes.object,
+  onMediaEvent: PropTypes.objectOf(PropTypes.func),
+  audioElementRef: PropTypes.func
 };
 
 AudioPlayer.defaultProps = {

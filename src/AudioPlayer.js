@@ -70,13 +70,10 @@ class AudioPlayer extends Component {
       activeTrackIndex: -1,
       // indicates whether audio player should be paused
       paused: true,
-      /* elapsed time for current track, in seconds -
-       * DISPLAY ONLY! the actual elapsed time may
-       * not match up if we're currently seeking, since
-       * the new time is visually previewed before the
-       * audio seeks.
-       */
-      displayedTime: 0,
+      // elapsed time for current track, in seconds
+      currentTime: 0,
+      // The most recent targeted time, in seconds, for seek preview
+      seekPreviewTime: 0,
       /* true if the user is currently dragging the mouse
        * to seek a new track position
        */
@@ -273,7 +270,7 @@ class AudioPlayer extends Component {
     this.currentTrackIndex = i;
     this.setState({
       activeTrackIndex: -1,
-      displayedTime: 0
+      currentTime: 0
     }, () => {
       this.updateSource();
       const shouldPauseOnCycle = (!cycle && i === 0);
@@ -304,10 +301,10 @@ class AudioPlayer extends Component {
   }
 
   handleTimeUpdate () {
-    const { seekInProgress, audio } = this.state;
-    if (!seekInProgress && audio) {
+    const { audio } = this.state;
+    if (audio) {
       this.setState({
-        displayedTime: audio.currentTime
+        currentTime: audio.currentTime
       });
     }
   }
@@ -325,20 +322,27 @@ class AudioPlayer extends Component {
     }
     const progressInBounds = Math.max(0, Math.min(progress, 1));
     this.setState({
-      displayedTime: progressInBounds * this.state.audio.duration,
+      seekPreviewTime: progressInBounds * this.state.audio.duration,
       seekInProgress: true
     });
   }
 
   handleSeekComplete () {
-    const { displayedTime, awaitingResumeOnSeekComplete, audio } = this.state;
+    const { seekPreviewTime, awaitingResumeOnSeekComplete, audio } = this.state;
     this.setState({
-      seekInProgress: false
+      seekInProgress: false,
     });
-    if (isNaN(displayedTime)) {
+    if (isNaN(seekPreviewTime)) {
       return;
     }
-    audio.currentTime = displayedTime;
+    this.setState({
+      /* we'll update currentTime on the audio listener hook anyway,
+       * but the optimistic update helps avoid a visual glitch in
+       * the progress bar, if seekInProgress changes before currentTime.
+       */
+      currentTime: seekPreviewTime
+    });
+    audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
       audio.play();
       this.setState({
@@ -360,7 +364,8 @@ class AudioPlayer extends Component {
     const {
       activeTrackIndex,
       paused,
-      displayedTime,
+      currentTime,
+      seekPreviewTime,
       seekInProgress,
       awaitingResumeOnSeekComplete,
       audio
@@ -370,7 +375,8 @@ class AudioPlayer extends Component {
       playlist,
       activeTrackIndex,
       paused,
-      displayedTime,
+      currentTime,
+      seekPreviewTime,
       seekInProgress,
       awaitingResumeOnSeekComplete,
       seekUnavailable: this.isSeekUnavailable(),

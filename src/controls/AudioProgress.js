@@ -88,9 +88,17 @@ class AudioProgress extends Component {
   }
 
   render () {
-    const { audio, playlist, activeTrackIndex, displayedTime } = this.props;
+    const {
+      audio,
+      playlist,
+      activeTrackIndex,
+      currentTime,
+      seekPreviewTime,
+      seekInProgress
+    } = this.props;
+    const time = seekInProgress ? seekPreviewTime : currentTime;
     const duration = audio && audio.duration || 0;
-    const displayedProgress = duration ? displayedTime / duration : 0;
+    const displayedProgress = duration ? time / duration : 0;
     return (
       <div
         className="audio_progress_container"
@@ -109,7 +117,7 @@ class AudioProgress extends Component {
             </div>
           </div>
           <div className="audio_time_progress noselect" draggable="false">
-            {`${convertToTime(displayedTime)} / ${convertToTime(duration)}`}
+            {`${convertToTime(time)} / ${convertToTime(duration)}`}
           </div>
         </div>
       </div>
@@ -123,7 +131,8 @@ AudioProgress.propTypes = {
     displayText: PropTypes.string.isRequired
   }).isRequired),
   activeTrackIndex: PropTypes.number.isRequired,
-  displayedTime: PropTypes.number.isRequired,
+  currentTime: PropTypes.number.isRequired,
+  seekPreviewTime: PropTypes.number.isRequired,
   seekInProgress: PropTypes.bool.isRequired,
   seekUnavailable: PropTypes.bool.isRequired,
   audio: PropTypes.object,

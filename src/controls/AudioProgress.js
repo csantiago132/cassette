@@ -118,7 +118,10 @@ class AudioProgress extends Component {
 }
 
 AudioProgress.propTypes = {
-  playlist: PropTypes.array,
+  playlist: PropTypes.arrayOf(PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    displayText: PropTypes.string.isRequired
+  }).isRequired),
   activeTrackIndex: PropTypes.number.isRequired,
   displayedTime: PropTypes.number.isRequired,
   seekInProgress: PropTypes.bool.isRequired,

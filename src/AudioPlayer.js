@@ -7,9 +7,6 @@ import getControlComponent from './utils/getControlComponent';
 
 import './index.scss';
 
-import { PurePropTypesComponent } from '.';
-setTimeout(() => console.log(PurePropTypesComponent), 1000);
-
 const log = console.log;
 const logError = console.error || log;
 const logWarning = console.warn || log;
@@ -404,9 +401,9 @@ class AudioPlayer extends Component {
 
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string,
-    displayText: PropTypes.string
-  })),
+    url: PropTypes.string.isRequired,
+    displayText: PropTypes.string.isRequired
+  }).isRequired),
   controls: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.oneOf([
@@ -416,7 +413,7 @@ AudioPlayer.propTypes = {
       'progress',
       'spacer'
     ])
-  ])),
+  ]).isRequired),
   autoplay: PropTypes.bool,
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
@@ -425,7 +422,7 @@ AudioPlayer.propTypes = {
   disableSeek: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
-  onMediaEvent: PropTypes.objectOf(PropTypes.func),
+  onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func
 };
 

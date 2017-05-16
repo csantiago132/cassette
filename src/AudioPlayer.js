@@ -95,8 +95,8 @@ class AudioPlayer extends Component {
     this.togglePause = this.togglePause.bind(this);
     this.skipToNextTrack = this.skipToNextTrack.bind(this);
     this.backSkip = this.backSkip.bind(this);
-    this.handleSeekPreview = this.handleSeekPreview.bind(this);
-    this.handleSeekComplete = this.handleSeekComplete.bind(this);
+    this.seekPreview = this.seekPreview.bind(this);
+    this.seekComplete = this.seekComplete.bind(this);
 
     // audio event listeners to add on mount and remove on unmount
     this.audioPlayListener = () => this.setState({ paused: false });
@@ -309,7 +309,7 @@ class AudioPlayer extends Component {
     }
   }
 
-  handleSeekPreview (progress) {
+  seekPreview (progress) {
     const { paused, awaitingResumeOnSeekComplete, audio } = this.state;
     if (this.isSeekUnavailable()) {
       return;
@@ -327,7 +327,7 @@ class AudioPlayer extends Component {
     });
   }
 
-  handleSeekComplete () {
+  seekComplete () {
     const { seekPreviewTime, awaitingResumeOnSeekComplete, audio } = this.state;
     this.setState({
       seekInProgress: false,
@@ -383,8 +383,8 @@ class AudioPlayer extends Component {
       onTogglePause: this.togglePause,
       onBackSkip: this.backSkip,
       onForwardSkip: this.skipToNextTrack,
-      onSeekPreview: this.handleSeekPreview,
-      onSeekComplete: this.handleSeekComplete
+      onSeekPreview: this.seekPreview,
+      onSeekComplete: this.seekComplete
     };
     return (
       <div

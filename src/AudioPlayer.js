@@ -60,9 +60,6 @@ class AudioPlayer extends Component {
   constructor (props) {
     super(props);
 
-    // index matching requested track (whether track has loaded or not)
-    this.currentTrackIndex = 0;
-
     this.defaultState = {
       /* activeTrackIndex will change to match
        * this.currentTrackIndex once metadata has loaded
@@ -82,14 +79,30 @@ class AudioPlayer extends Component {
        * it was paused, and it should be resumed on seek
        * complete
        */
-      awaitingResumeOnSeekComplete: false
+      awaitingResumeOnSeekComplete: false,
+      // the latest volume of the audio, between 0 and 1.
+      volume: 0,
+      // true if the audio has been muted
+      muted: false,
+      // the duration in seconds of the loaded track
+      duration: 0,
+      /* the TimeRanges object representing the buffered sections of the
+       * loaded track
+       */
+      buffered: null,
+      /* the TimeRanges object representing the played sections of the
+       * loaded track
+       */
+      played: null
     };
 
-    this.state = {
-      ...this.defaultState,
-      // html audio element used for playback
-      audio: null
-    };
+    this.state = this.defaultState;
+
+    // index matching requested track (whether track has loaded or not)
+    this.currentTrackIndex = 0;
+
+    // html audio element used for playback
+    this.audio = null;
 
     // bind methods fired on React events
     this.togglePause = this.togglePause.bind(this);
@@ -105,33 +118,36 @@ class AudioPlayer extends Component {
     this.handleAudioStalled = this.handleAudioStalled.bind(this);
     this.handleAudioTimeupdate = this.handleAudioTimeupdate.bind(this);
     this.handleAudioLoadedmetadata = this.handleAudioLoadedmetadata.bind(this);
+    this.handleAudioVolumechange = this.handleAudioVolumechange.bind(this);
+    this.handleAudioDurationchange = this.handleAudioDurationchange.bind(this);
+    this.handleAudioProgress = this.handleAudioProgress.bind(this);
   }
 
   componentDidMount () {
-    const audio = document.createElement('audio');
-    this.setState({ audio }, () => {
+    const audio = this.audio = document.createElement('audio');
 
-      // add event listeners on the audio element
-      audio.preload = 'metadata';
-      audio.addEventListener('play', this.handleAudioPlay);
-      audio.addEventListener('pause', this.handleAudioPause);
-      audio.addEventListener('ended', this.handleAudioEnded);
-      audio.addEventListener('stalled', this.handleAudioStalled);
-      audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
-      audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-      this.addMediaEventListeners(this.props.onMediaEvent);
+    // add event listeners on the audio element
+    audio.preload = 'metadata';
+    audio.addEventListener('play', this.handleAudioPlay);
+    audio.addEventListener('pause', this.handleAudioPause);
+    audio.addEventListener('ended', this.handleAudioEnded);
+    audio.addEventListener('stalled', this.handleAudioStalled);
+    audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
+    audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
+    audio.addEventListener('volumechange', this.handleAudioVolumechange);
+    audio.addEventListener('durationchange', this.handleAudioDurationchange);
+    audio.addEventListener('progress', this.handleAudioProgress);
+    this.addMediaEventListeners(this.props.onMediaEvent);
 
-      if (this.props.playlist && this.props.playlist.length) {
-        this.updateSource();
-        if (this.props.autoplay) {
-          clearTimeout(this.delayTimeout);
-          this.delayTimeout = setTimeout(() => {
-            this.togglePause(false);
-          }, this.props.autoplayDelayInSeconds * 1000);
-        }
+    if (this.props.playlist && this.props.playlist.length) {
+      this.updateSource();
+      if (this.props.autoplay) {
+        clearTimeout(this.delayTimeout);
+        this.delayTimeout = setTimeout(() => {
+          this.togglePause(false);
+        }, this.props.autoplayDelayInSeconds * 1000);
       }
-
-    });
+    }
 
     if (this.props.audioElementRef) {
       this.props.audioElementRef(audio);
@@ -145,7 +161,7 @@ class AudioPlayer extends Component {
 
     const newPlaylist = nextProps.playlist;
     if (!newPlaylist || !newPlaylist.length) {
-      this.state.audio.src = '';
+      this.audio.src = '';
       this.currentTrackIndex = 0;
       return this.setState(this.defaultState);
     }
@@ -176,7 +192,7 @@ class AudioPlayer extends Component {
   }
 
   componentWillUnmount () {
-    const { audio } = this.state;
+    const { audio } = this;
     // remove event listeners on the audio element
     audio.removeEventListener('play', this.handleAudioPlay);
     audio.removeEventListener('pause', this.handleAudioPause);
@@ -184,6 +200,9 @@ class AudioPlayer extends Component {
     audio.removeEventListener('stalled', this.handleAudioStalled);
     audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
     audio.removeEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
+    audio.removeEventListener('volumechange', this.handleAudioVolumechange);
+    audio.removeEventListener('durationchange', this.handleAudioDurationchange);
+    audio.removeEventListener('progress', this.handleAudioProgress);
     removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
@@ -205,7 +224,7 @@ class AudioPlayer extends Component {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
-      this.state.audio.addEventListener(type, mediaEvents[type]);
+      this.audio.addEventListener(type, mediaEvents[type]);
     });
   }
 
@@ -217,7 +236,7 @@ class AudioPlayer extends Component {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
-      this.state.audio.removeEventListener(type, mediaEvents[type]);
+      this.audio.removeEventListener(type, mediaEvents[type]);
     });
   }
 
@@ -242,12 +261,8 @@ class AudioPlayer extends Component {
   }
 
   handleAudioTimeupdate () {
-    const { audio } = this.state;
-    if (audio) {
-      this.setState({
-        currentTime: audio.currentTime
-      });
-    }
+    const { currentTime, played } = this.audio;
+    this.setState({ currentTime, played });
   }
 
   handleAudioLoadedmetadata () {
@@ -256,20 +271,35 @@ class AudioPlayer extends Component {
     });
   }
 
+  handleAudioVolumechange () {
+    const { volume, muted } = this.audio;
+    this.setState({ volume, muted });
+  }
+
+  handleAudioDurationchange () {
+    const { duration } = this.audio;
+    this.setState({ duration });
+  }
+
+  handleAudioProgress () {
+    const { buffered } = this.audio;
+    this.setState({ buffered });
+  }
+
   updateSource () {
-    this.state.audio.src = this.props.playlist[this.currentTrackIndex].url;
+    this.audio.src = this.props.playlist[this.currentTrackIndex].url;
   }
 
   togglePause (value) {
-    const { playlist } = this.props;
-    const { audio, paused } = this.state;
+    const { audio } = this;
     if (!audio) {
       return;
     }
-    const pause = typeof value === 'boolean' ? value : !paused;
+    const pause = typeof value === 'boolean' ? value : !this.state.paused;
     if (pause) {
       return audio.pause();
     }
+    const { playlist } = this.props;
     if (!playlist || !playlist.length) {
       return;
     }
@@ -286,12 +316,12 @@ class AudioPlayer extends Component {
   }
 
   skipToNextTrack (shouldPlay) {
-    const { playlist, cycle } = this.props;
-    const { audio } = this.state;
+    const { audio } = this;
     if (!audio) {
       return;
     }
     audio.pause();
+    const { playlist, cycle } = this.props;
     if (!playlist || !playlist.length) {
       return;
     }
@@ -313,7 +343,7 @@ class AudioPlayer extends Component {
 
   backSkip () {
     const { playlist, stayOnBackSkipThreshold } = this.props;
-    const { audio } = this.state;
+    const { audio } = this;
     if (!playlist || !playlist.length) {
       return;
     }
@@ -329,7 +359,7 @@ class AudioPlayer extends Component {
   }
 
   seekPreview (progress) {
-    const { paused, awaitingResumeOnSeekComplete, audio } = this.state;
+    const { paused, awaitingResumeOnSeekComplete } = this.state;
     if (this.isSeekUnavailable()) {
       return;
     }
@@ -341,13 +371,13 @@ class AudioPlayer extends Component {
     }
     const progressInBounds = Math.max(0, Math.min(progress, 1));
     this.setState({
-      seekPreviewTime: progressInBounds * this.state.audio.duration,
+      seekPreviewTime: progressInBounds * this.audio.duration,
       seekInProgress: true
     });
   }
 
   seekComplete () {
-    const { seekPreviewTime, awaitingResumeOnSeekComplete, audio } = this.state;
+    const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
     this.setState({
       seekInProgress: false,
     });
@@ -361,6 +391,7 @@ class AudioPlayer extends Component {
        */
       currentTime: seekPreviewTime
     });
+    const { audio } = this;
     audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
       audio.play();

@@ -89,15 +89,14 @@ class AudioProgress extends Component {
 
   render () {
     const {
-      audio,
       playlist,
       activeTrackIndex,
       currentTime,
       seekPreviewTime,
-      seekInProgress
+      seekInProgress,
+      duration
     } = this.props;
     const time = seekInProgress ? seekPreviewTime : currentTime;
-    const duration = audio && audio.duration || 0;
     const displayedProgress = duration ? time / duration : 0;
     return (
       <div
@@ -135,7 +134,7 @@ AudioProgress.propTypes = {
   seekPreviewTime: PropTypes.number.isRequired,
   seekInProgress: PropTypes.bool.isRequired,
   seekUnavailable: PropTypes.bool.isRequired,
-  audio: PropTypes.object,
+  duration: PropTypes.number.isRequired,
   onSeekPreview: PropTypes.func.isRequired,
   onSeekComplete: PropTypes.func.isRequired
 };

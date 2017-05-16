@@ -439,7 +439,7 @@ AudioPlayer.defaultProps = {
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
   cycle: true,
-  pauseOnSeekPreview: true,
+  pauseOnSeekPreview: false,
   disableSeek: false,
   stayOnBackSkipThreshold: 5
 };

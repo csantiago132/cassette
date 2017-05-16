@@ -98,20 +98,13 @@ class AudioPlayer extends Component {
     this.seekPreview = this.seekPreview.bind(this);
     this.seekComplete = this.seekComplete.bind(this);
 
-    // audio event listeners to add on mount and remove on unmount
-    this.audioPlayListener = () => this.setState({ paused: false });
-    this.audioPauseListener = () => this.setState({ paused: true });
-    this.audioEndListener = () => {
-      clearTimeout(this.gapLengthTimeout);
-      this.gapLengthTimeout = setTimeout(() => {
-        this.skipToNextTrack();
-      }, this.props.gapLengthInSeconds * 1000);
-    };
-    this.audioStallListener = () => this.togglePause(true);
-    this.audioTimeUpdateListener = () => this.handleTimeUpdate();
-    this.audioMetadataLoadedListener = () => this.setState({
-      activeTrackIndex: this.currentTrackIndex
-    });
+    // bind audio event listeners to add on mount and remove on unmount
+    this.handleAudioPlay = this.handleAudioPlay.bind(this);
+    this.handleAudioPause = this.handleAudioPause.bind(this);
+    this.handleAudioEnded = this.handleAudioEnded.bind(this);
+    this.handleAudioStalled = this.handleAudioStalled.bind(this);
+    this.handleAudioTimeupdate = this.handleAudioTimeupdate.bind(this);
+    this.handleAudioLoadedmetadata = this.handleAudioLoadedmetadata.bind(this);
   }
 
   componentDidMount () {
@@ -120,12 +113,12 @@ class AudioPlayer extends Component {
 
       // add event listeners on the audio element
       audio.preload = 'metadata';
-      audio.addEventListener('play', this.audioPlayListener);
-      audio.addEventListener('pause', this.audioPauseListener);
-      audio.addEventListener('ended', this.audioEndListener);
-      audio.addEventListener('stalled', this.audioStallListener);
-      audio.addEventListener('timeupdate', this.audioTimeUpdateListener);
-      audio.addEventListener('loadedmetadata', this.audioMetadataLoadedListener);
+      audio.addEventListener('play', this.handleAudioPlay);
+      audio.addEventListener('pause', this.handleAudioPause);
+      audio.addEventListener('ended', this.handleAudioEnded);
+      audio.addEventListener('stalled', this.handleAudioStalled);
+      audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
+      audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
       this.addMediaEventListeners(this.props.onMediaEvent);
 
       if (this.props.playlist && this.props.playlist.length) {
@@ -185,12 +178,12 @@ class AudioPlayer extends Component {
   componentWillUnmount () {
     const { audio } = this.state;
     // remove event listeners on the audio element
-    audio.removeEventListener('play', this.audioPlayListener);
-    audio.removeEventListener('pause', this.audioPauseListener);
-    audio.removeEventListener('ended', this.audioEndListener);
-    audio.removeEventListener('stalled', this.audioStallListener);
-    audio.removeEventListener('timeupdate', this.audioTimeUpdateListener);
-    audio.removeEventListener('loadedmetadata', this.audioMetadataLoadedListener);
+    audio.removeEventListener('play', this.handleAudioPlay);
+    audio.removeEventListener('pause', this.handleAudioPause);
+    audio.removeEventListener('ended', this.handleAudioEnded);
+    audio.removeEventListener('stalled', this.handleAudioStalled);
+    audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
+    audio.removeEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
     removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
@@ -226,6 +219,45 @@ class AudioPlayer extends Component {
       }
       this.state.audio.removeEventListener(type, mediaEvents[type]);
     });
+  }
+
+  handleAudioPlay () {
+    this.setState({ paused: false });
+  }
+
+  handleAudioPause () {
+    this.setState({ paused: true });
+  }
+
+  handleAudioEnded () {
+    clearTimeout(this.gapLengthTimeout);
+    this.gapLengthTimeout = setTimeout(
+      this.skipToNextTrack,
+      this.props.gapLengthInSeconds * 1000
+    );
+  }
+
+  handleAudioStalled () {
+    this.togglePause(true);
+  }
+
+  handleAudioTimeupdate () {
+    const { audio } = this.state;
+    if (audio) {
+      this.setState({
+        currentTime: audio.currentTime
+      });
+    }
+  }
+
+  handleAudioLoadedmetadata () {
+    this.setState({
+      activeTrackIndex: this.currentTrackIndex
+    });
+  }
+
+  updateSource () {
+    this.state.audio.src = this.props.playlist[this.currentTrackIndex].url;
   }
 
   togglePause (value) {
@@ -294,19 +326,6 @@ class AudioPlayer extends Component {
     }
     this.currentTrackIndex = i - 1;
     this.skipToNextTrack();
-  }
-
-  updateSource () {
-    this.state.audio.src = this.props.playlist[this.currentTrackIndex].url;
-  }
-
-  handleTimeUpdate () {
-    const { audio } = this.state;
-    if (audio) {
-      this.setState({
-        currentTime: audio.currentTime
-      });
-    }
   }
 
   seekPreview (progress) {

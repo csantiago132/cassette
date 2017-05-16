@@ -1,7 +1,9 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 
-class PlayPauseButton extends PureComponent {
+import PurePropTypesComponent from './common/PurePropTypesComponent';
+
+class PlayPauseButton extends PurePropTypesComponent {
   render () {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (

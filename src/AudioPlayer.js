@@ -7,6 +7,9 @@ import getControlComponent from './utils/getControlComponent';
 
 import './index.scss';
 
+import { PurePropTypesComponent } from '.';
+setTimeout(() => console.log(PurePropTypesComponent), 1000);
+
 const log = console.log;
 const logError = console.error || log;
 const logWarning = console.warn || log;

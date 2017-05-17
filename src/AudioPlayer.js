@@ -7,9 +7,9 @@ import getControlComponent from './utils/getControlComponent';
 
 import './index.scss';
 
-const log = console.log;
-const logError = console.error || log;
-const logWarning = console.warn || log;
+const log = console.log.bind(console);
+const logError = console.error ? console.error.bind(console) : log;
+const logWarning = console.warn ? console.warn.bind(console) : log;
 
 /*
  * AudioPlayer

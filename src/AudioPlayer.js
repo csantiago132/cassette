@@ -318,20 +318,17 @@ class AudioPlayer extends Component {
   }
 
   togglePause (value) {
-    const { audio } = this;
-    if (!audio) {
-      return;
-    }
     const pause = typeof value === 'boolean' ? value : !this.state.paused;
     if (pause) {
-      return audio.pause();
+      this.audio.pause();
+      return;
     }
     const { playlist } = this.props;
     if (!playlist || !playlist.length) {
       return;
     }
     try {
-      audio.play();
+      this.audio.play();
     } catch (error) {
       logError(error);
       const warningMessage =
@@ -343,11 +340,7 @@ class AudioPlayer extends Component {
   }
 
   skipToNextTrack (shouldPlay) {
-    const { audio } = this;
-    if (!audio) {
-      return;
-    }
-    audio.pause();
+    this.audio.pause();
     const { playlist, cycle } = this.props;
     if (!playlist || !playlist.length) {
       return;

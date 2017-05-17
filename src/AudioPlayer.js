@@ -6,6 +6,7 @@ import createAudioElementWithLoopEvent from './createAudioElementWithLoopEvent';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
 import getControlComponent from './utils/getControlComponent';
+import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
 
 import './index.scss';
 
@@ -394,7 +395,7 @@ class AudioPlayer extends Component {
       });
       this.togglePause(true);
     }
-    const progressInBounds = Math.max(0, Math.min(progress, 1));
+    const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
     this.setState({
       seekPreviewTime: progressInBounds * this.audio.duration,
       seekInProgress: true

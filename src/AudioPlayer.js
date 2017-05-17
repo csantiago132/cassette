@@ -315,7 +315,12 @@ class AudioPlayer extends Component {
   }
 
   updateSource () {
-    this.audio.src = this.props.playlist[this.currentTrackIndex].url;
+    const { playlist } = this.props;
+    if (!isPlaylistValid(playlist)) {
+      this.audio.src = '';
+      return;
+    }
+    this.audio.src = playlist[this.currentTrackIndex].url;
   }
 
   togglePause (value) {

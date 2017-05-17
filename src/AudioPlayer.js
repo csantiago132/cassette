@@ -3,6 +3,7 @@ import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
 import createAudioElementWithLoopEvent from './createAudioElementWithLoopEvent';
+import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
 import getControlComponent from './utils/getControlComponent';
 
@@ -154,7 +155,7 @@ class AudioPlayer extends Component {
     audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
-    if (this.props.playlist && this.props.playlist.length) {
+    if (isPlaylistValid(this.props.playlist)) {
       this.updateSource();
       if (this.props.autoplay) {
         clearTimeout(this.delayTimeout);
@@ -175,7 +176,7 @@ class AudioPlayer extends Component {
     this.addMediaEventListeners(nextProps.onMediaEvent);
 
     const newPlaylist = nextProps.playlist;
-    if (!newPlaylist || !newPlaylist.length) {
+    if (!isPlaylistValid(newPlaylist)) {
       this.audio.src = '';
       this.currentTrackIndex = 0;
       return this.setState(this.defaultState);
@@ -341,7 +342,7 @@ class AudioPlayer extends Component {
   skipToNextTrack (shouldPlay) {
     this.audio.pause();
     const { playlist, cycle } = this.props;
-    if (!playlist || !playlist.length) {
+    if (!isPlaylistValid(playlist)) {
       return;
     }
     let i = this.currentTrackIndex + 1;
@@ -363,7 +364,7 @@ class AudioPlayer extends Component {
   backSkip () {
     const { playlist, stayOnBackSkipThreshold } = this.props;
     const { audio } = this;
-    if (!playlist || !playlist.length) {
+    if (!isPlaylistValid(playlist)) {
       return;
     }
     if (audio.currentTime >= stayOnBackSkipThreshold) {

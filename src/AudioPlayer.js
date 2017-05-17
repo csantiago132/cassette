@@ -96,7 +96,7 @@ class AudioPlayer extends Component {
        */
       played: null,
       // whether to loop the current track
-      loop: true,
+      loop: false,
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: 1.0
     };

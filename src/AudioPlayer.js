@@ -323,8 +323,7 @@ class AudioPlayer extends Component {
       this.audio.pause();
       return;
     }
-    const { playlist } = this.props;
-    if (!playlist || !playlist.length) {
+    if (!this.audio.src) {
       return;
     }
     try {
@@ -422,11 +421,8 @@ class AudioPlayer extends Component {
   }
 
   isSeekUnavailable () {
-    return Boolean(
-      !this.props.playlist ||
-      !this.props.playlist.length ||
-      this.props.disableSeek
-    );
+    const { audio } = this;
+    return Boolean(!(audio && audio.src) || this.props.disableSeek);
   }
 
   render () {

@@ -82,7 +82,7 @@ class AudioPlayer extends Component {
        */
       awaitingResumeOnSeekComplete: false,
       // the latest volume of the audio, between 0 and 1.
-      volume: 0,
+      volume: 1.0,
       // true if the audio has been muted
       muted: false,
       // the duration in seconds of the loaded track

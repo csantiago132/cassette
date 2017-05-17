@@ -117,6 +117,10 @@ class AudioPlayer extends Component {
     this.backSkip = this.backSkip.bind(this);
     this.seekPreview = this.seekPreview.bind(this);
     this.seekComplete = this.seekComplete.bind(this);
+    this.setVolume = this.setVolume.bind(this);
+    this.toggleMuted = this.toggleMuted.bind(this);
+    this.toggleLoop = this.toggleLoop.bind(this);
+    this.setPlaybackRate = this.setPlaybackRate.bind(this);
 
     // bind audio event listeners to add on mount and remove on unmount
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
@@ -427,6 +431,24 @@ class AudioPlayer extends Component {
     }
   }
 
+  setVolume (volume) {
+    this.audio.volume = convertToNumberWithinIntervalBounds(volume, 0, 1);
+  }
+
+  toggleMuted (value) {
+    const muted = typeof value === 'boolean' ? value : !this.state.muted;
+    this.audio.muted = muted;
+  }
+
+  toggleLoop (value) {
+    const loop = typeof value === 'boolean' ? value : !this.state.loop;
+    this.audio.loop = loop;
+  }
+
+  setPlaybackRate (rate) {
+    this.audio.playbackRate = rate;
+  }
+
   isSeekUnavailable () {
     const { audio } = this;
     return Boolean(!(audio && audio.src) || this.props.disableSeek);
@@ -455,6 +477,10 @@ class AudioPlayer extends Component {
               onForwardSkip={this.skipToNextTrack}
               onSeekPreview={this.seekPreview}
               onSeekComplete={this.seekComplete}
+              onSetVolume={this.setVolume}
+              onToggleMuted={this.toggleMuted}
+              onToggleLoop={this.toggleLoop}
+              onSetPlaybackRate={this.setPlaybackRate}
               {...this.state}
             />
           );

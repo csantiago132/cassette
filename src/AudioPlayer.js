@@ -133,6 +133,12 @@ class AudioPlayer extends Component {
   componentDidMount () {
     const audio = this.audio = createHTMLAudioElementWithLoopEvent();
 
+    // initialize audio properties
+    audio.volume = this.state.volume;
+    audio.muted = this.state.muted;
+    audio.loop = this.state.loop;
+    audio.playbackRate = this.state.playbackRate;
+
     // add event listeners on the audio element
     audio.preload = 'metadata';
     audio.addEventListener('play', this.handleAudioPlay);

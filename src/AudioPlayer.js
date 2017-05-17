@@ -125,6 +125,7 @@ class AudioPlayer extends Component {
     this.handleAudioVolumechange = this.handleAudioVolumechange.bind(this);
     this.handleAudioDurationchange = this.handleAudioDurationchange.bind(this);
     this.handleAudioProgress = this.handleAudioProgress.bind(this);
+    this.handleAudioRatechange = this.handleAudioRatechange.bind(this);
   }
 
   componentDidMount () {
@@ -141,6 +142,7 @@ class AudioPlayer extends Component {
     audio.addEventListener('volumechange', this.handleAudioVolumechange);
     audio.addEventListener('durationchange', this.handleAudioDurationchange);
     audio.addEventListener('progress', this.handleAudioProgress);
+    audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
     if (this.props.playlist && this.props.playlist.length) {
@@ -207,6 +209,7 @@ class AudioPlayer extends Component {
     audio.removeEventListener('volumechange', this.handleAudioVolumechange);
     audio.removeEventListener('durationchange', this.handleAudioDurationchange);
     audio.removeEventListener('progress', this.handleAudioProgress);
+    audio.removeEventListener('ratechange', this.handleAudioRatechange);
     removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
@@ -288,6 +291,11 @@ class AudioPlayer extends Component {
   handleAudioProgress () {
     const { buffered } = this.audio;
     this.setState({ buffered });
+  }
+
+  handleAudioRatechange () {
+    const { playbackRate } = this.audio;
+    this.setState({ playbackRate });
   }
 
   updateSource () {

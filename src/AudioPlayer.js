@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
-import createHTMLAudioElementWithLoopEvent from './createHTMLAudioElementWithLoopEvent';
+import createAudioElementWithLoopEvent from './createAudioElementWithLoopEvent';
 import getDisplayText from './utils/getDisplayText';
 import getControlComponent from './utils/getControlComponent';
 
@@ -131,7 +131,7 @@ class AudioPlayer extends Component {
   }
 
   componentDidMount () {
-    const audio = this.audio = createHTMLAudioElementWithLoopEvent();
+    const audio = this.audio = createAudioElementWithLoopEvent();
 
     // initialize audio properties
     audio.volume = this.state.volume;

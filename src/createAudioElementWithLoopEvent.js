@@ -1,6 +1,6 @@
 const loopchange = new Event('loopchange');
 
-function createHTMLAudioElementWithLoopEvent () {
+function createAudioElementWithLoopEvent () {
   const audio = document.createElement('audio');
   new MutationObserver(() => {
     audio.dispatchEvent(loopchange);
@@ -10,4 +10,4 @@ function createHTMLAudioElementWithLoopEvent () {
   return audio;
 }
 
-module.exports = createHTMLAudioElementWithLoopEvent;
+module.exports = createAudioElementWithLoopEvent;

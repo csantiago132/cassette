@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
+import createHTMLAudioElementWithLoopEvent from './createHTMLAudioElementWithLoopEvent';
 import getDisplayText from './utils/getDisplayText';
 import getControlComponent from './utils/getControlComponent';
 
@@ -125,11 +126,12 @@ class AudioPlayer extends Component {
     this.handleAudioVolumechange = this.handleAudioVolumechange.bind(this);
     this.handleAudioDurationchange = this.handleAudioDurationchange.bind(this);
     this.handleAudioProgress = this.handleAudioProgress.bind(this);
+    this.handleAudioLoopchange = this.handleAudioLoopchange.bind(this);
     this.handleAudioRatechange = this.handleAudioRatechange.bind(this);
   }
 
   componentDidMount () {
-    const audio = this.audio = document.createElement('audio');
+    const audio = this.audio = createHTMLAudioElementWithLoopEvent();
 
     // add event listeners on the audio element
     audio.preload = 'metadata';
@@ -142,6 +144,7 @@ class AudioPlayer extends Component {
     audio.addEventListener('volumechange', this.handleAudioVolumechange);
     audio.addEventListener('durationchange', this.handleAudioDurationchange);
     audio.addEventListener('progress', this.handleAudioProgress);
+    audio.addEventListener('loopchange', this.handleAudioLoopchange);
     audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
@@ -209,6 +212,7 @@ class AudioPlayer extends Component {
     audio.removeEventListener('volumechange', this.handleAudioVolumechange);
     audio.removeEventListener('durationchange', this.handleAudioDurationchange);
     audio.removeEventListener('progress', this.handleAudioProgress);
+    audio.removeEventListener('loopchange', this.handleAudioLoopchange);
     audio.removeEventListener('ratechange', this.handleAudioRatechange);
     removeMediaEventListeners(this.props.onMediaEvent);
 
@@ -291,6 +295,11 @@ class AudioPlayer extends Component {
   handleAudioProgress () {
     const { buffered } = this.audio;
     this.setState({ buffered });
+  }
+
+  handleAudioLoopchange () {
+    const { loop } = this.audio;
+    this.setState({ loop });
   }
 
   handleAudioRatechange () {

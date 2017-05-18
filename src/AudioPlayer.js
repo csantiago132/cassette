@@ -350,7 +350,7 @@ class AudioPlayer extends Component {
     }
   }
 
-  selectTrackIndex (index, shouldPlay) {
+  selectTrackIndex (index, shouldPlay = true) {
     const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
@@ -365,12 +365,11 @@ class AudioPlayer extends Component {
       currentTime: 0
     }, () => {
       this.updateSource();
-      const shouldPause = typeof shouldPlay === 'boolean' ? !shouldPlay : false;
-      this.togglePause(shouldPause);
+      this.togglePause(!shouldPlay);
     });
   }
 
-  skipToNextTrack (shouldPlay) {
+  skipToNextTrack (shouldPlay = true) {
     const { playlist, cycle } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
@@ -380,8 +379,8 @@ class AudioPlayer extends Component {
       index = 0;
     }
     const shouldPauseForEndOfCycle = !cycle && index === 0;
-    const shouldPause = shouldPauseForEndOfCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
-    this.selectTrackIndex(index, !shouldPause);
+    const shouldDefinitelyPlay = shouldPlay && !shouldPauseForEndOfCycle;
+    this.selectTrackIndex(index, shouldPlay);
   }
 
   backSkip () {

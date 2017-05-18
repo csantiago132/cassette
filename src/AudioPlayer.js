@@ -274,6 +274,13 @@ class AudioPlayer extends Component {
 
   handleAudioEnded () {
     clearTimeout(this.gapLengthTimeout);
+    const { playlist, cycle } = this.props;
+    if (!isPlaylistValid(playlist)) {
+      return;
+    }
+    if (!cycle && this.currentTrackIndex + 1 >= playlist.length) {
+      return;
+    }
     this.gapLengthTimeout = setTimeout(
       this.skipToNextTrack,
       this.props.gapLengthInSeconds * 1000
@@ -370,7 +377,7 @@ class AudioPlayer extends Component {
   }
 
   skipToNextTrack (shouldPlay = true) {
-    const { playlist, cycle } = this.props;
+    const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
     }
@@ -378,8 +385,6 @@ class AudioPlayer extends Component {
     if (index >= playlist.length) {
       index = 0;
     }
-    const shouldPauseForEndOfCycle = !cycle && index === 0;
-    const shouldDefinitelyPlay = shouldPlay && !shouldPauseForEndOfCycle;
     this.selectTrackIndex(index, shouldPlay);
   }
 

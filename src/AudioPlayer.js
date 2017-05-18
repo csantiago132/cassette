@@ -448,7 +448,7 @@ class AudioPlayer extends Component {
     const { audio } = this;
     audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
-      audio.play();
+      this.togglePause(false);
       this.setState({
         awaitingResumeOnSeekComplete: false
       });

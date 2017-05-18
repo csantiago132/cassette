@@ -36,6 +36,10 @@ const logWarning = console.warn ? console.warn.bind(console) : log;
  * starts playing at the beginning of the playlist
  * when finished if true).
  *
+ * Accepts 'loadFirstTrackOnPlaylistComplete' prop
+ * (default true, loads up first track when playlist
+ * has completed. Ignored if 'cycle' is true.)
+ *
  * Accepts 'pauseOnSeekPreview' prop (default true,
  * pauses audio while user is selecting new time
  * for playback)
@@ -279,6 +283,9 @@ class AudioPlayer extends Component {
       return;
     }
     if (!cycle && this.currentTrackIndex + 1 >= playlist.length) {
+      if (this.props.loadFirstTrackOnPlaylistComplete) {
+        this.selectTrackIndex(0, false);
+      }
       return;
     }
     this.gapLengthTimeout = setTimeout(
@@ -528,6 +535,7 @@ AudioPlayer.propTypes = {
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
   cycle: PropTypes.bool,
+  loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   disableSeek: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
@@ -549,6 +557,7 @@ AudioPlayer.defaultProps = {
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
   cycle: true,
+  loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   disableSeek: false,
   stayOnBackSkipThreshold: 5

@@ -113,6 +113,7 @@ class AudioPlayer extends Component {
 
     // bind methods fired on React events
     this.togglePause = this.togglePause.bind(this);
+    this.selectTrackIndex = this.selectTrackIndex.bind(this);
     this.skipToNextTrack = this.skipToNextTrack.bind(this);
     this.backSkip = this.backSkip.bind(this);
     this.seekPreview = this.seekPreview.bind(this);
@@ -349,26 +350,38 @@ class AudioPlayer extends Component {
     }
   }
 
-  skipToNextTrack (shouldPlay) {
-    this.audio.pause();
-    const { playlist, cycle } = this.props;
+  selectTrackIndex (index, shouldPlay) {
+    const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
     }
-    let i = this.currentTrackIndex + 1;
-    if (i >= playlist.length) {
-      i = 0;
+    if (index < 0 || index > playlist.length) {
+      logWarning(`Playlist index ${index} is out of bounds!`);
+      return;
     }
-    this.currentTrackIndex = i;
+    this.currentTrackIndex = index;
     this.setState({
       activeTrackIndex: -1,
       currentTime: 0
     }, () => {
       this.updateSource();
-      const shouldPauseOnCycle = (!cycle && i === 0);
-      const shouldPause = shouldPauseOnCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
+      const shouldPause = typeof shouldPlay === 'boolean' ? !shouldPlay : false;
       this.togglePause(shouldPause);
     });
+  }
+
+  skipToNextTrack (shouldPlay) {
+    const { playlist, cycle } = this.props;
+    if (!isPlaylistValid(playlist)) {
+      return;
+    }
+    let index = this.currentTrackIndex + 1;
+    if (index >= playlist.length) {
+      index = 0;
+    }
+    const shouldPauseForEndOfCycle = !cycle && index === 0;
+    const shouldPause = shouldPauseForEndOfCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
+    this.selectTrackIndex(index, !shouldPause);
   }
 
   backSkip () {
@@ -378,14 +391,14 @@ class AudioPlayer extends Component {
       return;
     }
     if (audio.currentTime >= stayOnBackSkipThreshold) {
-      return audio.currentTime = 0;
+      audio.currentTime = 0;
+      return;
     }
-    let i = this.currentTrackIndex - 1;
-    if (i < 0) {
-      i = playlist.length - 1;
+    let index = this.currentTrackIndex - 1;
+    if (index < 0) {
+      index = playlist.length - 1;
     }
-    this.currentTrackIndex = i - 1;
-    this.skipToNextTrack();
+    this.selectTrackIndex(index);
   }
 
   seekPreview (progress) {
@@ -473,6 +486,7 @@ class AudioPlayer extends Component {
               playlist={playlist}
               seekUnavailable={this.isSeekUnavailable()}
               onTogglePause={this.togglePause}
+              onSelectTrackIndex={this.selectTrackIndex}
               onBackSkip={this.backSkip}
               onForwardSkip={this.skipToNextTrack}
               onSeekPreview={this.seekPreview}

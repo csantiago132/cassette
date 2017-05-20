@@ -1,8 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ResizeObserver from 'resize-observer-polyfill';
 import classNames from 'classnames';
 
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
+import convertToNumberWithinIntervalBounds from '../utils/convertToNumberWithinIntervalBounds';
 
 class AudioProgress extends Component {
   constructor (props) {
@@ -10,6 +13,7 @@ class AudioProgress extends Component {
 
     this.audioProgressContainer = null;
     this.audioProgressBoundingRect = null;
+    this.audioProgressContainerResizeObserver = null;
 
     this.setAudioProgressContainerRef = ref => {
       this.audioProgressContainer = ref;
@@ -29,8 +33,10 @@ class AudioProgress extends Component {
     document.addEventListener('touchmove', this.handleSeekPreview);
     window.addEventListener('mouseup', this.handleSeekComplete);
     document.addEventListener('touchend', this.handleSeekComplete);
-    window.addEventListener('resize', this.fetchAudioProgressBoundingRect);
-    this.fetchAudioProgressBoundingRect();
+    this.audioProgressContainerResizeObserver = new ResizeObserver(
+      this.fetchAudioProgressBoundingRect
+    );
+    this.audioProgressContainerResizeObserver.observe(this.audioProgressContainer);
   }
 
   componentWillUnmount () {
@@ -39,7 +45,7 @@ class AudioProgress extends Component {
     document.removeEventListener('touchmove', this.handleSeekPreview);
     window.removeEventListener('mouseup', this.handleSeekComplete);
     document.removeEventListener('touchend', this.handleSeekComplete);
-    window.removeEventListener('resize', this.fetchAudioProgressBoundingRect);
+    this.audioProgressContainerResizeObserver.disconnect();
   }
 
   handleSeekPreview (event) {
@@ -62,7 +68,7 @@ class AudioProgress extends Component {
     const boundingRect = this.audioProgressBoundingRect;
     const position = pageX - boundingRect.left - document.body.scrollLeft;
     const containerWidth = boundingRect.width;
-    const progress = position / containerWidth;
+    const progress = convertToNumberWithinIntervalBounds(position / containerWidth, 0, 1);
     onSeekPreview(progress);
   }
 

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import PurePropTypesComponent from './common/PurePropTypesComponent';
 
@@ -9,7 +10,7 @@ class Spacer extends PurePropTypesComponent {
 }
 
 Spacer.propTypes = {
-  style: React.PropTypes.object
+  style: PropTypes.object
 };
 
 module.exports = Spacer;

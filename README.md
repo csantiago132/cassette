@@ -62,17 +62,16 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <!-- audioplayer.css v1.1.2 -->
-    <link rel="stylesheet" href="https://cdn.rawgit.com/benwiley4000/react-responsive-audio-player/3d31d4c18c367686ccba011d772a83c49189289c/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
 
-    <!-- react/react-dom served over CDN -->
     <script src="https://unpkg.com/react@15/dist/react.js"></script>
     <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
-    <!-- audioplayer.js v1.1.2 -->
-    <script src="https://cdn.rawgit.com/benwiley4000/react-responsive-audio-player/3d31d4c18c367686ccba011d772a83c49189289c/audioplayer.js"></script>
+    <script src="https://unpkg.com/prop-types/prop-types.js"></script>
+    <script src="https://unpkg.com/resize-observer-polyfill"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.1.3/dist/audioplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', displayText: 'Track 1 - a track to remember' },
@@ -132,46 +131,48 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 None of these options are required, though the player will be functionally disabled if no `playlist` prop is provided.
 
 ## Styling
-**IMPORTANT NOTES**
-* In order to use the default stylings you'll need to grab the compiled `audioplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/react-responsive-audio-player/releases).
-* If you want your audio player to take the full screen width, do the following:
-  * Include the following code in your own CSS:
+
+In order to use the default stylings you'll need to grab the compiled `audioplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/react-responsive-audio-player/releases).
+
+It's easy to override the default styles with CSS. Alternatively, for styles which only affect the outer element, you can use [React inline styles](https://facebook.github.io/react/docs/dom-elements.html#style).
+
+For example, if you want your audio player to take the full screen width, do the following:
+* Include the following code in your own CSS:
   ```css
   html,
   body {
     margin: 0;
   }
   ```
-  * Give your audio player fixed position styling, e.g.
-  ```html
+* Give your audio player fixed position styling, e.g.
+  ```jsx
   <AudioPlayer style={{ position: 'fixed', bottom: 0 }} />
   ```
 
-Why aren't these styles included by default? See [this discussion](https://github.com/benwiley4000/react-responsive-audio-player/issues/6).
+## Usage with SASS
 
-*The default look:*
+If you preprocess your styles with Sass, you can have more powerful control via Sass variables. The defaults are located at the top of [**src/index.scss**](src/index.scss):
 
-![Audio Player Screenshot](audio_player_example_01.png)
+```scss
+$audio_player_base_height: 50px !default;
+$audio_player_base_bg_color: #333 !default;
+$audio_player_base_text_color: #fff !default;
+// ...etc
+```
+The `!default` flag means you can override these variable definitions before the styles are included.
 
-The default stylings for the audio player can be found [here](https://github.com/benwiley4000/react-responsive-audio-player/blob/master/src/index.scss). It's easy to override them with CSS.
+```scss
+// Include var overrides before default styles import
+$audio_player_base_bg_color: firebrick;
 
-To change the `font-family` for the whole component using CSS, use:
-```css
+// Using webpack css/sass module import syntax
+@import '~react-responsive-audio-player/src/index';
+
+// include other overrides afterward
 .audio_player {
-  font-family: Helvetica, sans-serif;
+  width: 600px;
 }
 ```
-To make the audio player's background color `firebrick`, use:
-```css
-.audio_player {
-  background-color: #b22222;
-}
-.audio_player .play_pause_button .triangle_1,
-.audio_player .play_pause_button .triangle_2 {
-  border-right-color: #b22222;
-}
-```
-Alternatively, for styles which only affect the outer element, use [React inline styles](https://facebook.github.io/react/docs/dom-elements.html#style).
 
 # Development
 

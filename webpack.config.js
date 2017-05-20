@@ -35,11 +35,23 @@ var webpackConfig = {
     return [autoprefixer({ browsers: ['> 2%'] })];
   },
   externals: {
+    'prop-types': {
+      root: 'PropTypes',
+      commonjs: 'prop-types',
+      commonjs2: 'prop-types',
+      amd: 'prop-types'
+    },
     'react': {
       root: 'React',
       commonjs: 'react',
       commonjs2: 'react',
       amd: 'react'
+    },
+    'resize-observer-polyfill': {
+      root: 'ResizeObserver',
+      commonjs: 'resize-observer-polyfill',
+      commonjs2: 'resize-observer-polyfill',
+      amd: 'resize-observer-polyfill'
     }
   },
   plugins: [

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import PurePropTypesComponent from './PurePropTypesComponent';
 
@@ -16,7 +15,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
     return (
       <div
         ref={progressBarRef}
-        className={classNames('progress_bar', className)}
+        className={className}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
@@ -33,7 +32,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
 }
 
 ProgressBarDisplay.propTypes = {
-  className: PropTypes.string,
+  className: PropTypes.string.isRequired,
   progress: PropTypes.number.isRequired,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,

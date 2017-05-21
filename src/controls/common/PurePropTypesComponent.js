@@ -4,7 +4,7 @@ class PurePropTypesComponent extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     if (this.props) {
       // for props, only shallow compare keys found in propTypes
-      for (const propName of Object.keys(this.constructor.propTypes)) {
+      for (const propName of Object.keys(this.constructor.propTypes || {})) {
         if (this.props[propName] !== nextProps[propName]) {
           return true;
         }

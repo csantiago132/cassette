@@ -49,7 +49,7 @@ class AudioProgress extends Component {
   }
 
   handleSeekPreview (event) {
-    const { seekUnavailable, seekInProgress, onSeekPreview } = this.props;
+    const { seekUnavailable, seekInProgress, duration, onSeekPreview } = this.props;
     if (seekUnavailable) {
       return;
     }
@@ -68,8 +68,10 @@ class AudioProgress extends Component {
     const boundingRect = this.audioProgressBoundingRect;
     const position = pageX - boundingRect.left - document.body.scrollLeft;
     const containerWidth = boundingRect.width;
-    const progress = convertToNumberWithinIntervalBounds(position / containerWidth, 0, 1);
-    onSeekPreview(progress);
+    const progress = position / containerWidth;
+    const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
+    const targetTime = progressInBounds * duration;
+    onSeekPreview(targetTime);
   }
 
   handleSeekComplete (event) {

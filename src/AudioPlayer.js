@@ -413,20 +413,19 @@ class AudioPlayer extends Component {
     this.selectTrackIndex(index);
   }
 
-  seekPreview (progress) {
-    const { paused, awaitingResumeOnSeekComplete } = this.state;
+  seekPreview (targetTime) {
     if (this.isSeekUnavailable()) {
       return;
     }
+    const { paused, awaitingResumeOnSeekComplete } = this.state;
     if (!paused && this.props.pauseOnSeekPreview && !awaitingResumeOnSeekComplete) {
       this.setState({
         awaitingResumeOnSeekComplete: true
       });
       this.togglePause(true);
     }
-    const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
     this.setState({
-      seekPreviewTime: progressInBounds * this.audio.duration,
+      seekPreviewTime: targetTime,
       seekInProgress: true
     });
   }

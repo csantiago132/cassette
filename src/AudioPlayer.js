@@ -210,11 +210,11 @@ class AudioPlayer extends Component {
   }
 
   componentDidUpdate () {
-    /* if we loaded a new playlist and reset the current track marker, we
-     * should load up the first one.
+    /* if we loaded a new playlist and the currently playing track couldn't
+     * be found, pause and load the first track in the new playlist.
      */
     if (this.currentTrackIndex === -1) {
-      this.skipToNextTrack(false);
+      this.selectTrackIndex(0, false);
     }
   }
 
@@ -384,7 +384,7 @@ class AudioPlayer extends Component {
     });
   }
 
-  skipToNextTrack (shouldPlay = true) {
+  skipToNextTrack () {
     const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
@@ -393,7 +393,7 @@ class AudioPlayer extends Component {
     if (index >= playlist.length) {
       index = 0;
     }
-    this.selectTrackIndex(index, shouldPlay);
+    this.selectTrackIndex(index);
   }
 
   backSkip () {

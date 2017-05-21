@@ -481,6 +481,12 @@ class AudioPlayer extends Component {
 
   render () {
     const { playlist, controls, style } = this.props;
+    const unknownProps = Object.keys(this.props).reduce((memo, propName) => {
+      if (!(propName in AudioPlayer.propTypes)) {
+        memo[propName] = this.props[propName];
+      }
+      return memo;
+    }, {});
     return (
       <div
         className="audio_player"
@@ -494,6 +500,8 @@ class AudioPlayer extends Component {
           }
           return (
             <ControlComponent
+              {...unknownProps}
+              {...this.state}
               key={index}
               playlist={playlist}
               seekUnavailable={this.isSeekUnavailable()}
@@ -507,7 +515,6 @@ class AudioPlayer extends Component {
               onToggleMuted={this.toggleMuted}
               onToggleLoop={this.toggleLoop}
               onSetPlaybackRate={this.setPlaybackRate}
-              {...this.state}
             />
           );
         })}

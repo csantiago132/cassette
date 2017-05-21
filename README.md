@@ -116,6 +116,8 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `cycle`: a boolean value that if true continues playing from the beginning after the playlist has completed. **true** by default.
 
+* `loadFirstTrackOnPlaylistComplete`: a boolean value that if true loads up the first track when the playlist has completed. Ignored if `cycle` is true.
+
 * 'pauseOnSeekPreview' a boolean value that if true pauses audio while the user is selecting new timestamp for playback. true by default.
 
 * `disableSeek`: a boolean value that if true prevents seeking. **false** by default.

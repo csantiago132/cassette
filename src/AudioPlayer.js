@@ -143,6 +143,7 @@ class AudioPlayer extends Component {
     const audio = this.audio = createAudioElementWithLoopEvent();
 
     // initialize audio properties
+    audio.crossOrigin = this.props.crossOrigin;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.loop = this.state.loop;
@@ -182,6 +183,10 @@ class AudioPlayer extends Component {
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(this.props.onMediaEvent);
     this.addMediaEventListeners(nextProps.onMediaEvent);
+
+    if (this.props.crossOrigin !== nextProps.crossOrigin) {
+      this.audio.crossOrigin = nextProps.crossOrigin;
+    }
 
     const newPlaylist = nextProps.playlist;
     if (!isPlaylistValid(newPlaylist)) {
@@ -537,6 +542,7 @@ AudioPlayer.propTypes = {
   autoplay: PropTypes.bool,
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
+  crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   cycle: PropTypes.bool,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,

@@ -9,7 +9,7 @@ class AudioStatusBar extends PurePropTypesComponent {
     const { className, style, displayText, displayTime } = this.props;
     return (
       <div
-        className={classNames('rr_audio_player__audio_progress_overlay', className)}
+        className={classNames('rr_audio_player__audio_status_bar', className)}
         style={style}
       >
         <div className="rr_audio_player__audio_info_marquee">

@@ -93,7 +93,7 @@ $rr_audio_player_progress_bg_color: #4a4a4a !default;
       background-color: $rr_audio_player_progress_bg_color;
     }
   }
-  &__audio_progress_overlay {
+  &__audio_status_bar {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

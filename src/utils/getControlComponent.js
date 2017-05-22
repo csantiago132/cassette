@@ -2,6 +2,7 @@ import PlayPauseButton from '../controls/PlayPauseButton';
 import BackSkipButton from '../controls/BackSkipButton';
 import ForwardSkipButton from '../controls/ForwardSkipButton';
 import AudioProgress from '../controls/AudioProgress';
+import AudioProgressDisplay from '../controls/AudioProgressDisplay';
 import Spacer from '../controls/Spacer';
 
 function getControlComponent (control) {
@@ -18,6 +19,8 @@ function getControlComponent (control) {
         return ForwardSkipButton;
       case 'progress':
         return AudioProgress;
+      case 'progressdisplay':
+        return AudioProgressDisplay;
       case 'spacer':
         return Spacer;
       default:

@@ -35,7 +35,7 @@ var playlist =
    { url: 'audio/track2.mp3',
      displayText: 'Some Other Artist - Track 2' }];
 ReactDOM.render(
-  <AudioPlayer playlist={playlist} hideBackSkip={true} />,
+  <AudioPlayer playlist={playlist} />,
   document.getElementById('audio_player_container')
 );
 ```
@@ -45,8 +45,7 @@ JavaScript (without JSX):
 ...
 ReactDOM.render(
   React.createElement(AudioPlayer, {
-    playlist: playlist,
-    hideBackSkip: true
+    playlist: playlist
   }),
   document.getElementById('audio_player_container')
 );
@@ -115,13 +114,13 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `gapLengthInSeconds`: a number value that represents the number of seconds to wait at the end of a track before beginning the next one in the playlist. Not applicable for manually-initiated skip. **0** by default. *NOTE:* Like `autoplayDelayInSeconds`, this delay is inexact.
 
-* `hideBackSkip`: a boolean value that if true disables the back skip button by hiding it from view. **false** by default.
+* `cycle`: a boolean value that if true continues playing from the beginning after the playlist has completed. **true** by default.
 
-* `hideForwardSkip`: a boolean value that if true disables the forward skip button by hiding it from view. **false** by default.
+* `loadFirstTrackOnPlaylistComplete`: a boolean value that if true loads up the first track when the playlist has completed. Ignored if `cycle` is true.
+
+* 'pauseOnSeekPreview' a boolean value that if true pauses audio while the user is selecting new timestamp for playback. true by default.
 
 * `disableSeek`: a boolean value that if true prevents seeking. **false** by default.
-
-* `cycle`: a boolean value that if true continues playing from the beginning after the playlist has completed. **true** by default.
 
 * `stayOnBackSkipThreshold`: a number value that represents the number of seconds of progress after which pressing the back button will simply restart the current track. **5** by default.
 

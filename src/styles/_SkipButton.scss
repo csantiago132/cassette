@@ -1,0 +1,23 @@
+@import 'variables';
+
+.rr_audio_player {
+
+  &__skip_button {
+
+    &.back {
+      transform: rotate(180deg);
+    }
+
+    .skip_button_inner {
+      display: flex;
+      flex-direction: row;
+    }
+    .right_facing_triangle {
+      width: 0;
+      height: 0;
+      border-left: 16px solid $rr_audio_player_play_btn_border_color;
+      border-top: 16px solid transparent;
+      border-bottom: 16px solid transparent;
+    }
+  }
+}

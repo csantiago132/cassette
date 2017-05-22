@@ -1,0 +1,17 @@
+@import 'variables';
+
+.rr_audio_player {
+
+  &__audio_button {
+    padding-left: $rr_audio_player_btn_padding;
+    padding-right: $rr_audio_player_btn_padding;
+    margin-left: $rr_audio_player_btn_margin;
+    margin-right: $rr_audio_player_btn_margin;
+    cursor: pointer;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: $rr_audio_player_btn_height;
+  }
+}

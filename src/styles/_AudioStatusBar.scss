@@ -1,0 +1,96 @@
+@import 'variables';
+
+@keyframes rr_audio_player__marquee1 {
+  0% {
+    transform:translateX(100%);
+  }
+  100%{
+    transform:translateX(-100%);
+  }
+}
+@keyframes rr_audio_player__marquee2 {
+  0% {
+    transform:translateX(100%);
+  }
+  100%{
+    transform:translateX(-200%);
+  }
+}
+@keyframes rr_audio_player__marquee3 {
+  0% {
+    transform:translateX(100%);
+  }
+  100%{
+    transform:translateX(-300%);
+  }
+}
+@keyframes rr_audio_player__marquee4 {
+  0% {
+    transform:translateX(100%);
+  }
+  100%{
+    transform:translateX(-400%);
+  }
+}
+@keyframes rr_audio_player__marquee5 {
+  0% {
+    transform:translateX(100%);
+  }
+  100%{
+    transform:translateX(-500%);
+  }
+}
+
+.rr_audio_player {
+
+  &__audio_status_bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  &__audio_info_marquee {
+    overflow: hidden;
+    /* to make room for __audio_time_progress */
+    width: $rr_audio_player_marquee_width;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: $rr_audio_player_marquee_margin;
+  }
+  &__audio_info {
+    display: none;
+    width: 100%;
+    white-space: nowrap;
+    word-break: break-all;
+    margin: 0;
+    font-size: $rr_audio_player_info_font_size;
+    color: $rr_audio_player_base_text_color;
+
+    @media screen and (min-width: 370px) {
+      display: initial;
+      animation: rr_audio_player__marquee5 10s cubic-bezier(0, 0.23, 0.6, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 450px) {
+      animation: rr_audio_player__marquee4 10s cubic-bezier(0, 0.23, 0.7, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 550px) {
+      animation: rr_audio_player__marquee3 10s cubic-bezier(0, 0.23, 0.85, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 650px) {
+      animation: rr_audio_player__marquee2 10s cubic-bezier(0, 0.23, 1, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 720px) {
+      animation: initial;
+    }
+  }
+  &__audio_time_progress {
+    margin-right: $rr_audio_player_time_margin;
+    align-self: center;
+    color: $rr_audio_player_base_text_color;
+    font-size: $rr_audio_player_time_font_size;
+  }
+}

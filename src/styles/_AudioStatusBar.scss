@@ -66,24 +66,24 @@
     font-size: $rr_audio_player_info_font_size;
     color: $rr_audio_player_base_text_color;
 
-    @media screen and (min-width: 370px) {
+    &__166-245 {
       display: initial;
       animation: rr_audio_player__marquee5 10s cubic-bezier(0, 0.23, 0.6, -0.09) infinite;
     }
-
-    @media screen and (min-width: 450px) {
+    &__246-345 {
+      display: initial;
       animation: rr_audio_player__marquee4 10s cubic-bezier(0, 0.23, 0.7, -0.09) infinite;
     }
-
-    @media screen and (min-width: 550px) {
+    &__346-445 {
+      display: initial;
       animation: rr_audio_player__marquee3 10s cubic-bezier(0, 0.23, 0.85, -0.09) infinite;
     }
-
-    @media screen and (min-width: 650px) {
+    &__446-515 {
+      display: initial;
       animation: rr_audio_player__marquee2 10s cubic-bezier(0, 0.23, 1, -0.09) infinite;
     }
-
-    @media screen and (min-width: 720px) {
+    &__516 {
+      display: initial;
       animation: initial;
     }
   }

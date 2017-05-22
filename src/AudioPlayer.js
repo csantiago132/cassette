@@ -9,7 +9,7 @@ import getDisplayText from './utils/getDisplayText';
 import getControlComponent from './utils/getControlComponent';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
 
-import './index.scss';
+import './styles/index.scss';
 
 const log = console.log.bind(console);
 const logError = console.error ? console.error.bind(console) : log;

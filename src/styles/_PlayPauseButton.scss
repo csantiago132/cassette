@@ -1,0 +1,64 @@
+@import 'variables';
+
+.rr_audio_player {
+
+  /* http://codepen.io/aralon/pen/NqGWXZ */
+  &__play_pause_button {
+
+    .play_pause_inner {
+      height: $rr_audio_player_play_btn_inner_height;
+      width: $rr_audio_player_play_btn_inner_width;
+      overflow: hidden;
+      position: relative;
+    }
+    .left {
+      height: 100%;
+      float: left;
+      background-color: $rr_audio_player_btn_bg_color;
+      width: $rr_audio_player_play_btn_direction_width;
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+    .triangle_1 {
+      transform: translate(0, -100%);
+    }
+    .triangle_2 {
+      transform: translate(0, 100%);
+    }
+    .triangle_1,
+    .triangle_2 {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: transparent;
+      width: 0;
+      height: 0;
+      border-right: 30px solid $rr_audio_player_play_btn_triangle_color;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      transition: transform 0.25s ease;
+    }
+    .right {
+      height: 100%;
+      float: right;
+      width: $rr_audio_player_play_btn_direction_width;
+      background-color: $rr_audio_player_btn_bg_color;
+      transition: all 0.25s ease;
+    }
+    &.paused {
+
+      .left {
+        width: 50%;
+      }
+      .right {
+        width: 50%;
+      }
+      .triangle_1 {
+        transform: translate(0, -50%);
+      }
+      .triangle_2 {
+        transform: translate(0, 50%);
+      }
+    }
+  }
+}

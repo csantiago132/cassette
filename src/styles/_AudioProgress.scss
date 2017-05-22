@@ -1,0 +1,17 @@
+@import 'variables';
+
+.rr_audio_player {
+
+  &__audio_progress_container {
+    position: relative;
+    height: 100%;
+    flex-grow: 1;
+  }
+  &__audio_progress_bar {
+    height: 100%;
+
+    > div {
+      background-color: $rr_audio_player_progress_bg_color;
+    }
+  }
+}

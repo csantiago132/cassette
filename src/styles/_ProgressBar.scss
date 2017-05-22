@@ -1,0 +1,8 @@
+.rr_audio_player {
+
+  &__noselect {
+    cursor: default;
+    user-select: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+  }
+}

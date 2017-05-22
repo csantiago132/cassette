@@ -120,8 +120,6 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * 'pauseOnSeekPreview' a boolean value that if true pauses audio while the user is selecting new timestamp for playback. true by default.
 
-* `disableSeek`: a boolean value that if true prevents seeking. **false** by default.
-
 * `stayOnBackSkipThreshold`: a number value that represents the number of seconds of progress after which pressing the back button will simply restart the current track. **5** by default.
 
 * `style`: a React style object which is applied to the outermost div in the component. **undefined** by default.

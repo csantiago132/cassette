@@ -45,9 +45,6 @@ const logWarning = console.warn ? console.warn.bind(console) : log;
  * pauses audio while user is selecting new time
  * for playback)
  *
- * Accepts 'disableSeek' prop (default false,
- * disables seeking through the audio if true).
- *
  * Accepts 'stayOnBackSkipThreshold' prop, default 5,
  * is number of seconds to progress until pressing back skip
  * restarts the current track.
@@ -474,8 +471,7 @@ class AudioPlayer extends Component {
   }
 
   isSeekUnavailable () {
-    const { audio } = this;
-    return Boolean(!(audio && audio.src) || this.props.disableSeek);
+    return Boolean(!this.audio || !this.audio.src);
   }
 
   render () {
@@ -544,7 +540,6 @@ AudioPlayer.propTypes = {
   cycle: PropTypes.bool,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
-  disableSeek: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
@@ -566,7 +561,6 @@ AudioPlayer.defaultProps = {
   cycle: true,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
-  disableSeek: false,
   stayOnBackSkipThreshold: 5
 };
 

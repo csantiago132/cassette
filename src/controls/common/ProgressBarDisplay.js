@@ -7,6 +7,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
   render () {
     const {
       className,
+      style,
       progress,
       onMouseDown,
       onTouchStart,
@@ -16,6 +17,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
       <div
         ref={progressBarRef}
         className={className}
+        style={style}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
@@ -32,7 +34,8 @@ class ProgressBarDisplay extends PurePropTypesComponent {
 }
 
 ProgressBarDisplay.propTypes = {
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  style: PropTypes.object,
   progress: PropTypes.number.isRequired,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,

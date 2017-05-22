@@ -96,11 +96,12 @@ class ProgressBar extends PurePropTypesComponent {
   }
 
   render () {
-    const { className, progress } = this.props;
+    const { className, style, progress } = this.props;
     return (
       <ProgressBarDisplay
         progressBarRef={this.setProgressContainerRef}
         className={className}
+        style={style}
         progress={progress}
         onMouseDown={this.handleAdjustProgress}
         onTouchStart={this.handleAdjustProgress}
@@ -111,6 +112,7 @@ class ProgressBar extends PurePropTypesComponent {
 
 ProgressBar.propTypes = {
   className: PropTypes.string,
+  style: PropTypes.object,
   progress: PropTypes.number.isRequired,
   adjusting: PropTypes.bool.isRequired,
   readonly: PropTypes.bool.isRequired,

@@ -4,9 +4,19 @@ import ResizeObserver from 'resize-observer-polyfill';
 import classNames from 'classnames';
 
 import ProgressBar from './common/ProgressBar';
+import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
 import convertToNumberWithinIntervalBounds from '../utils/convertToNumberWithinIntervalBounds';
+
+const audioStatusBarStyle = {
+  pointerEvents: 'none',
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0
+};
 
 class AudioProgress extends Component {
   constructor (props) {
@@ -43,19 +53,11 @@ class AudioProgress extends Component {
           onAdjustProgress={this.handleSeekPreview}
           onAdjustComplete={onSeekComplete}
         />
-        <div
-          className="rr_audio_player__audio_progress_overlay"
-          style={{ pointerEvents: 'none' }}
-        >
-          <div className="rr_audio_player__audio_info_marquee">
-            <div className="rr_audio_player__audio_info">
-              {getDisplayText(playlist, activeTrackIndex)}
-            </div>
-          </div>
-          <div className="rr_audio_player__audio_time_progress">
-            {`${convertToTime(time)} / ${convertToTime(duration)}`}
-          </div>
-        </div>
+        <AudioStatusBar
+          style={audioStatusBarStyle}
+          displayText={getDisplayText(playlist, activeTrackIndex) || ''}
+          displayTime={`${convertToTime(time)} / ${convertToTime(duration)}`}
+        />
       </div>
     );
   }

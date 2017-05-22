@@ -94,11 +94,6 @@ $rr_audio_player_progress_bg_color: #4a4a4a !default;
     }
   }
   &__audio_progress_overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ResizeObserver from 'resize-observer-polyfill';
-import classNames from 'classnames';
 
 import ProgressBar from './common/ProgressBar';
 import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
-import convertToNumberWithinIntervalBounds from '../utils/convertToNumberWithinIntervalBounds';
 
 const audioStatusBarStyle = {
   pointerEvents: 'none',

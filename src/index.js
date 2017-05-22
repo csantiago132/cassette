@@ -4,6 +4,9 @@ import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
 import AudioProgress from './controls/AudioProgress';
 import Spacer from './controls/Spacer';
+import ProgressBar from './controls/common/ProgressBar';
+import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
+import AudioStatusBar from './controls/common/AudioStatusBar';
 import PurePropTypesComponent from './controls/common/PurePropTypesComponent';
 
 module.exports = AudioPlayer;
@@ -12,4 +15,7 @@ module.exports.BackSkipButton = BackSkipButton;
 module.exports.ForwardSkipButton = ForwardSkipButton;
 module.exports.AudioProgress = AudioProgress;
 module.exports.Spacer = Spacer;
+module.exports.ProgressBar = ProgressBar;
+module.exports.ProgressBarDisplay = ProgressBarDisplay;
+module.exports.AudioStatusBar = AudioStatusBar;
 module.exports.PurePropTypesComponent = PurePropTypesComponent;

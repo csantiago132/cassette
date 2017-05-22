@@ -1,30 +1,30 @@
-$audio_player_base_height: 50px !default;
-$audio_player_base_bg_color: #333 !default;
-$audio_player_base_text_color: #fff !default;
+$rr_audio_player_base_height: 50px !default;
+$rr_audio_player_base_bg_color: #333 !default;
+$rr_audio_player_base_text_color: #fff !default;
 
-$audio_player_btn_bg_color: #fff !default;
-$audio_player_btn_height: $audio_player_base_height !default;
-$audio_player_btn_margin: 4px !default;
-$audio_player_btn_padding: 11px !default;
+$rr_audio_player_btn_bg_color: #fff !default;
+$rr_audio_player_btn_height: $rr_audio_player_base_height !default;
+$rr_audio_player_btn_margin: 4px !default;
+$rr_audio_player_btn_padding: 11px !default;
 
-$audio_player_spacer_width: 10px !default;
+$rr_audio_player_spacer_width: 10px !default;
 
-$audio_player_info_font_size: 19.2px !default;
-$audio_player_time_font_size: 23px !default;
-$audio_player_time_margin: 20px !default;
+$rr_audio_player_info_font_size: 19.2px !default;
+$rr_audio_player_time_font_size: 23px !default;
+$rr_audio_player_time_margin: 20px !default;
 
-$audio_player_marquee_margin: $audio_player_spacer_width !default;
-$audio_player_marquee_width: calc(100% - 180px) !default;
+$rr_audio_player_marquee_margin: $rr_audio_player_spacer_width !default;
+$rr_audio_player_marquee_width: calc(100% - 180px) !default;
 
-$audio_player_play_btn_border_color: $audio_player_btn_bg_color !default;
-$audio_player_play_btn_direction_width: 36% !default;
-$audio_player_play_btn_inner_height: 30px !default;
-$audio_player_play_btn_inner_width: 30px !default;
-$audio_player_play_btn_triangle_color: $audio_player_base_bg_color !default;
+$rr_audio_player_play_btn_border_color: $rr_audio_player_btn_bg_color !default;
+$rr_audio_player_play_btn_direction_width: 36% !default;
+$rr_audio_player_play_btn_inner_height: 30px !default;
+$rr_audio_player_play_btn_inner_width: 30px !default;
+$rr_audio_player_play_btn_triangle_color: $rr_audio_player_base_bg_color !default;
 
-$audio_player_progress_bg_color: #4a4a4a !default;
+$rr_audio_player_progress_bg_color: #4a4a4a !default;
 
-@keyframes marquee1 {
+@keyframes rr_audio_player__marquee1 {
   0% {
     transform:translateX(100%);
   }
@@ -32,7 +32,7 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     transform:translateX(-100%);
   }
 }
-@keyframes marquee2 {
+@keyframes rr_audio_player__marquee2 {
   0% {
     transform:translateX(100%);
   }
@@ -40,7 +40,7 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     transform:translateX(-200%);
   }
 }
-@keyframes marquee3 {
+@keyframes rr_audio_player__marquee3 {
   0% {
     transform:translateX(100%);
   }
@@ -48,7 +48,7 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     transform:translateX(-300%);
   }
 }
-@keyframes marquee4 {
+@keyframes rr_audio_player__marquee4 {
   0% {
     transform:translateX(100%);
   }
@@ -56,7 +56,7 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     transform:translateX(-400%);
   }
 }
-@keyframes marquee5 {
+@keyframes rr_audio_player__marquee5 {
   0% {
     transform:translateX(100%);
   }
@@ -65,36 +65,35 @@ $audio_player_progress_bg_color: #4a4a4a !default;
   }
 }
 
-.noselect {
-  cursor: default;
-  user-select: none;
-  -webkit-touch-callout: none; /* iOS Safari */
-}
-
-.audio_player {
+.rr_audio_player {
   display: flex;
   flex-direction: row;
-  height: $audio_player_base_height;
-  background-color: $audio_player_base_bg_color;
-  width: 100%;
+  height: $rr_audio_player_base_height;
+  background-color: $rr_audio_player_base_bg_color;
 
-  .spacer {
-    width: $audio_player_spacer_width;
+  &__noselect {
+    cursor: default;
+    user-select: none;
+    -webkit-touch-callout: none; /* iOS Safari */
   }
 
-  .audio_progress_container {
+  &__spacer {
+    width: $rr_audio_player_spacer_width;
+  }
+
+  &__audio_progress_container {
     position: relative;
     height: 100%;
     flex-grow: 1;
   }
-  .audio_progress_bar {
+  &__audio_progress_bar {
     height: 100%;
 
     > div {
-      background-color: $audio_player_progress_bg_color;
+      background-color: $rr_audio_player_progress_bg_color;
     }
   }
-  .audio_progress_overlay {
+  &__audio_progress_overlay {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -104,58 +103,79 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     flex-direction: row;
     justify-content: space-between;
   }
-  .audio_info_marquee {
+  &__audio_info_marquee {
     overflow: hidden;
-    /* to make room for .audio_time_progress */
-    width: $audio_player_marquee_width;
+    /* to make room for __audio_time_progress */
+    width: $rr_audio_player_marquee_width;
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-left: $audio_player_marquee_margin;
+    margin-left: $rr_audio_player_marquee_margin;
   }
-  .audio_info {
+  &__audio_info {
     display: none;
     width: 100%;
     white-space: nowrap;
     word-break: break-all;
     margin: 0;
-    font-size: $audio_player_info_font_size;
-    color: $audio_player_base_text_color;
+    font-size: $rr_audio_player_info_font_size;
+    color: $rr_audio_player_base_text_color;
+
+    @media screen and (min-width: 370px) {
+      display: initial;
+      animation: rr_audio_player__marquee5 10s cubic-bezier(0, 0.23, 0.6, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 450px) {
+      animation: rr_audio_player__marquee4 10s cubic-bezier(0, 0.23, 0.7, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 550px) {
+      animation: rr_audio_player__marquee3 10s cubic-bezier(0, 0.23, 0.85, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 650px) {
+      animation: rr_audio_player__marquee2 10s cubic-bezier(0, 0.23, 1, -0.09) infinite;
+    }
+
+    @media screen and (min-width: 720px) {
+      animation: initial;
+    }
   }
-  .audio_time_progress {
-    margin-right: $audio_player_time_margin;
+  &__audio_time_progress {
+    margin-right: $rr_audio_player_time_margin;
     align-self: center;
-    color: $audio_player_base_text_color;
-    font-size: $audio_player_time_font_size;
+    color: $rr_audio_player_base_text_color;
+    font-size: $rr_audio_player_time_font_size;
   }
 
-  .audio_button {
-    padding-left: $audio_player_btn_padding;
-    padding-right: $audio_player_btn_padding;
-    margin-left: $audio_player_btn_margin;
-    margin-right: $audio_player_btn_margin;
+  &__audio_button {
+    padding-left: $rr_audio_player_btn_padding;
+    padding-right: $rr_audio_player_btn_padding;
+    margin-left: $rr_audio_player_btn_margin;
+    margin-right: $rr_audio_player_btn_margin;
     cursor: pointer;
     align-self: center;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    height: $audio_player_btn_height;
+    height: $rr_audio_player_btn_height;
   }
 
   /* http://codepen.io/aralon/pen/NqGWXZ */
-  .play_pause_button {
+  &__play_pause_button {
 
     .play_pause_inner {
-      height: $audio_player_play_btn_inner_height;
-      width: $audio_player_play_btn_inner_width;
+      height: $rr_audio_player_play_btn_inner_height;
+      width: $rr_audio_player_play_btn_inner_width;
       overflow: hidden;
       position: relative;
     }
     .left {
       height: 100%;
       float: left;
-      background-color: $audio_player_btn_bg_color;
-      width: $audio_player_play_btn_direction_width;
+      background-color: $rr_audio_player_btn_bg_color;
+      width: $rr_audio_player_play_btn_direction_width;
       transition: all 0.25s ease;
       overflow: hidden;
     }
@@ -173,7 +193,7 @@ $audio_player_progress_bg_color: #4a4a4a !default;
       background-color: transparent;
       width: 0;
       height: 0;
-      border-right: 30px solid $audio_player_play_btn_triangle_color;
+      border-right: 30px solid $rr_audio_player_play_btn_triangle_color;
       border-top: 15px solid transparent;
       border-bottom: 15px solid transparent;
       transition: transform 0.25s ease;
@@ -181,25 +201,28 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     .right {
       height: 100%;
       float: right;
-      width: $audio_player_play_btn_direction_width;
-      background-color: $audio_player_btn_bg_color;
+      width: $rr_audio_player_play_btn_direction_width;
+      background-color: $rr_audio_player_btn_bg_color;
       transition: all 0.25s ease;
     }
-    &.paused .left {
-      width: 50%;
-    }
-    &.paused .right {
-      width: 50%;
-    }
-    &.paused .triangle_1 {
-      transform: translate(0, -50%);
-    }
-    &.paused .triangle_2 {
-      transform: translate(0, 50%);
+    &.paused {
+
+      .left {
+        width: 50%;
+      }
+      .right {
+        width: 50%;
+      }
+      .triangle_1 {
+        transform: translate(0, -50%);
+      }
+      .triangle_2 {
+        transform: translate(0, 50%);
+      }
     }
   }
 
-  .skip_button {
+  &__skip_button {
 
     &.back {
       transform: rotate(180deg);
@@ -212,40 +235,9 @@ $audio_player_progress_bg_color: #4a4a4a !default;
     .right_facing_triangle {
       width: 0;
       height: 0;
-      border-left: 16px solid $audio_player_play_btn_border_color;
+      border-left: 16px solid $rr_audio_player_play_btn_border_color;
       border-top: 16px solid transparent;
       border-bottom: 16px solid transparent;
-    }
-  }
-
-  @media screen and (min-width: 370px) {
-    .audio_info {
-      display: initial;
-      animation: marquee5 10s cubic-bezier(0, 0.23, 0.6, -0.09) infinite;
-    }
-  }
-
-  @media screen and (min-width: 450px) {
-    .audio_info {
-      animation: marquee4 10s cubic-bezier(0, 0.23, 0.7, -0.09) infinite;
-    }
-  }
-
-  @media screen and (min-width: 550px) {
-    .audio_info {
-      animation: marquee3 10s cubic-bezier(0, 0.23, 0.85, -0.09) infinite;
-    }
-  }
-
-  @media screen and (min-width: 650px) {
-    .audio_info {
-      animation: marquee2 10s cubic-bezier(0, 0.23, 1, -0.09) infinite;
-    }
-  }
-
-  @media screen and (min-width: 720px) {
-    .audio_info {
-      animation: initial;
     }
   }
 }

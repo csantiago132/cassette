@@ -9,9 +9,10 @@ class PlayPauseButton extends PurePropTypesComponent {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (
       <div
-        className={classNames('play_pause_button', 'audio_button', {
-          paused: paused && !awaitingResumeOnSeekComplete
-        })}
+        className={classNames(
+          'rr_audio_player__play_pause_button rr_audio_player__audio_button',
+          { paused: paused && !awaitingResumeOnSeekComplete }
+        )}
         onClick={onTogglePause}
       >
         <div className="play_pause_inner">

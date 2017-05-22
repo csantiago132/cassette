@@ -5,7 +5,7 @@ import PurePropTypesComponent from './common/PurePropTypesComponent';
 
 class Spacer extends PurePropTypesComponent {
   render () {
-    return <div className="spacer" style={this.props.style} />;
+    return <div className="rr_audio_player__spacer" style={this.props.style} />;
   }
 }
 

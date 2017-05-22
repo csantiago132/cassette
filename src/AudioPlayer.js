@@ -488,7 +488,7 @@ class AudioPlayer extends Component {
     }, {});
     return (
       <div
-        className="audio_player"
+        className="rr_audio_player"
         title={getDisplayText(playlist, this.state.activeTrackIndex)}
         style={style}
       >

@@ -34,22 +34,25 @@ class AudioProgress extends Component {
     const time = seekInProgress ? seekPreviewTime : currentTime;
     const displayedProgress = duration ? time / duration : 0;
     return (
-      <div className="audio_progress_container">
+      <div className="rr_audio_player__audio_progress_container">
         <ProgressBar
-          className="audio_progress_bar"
+          className="rr_audio_player__audio_progress_bar"
           progress={displayedProgress}
           adjusting={seekInProgress}
           readonly={seekUnavailable}
           onAdjustProgress={this.handleSeekPreview}
           onAdjustComplete={onSeekComplete}
         />
-        <div className="audio_progress_overlay" style={{ pointerEvents: 'none' }}>
-          <div className="audio_info_marquee">
-            <div className="audio_info noselect" draggable="false">
+        <div
+          className="rr_audio_player__audio_progress_overlay"
+          style={{ pointerEvents: 'none' }}
+        >
+          <div className="rr_audio_player__audio_info_marquee">
+            <div className="rr_audio_player__audio_info">
               {getDisplayText(playlist, activeTrackIndex)}
             </div>
           </div>
-          <div className="audio_time_progress noselect" draggable="false">
+          <div className="rr_audio_player__audio_time_progress">
             {`${convertToTime(time)} / ${convertToTime(duration)}`}
           </div>
         </div>

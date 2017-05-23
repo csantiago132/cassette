@@ -345,7 +345,10 @@ class AudioPlayer extends Component {
       this.audio.src = '';
       return;
     }
+    const previousPlaybackRate = this.audio.playbackRate;
     this.audio.src = playlist[this.currentTrackIndex].url;
+    // We want to keep the playbackRate where it is when we switch tracks
+    this.audio.playbackRate = previousPlaybackRate;
   }
 
   togglePause (value) {
@@ -574,7 +577,7 @@ AudioPlayer.defaultProps = {
   defaultVolume: 1.0,
   defaultMuted: false,
   defaultLoop: false,
-  defaultPlaybackRate: 2.0,
+  defaultPlaybackRate: 1.0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   stayOnBackSkipThreshold: 5

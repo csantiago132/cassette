@@ -111,7 +111,7 @@ class AudioPlayer extends Component {
     };
 
     // index matching requested track (whether track has loaded or not)
-    this.currentTrackIndex = 0;
+    this.currentTrackIndex = props.startingTrackIndex;
 
     // html audio element used for playback
     this.audio = null;
@@ -556,6 +556,7 @@ AudioPlayer.propTypes = {
   defaultLoop: PropTypes.bool,
   defaultPlaybackRate: PropTypes.number,
   startingTime: PropTypes.number,
+  startingTrackIndex: PropTypes.number,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
@@ -582,6 +583,7 @@ AudioPlayer.defaultProps = {
   defaultLoop: false,
   defaultPlaybackRate: 1,
   startingTime: 0,
+  startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   stayOnBackSkipThreshold: 5

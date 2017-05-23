@@ -15,6 +15,11 @@ const log = console.log.bind(console);
 const logError = console.error ? console.error.bind(console) : log;
 const logWarning = console.warn ? console.warn.bind(console) : log;
 
+let nextControlKey = 0;
+function getNextControlKey () {
+  return (nextControlKey++).toString();
+}
+
 /*
  * AudioPlayer
  *
@@ -113,6 +118,9 @@ class AudioPlayer extends Component {
     // index matching requested track (whether track has loaded or not)
     this.currentTrackIndex = props.startingTrackIndex;
 
+    // set of keys to use in controls render
+    this.controlKeys = props.controls.map(getNextControlKey);
+
     // html audio element used for playback
     this.audio = null;
 
@@ -191,6 +199,16 @@ class AudioPlayer extends Component {
     if (this.props.crossOrigin !== nextProps.crossOrigin) {
       this.audio.crossOrigin = nextProps.crossOrigin;
     }
+
+    const oldControls = [...this.props.controls];
+    this.controlKeys = nextProps.controls.map(control => {
+      const matchingIndex = oldControls.indexOf(control);
+      if (matchingIndex !== -1 && oldControls[matchingIndex]) {
+        oldControls[matchingIndex] = null;
+        return this.controlKeys[matchingIndex];
+      }
+      return getNextControlKey();
+    });
 
     const newPlaylist = nextProps.playlist;
     if (!isPlaylistValid(newPlaylist)) {
@@ -509,7 +527,7 @@ class AudioPlayer extends Component {
             <ControlComponent
               {...unknownProps}
               {...this.state}
-              key={index}
+              key={this.controlKeys[index]}
               playlist={playlist}
               seekUnavailable={this.isSeekUnavailable()}
               onTogglePause={this.togglePause}

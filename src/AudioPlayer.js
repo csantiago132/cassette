@@ -85,10 +85,6 @@ class AudioPlayer extends Component {
        * complete
        */
       awaitingResumeOnSeekComplete: false,
-      // the latest volume of the audio, between 0 and 1.
-      volume: 1.0,
-      // true if the audio has been muted
-      muted: false,
       // the duration in seconds of the loaded track
       duration: 0,
       /* the TimeRanges object representing the buffered sections of the
@@ -98,17 +94,24 @@ class AudioPlayer extends Component {
       /* the TimeRanges object representing the played sections of the
        * loaded track
        */
-      played: null,
-      // whether to loop the current track
-      loop: false,
-      // Rate at which audio should be played. 1.0 is normal speed.
-      playbackRate: 1.0
+      played: null
     };
 
-    this.state = this.defaultState;
+    this.state = {
+      ...this.defaultState,
+      currentTime: convertToNumberWithinIntervalBounds(props.startingTime, 0),
+      // the latest volume of the audio, between 0 and 1.
+      volume: convertToNumberWithinIntervalBounds(props.defaultVolume, 0, 1),
+      // true if the audio has been muted
+      muted: props.defaultMuted,
+      // whether to loop the current track
+      loop: props.defaultLoop,
+      // Rate at which audio should be played. 1.0 is normal speed.
+      playbackRate: props.defaultPlaybackRate
+    };
 
     // index matching requested track (whether track has loaded or not)
-    this.currentTrackIndex = 0;
+    this.currentTrackIndex = props.startingTrackIndex;
 
     // html audio element used for playback
     this.audio = null;
@@ -143,6 +146,8 @@ class AudioPlayer extends Component {
     const audio = this.audio = createAudioElementWithLoopEvent();
 
     // initialize audio properties
+    audio.crossOrigin = this.props.crossOrigin;
+    audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.loop = this.state.loop;
@@ -182,6 +187,10 @@ class AudioPlayer extends Component {
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(this.props.onMediaEvent);
     this.addMediaEventListeners(nextProps.onMediaEvent);
+
+    if (this.props.crossOrigin !== nextProps.crossOrigin) {
+      this.audio.crossOrigin = nextProps.crossOrigin;
+    }
 
     const newPlaylist = nextProps.playlist;
     if (!isPlaylistValid(newPlaylist)) {
@@ -338,7 +347,10 @@ class AudioPlayer extends Component {
       this.audio.src = '';
       return;
     }
+    const previousPlaybackRate = this.audio.playbackRate;
     this.audio.src = playlist[this.currentTrackIndex].url;
+    // We want to keep the playbackRate where it is when we switch tracks
+    this.audio.playbackRate = previousPlaybackRate;
   }
 
   togglePause (value) {
@@ -537,7 +549,14 @@ AudioPlayer.propTypes = {
   autoplay: PropTypes.bool,
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
+  crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   cycle: PropTypes.bool,
+  defaultVolume: PropTypes.number,
+  defaultMuted: PropTypes.bool,
+  defaultLoop: PropTypes.bool,
+  defaultPlaybackRate: PropTypes.number,
+  startingTime: PropTypes.number,
+  startingTrackIndex: PropTypes.number,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
@@ -559,6 +578,12 @@ AudioPlayer.defaultProps = {
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
   cycle: true,
+  defaultVolume: 1,
+  defaultMuted: false,
+  defaultLoop: false,
+  defaultPlaybackRate: 1,
+  startingTime: 0,
+  startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   stayOnBackSkipThreshold: 5

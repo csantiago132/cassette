@@ -85,10 +85,6 @@ class AudioPlayer extends Component {
        * complete
        */
       awaitingResumeOnSeekComplete: false,
-      // the latest volume of the audio, between 0 and 1.
-      volume: 1.0,
-      // true if the audio has been muted
-      muted: false,
       // the duration in seconds of the loaded track
       duration: 0,
       /* the TimeRanges object representing the buffered sections of the
@@ -98,14 +94,20 @@ class AudioPlayer extends Component {
       /* the TimeRanges object representing the played sections of the
        * loaded track
        */
-      played: null,
-      // whether to loop the current track
-      loop: false,
-      // Rate at which audio should be played. 1.0 is normal speed.
-      playbackRate: 1.0
+      played: null
     };
 
-    this.state = this.defaultState;
+    this.state = {
+      ...this.defaultState,
+      // the latest volume of the audio, between 0 and 1.
+      volume: convertToNumberWithinIntervalBounds(props.defaultVolume, 0, 1),
+      // true if the audio has been muted
+      muted: Boolean(props.defaultMuted),
+      // whether to loop the current track
+      loop: Boolean(props.defaultLoop),
+      // Rate at which audio should be played. 1.0 is normal speed.
+      playbackRate: Number(props.defaultPlaybackRate)
+    };
 
     // index matching requested track (whether track has loaded or not)
     this.currentTrackIndex = 0;
@@ -544,6 +546,10 @@ AudioPlayer.propTypes = {
   gapLengthInSeconds: PropTypes.number,
   crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   cycle: PropTypes.bool,
+  defaultVolume: PropTypes.number,
+  defaultMuted: PropTypes.bool,
+  defaultLoop: PropTypes.bool,
+  defaultPlaybackRate: PropTypes.number,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
@@ -565,6 +571,10 @@ AudioPlayer.defaultProps = {
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
   cycle: true,
+  defaultVolume: 1.0,
+  defaultMuted: false,
+  defaultLoop: false,
+  defaultPlaybackRate: 2.0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   stayOnBackSkipThreshold: 5

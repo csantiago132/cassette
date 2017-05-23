@@ -99,14 +99,15 @@ class AudioPlayer extends Component {
 
     this.state = {
       ...this.defaultState,
+      currentTime: convertToNumberWithinIntervalBounds(props.startingTime, 0),
       // the latest volume of the audio, between 0 and 1.
       volume: convertToNumberWithinIntervalBounds(props.defaultVolume, 0, 1),
       // true if the audio has been muted
-      muted: Boolean(props.defaultMuted),
+      muted: props.defaultMuted,
       // whether to loop the current track
-      loop: Boolean(props.defaultLoop),
+      loop: props.defaultLoop,
       // Rate at which audio should be played. 1.0 is normal speed.
-      playbackRate: Number(props.defaultPlaybackRate)
+      playbackRate: props.defaultPlaybackRate
     };
 
     // index matching requested track (whether track has loaded or not)
@@ -146,6 +147,7 @@ class AudioPlayer extends Component {
 
     // initialize audio properties
     audio.crossOrigin = this.props.crossOrigin;
+    audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.loop = this.state.loop;
@@ -553,6 +555,7 @@ AudioPlayer.propTypes = {
   defaultMuted: PropTypes.bool,
   defaultLoop: PropTypes.bool,
   defaultPlaybackRate: PropTypes.number,
+  startingTime: PropTypes.number,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
@@ -574,10 +577,11 @@ AudioPlayer.defaultProps = {
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
   cycle: true,
-  defaultVolume: 1.0,
+  defaultVolume: 1,
   defaultMuted: false,
   defaultLoop: false,
-  defaultPlaybackRate: 1.0,
+  defaultPlaybackRate: 1,
+  startingTime: 0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
   stayOnBackSkipThreshold: 5

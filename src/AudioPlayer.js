@@ -555,7 +555,7 @@ AudioPlayer.propTypes = {
     displayText: PropTypes.string.isRequired
   }).isRequired),
   controls: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.element,
+    PropTypes.func,
     PropTypes.oneOf([
       'playpause',
       'backskip',

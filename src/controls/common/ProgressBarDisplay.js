@@ -7,8 +7,10 @@ class ProgressBarDisplay extends PurePropTypesComponent {
   render () {
     const {
       className,
+      progressClassName,
       style,
       progress,
+      handle,
       onMouseDown,
       onTouchStart,
       progressBarRef
@@ -21,13 +23,29 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
-        <div
-          style={{
-            height: '100%',
-            willChange: 'width',
-            width: `${(progress || 0) * 100}%`
-          }}
-        />
+        <div style={{ position: 'relative', height: '100%' }}>
+          <div
+            className={progressClassName}
+            style={{
+              height: '100%',
+              willChange: 'width',
+              width: `${(progress || 0) * 100}%`
+            }}
+          />
+          {handle && (
+            <div
+              style={{
+                position: 'absolute',
+                willChange: 'left',
+                left: `${(progress || 0) * 100}%`,
+                top: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              {handle}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -35,8 +53,10 @@ class ProgressBarDisplay extends PurePropTypesComponent {
 
 ProgressBarDisplay.propTypes = {
   className: PropTypes.string,
+  progressClassName: PropTypes.string,
   style: PropTypes.object,
   progress: PropTypes.number.isRequired,
+  handle: PropTypes.element,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,
   progressBarRef: PropTypes.func

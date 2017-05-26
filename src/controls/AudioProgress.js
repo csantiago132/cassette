@@ -44,6 +44,7 @@ class AudioProgress extends Component {
       <div className="rr_audio_player__audio_progress_container">
         <ProgressBar
           className="rr_audio_player__audio_progress_bar"
+          progressClassName="progress"
           progress={displayedProgress}
           adjusting={seekInProgress}
           readonly={seekUnavailable}

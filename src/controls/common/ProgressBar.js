@@ -11,8 +11,6 @@ class ProgressBar extends PurePropTypesComponent {
     super(props);
 
     this.progressContainer = null;
-    this.progressBoundingRect = null;
-    this.progressContainerResizeObserver = null;
 
     // bind methods fired on React events
     this.setProgressContainerRef = this.setProgressContainerRef.bind(this);
@@ -20,7 +18,6 @@ class ProgressBar extends PurePropTypesComponent {
 
     // bind listeners to add on mount and remove on unmount
     this.handleAdjustComplete = this.handleAdjustComplete.bind(this);
-    this.fetchProgressBoundingRect = this.fetchProgressBoundingRect.bind(this);
   }
 
   componentDidMount () {
@@ -29,10 +26,6 @@ class ProgressBar extends PurePropTypesComponent {
     document.addEventListener('touchmove', this.handleAdjustProgress);
     window.addEventListener('mouseup', this.handleAdjustComplete);
     document.addEventListener('touchend', this.handleAdjustComplete);
-    this.progressContainerResizeObserver = new ResizeObserver(
-      this.fetchProgressBoundingRect
-    );
-    this.progressContainerResizeObserver.observe(this.progressContainer);
   }
 
   componentWillUnmount () {
@@ -41,7 +34,6 @@ class ProgressBar extends PurePropTypesComponent {
     document.removeEventListener('touchmove', this.handleAdjustProgress);
     window.removeEventListener('mouseup', this.handleAdjustComplete);
     document.removeEventListener('touchend', this.handleAdjustComplete);
-    this.progressContainerResizeObserver.disconnect();
   }
 
   setProgressContainerRef (ref) {
@@ -65,7 +57,7 @@ class ProgressBar extends PurePropTypesComponent {
     event.preventDefault();
     const isTouch = event.type.slice(0, 5) === 'touch';
     const pageX = isTouch ? event.targetTouches.item(0).pageX : event.pageX;
-    const boundingRect = this.progressBoundingRect;
+    const boundingRect = this.progressContainer.getBoundingClientRect();
     const position = pageX - boundingRect.left - document.body.scrollLeft;
     const progress = position / boundingRect.width;
     const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
@@ -89,10 +81,6 @@ class ProgressBar extends PurePropTypesComponent {
     if (typeof onAdjustComplete === 'function') {
       onAdjustComplete();
     }
-  }
-
-  fetchProgressBoundingRect () {
-    this.progressBoundingRect = this.progressContainer.getBoundingClientRect();
   }
 
   render () {

@@ -11,13 +11,6 @@
       overflow: hidden;
       position: relative;
     }
-    .left {
-      height: 100%;
-      float: left;
-      background-color: $rr_audio_player_btn_bg_color;
-      width: $rr_audio_player_play_btn_direction_width;
-      transition: all 0.25s ease;
-    }
     .triangle_1 {
       transform: translate(0, -100%);
     }
@@ -37,18 +30,22 @@
       border-bottom: 15px solid transparent;
       transition: transform 0.25s ease;
     }
+    .left,
     .right {
       height: 100%;
-      float: right;
-      width: $rr_audio_player_play_btn_direction_width;
       background-color: $rr_audio_player_btn_bg_color;
+      width: $rr_audio_player_play_btn_direction_width;
       transition: all 0.25s ease;
+    }
+    .left {
+      float: left;
+    }
+    .right {
+      float: right;
     }
     &.paused {
 
-      .left {
-        width: 50%;
-      }
+      .left,
       .right {
         width: 50%;
       }

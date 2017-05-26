@@ -127,7 +127,7 @@ class AudioPlayer extends Component {
     // bind methods fired on React events
     this.togglePause = this.togglePause.bind(this);
     this.selectTrackIndex = this.selectTrackIndex.bind(this);
-    this.skipToNextTrack = this.skipToNextTrack.bind(this);
+    this.forwardSkip = this.forwardSkip.bind(this);
     this.backSkip = this.backSkip.bind(this);
     this.seekPreview = this.seekPreview.bind(this);
     this.seekComplete = this.seekComplete.bind(this);
@@ -314,7 +314,7 @@ class AudioPlayer extends Component {
       return;
     }
     this.gapLengthTimeout = setTimeout(
-      this.skipToNextTrack,
+      this.forwardSkip,
       this.props.gapLengthInSeconds * 1000
     );
   }
@@ -411,24 +411,6 @@ class AudioPlayer extends Component {
     });
   }
 
-  skipToNextTrack () {
-    const { playlist, cycle } = this.props;
-    if (
-      !isPlaylistValid(playlist) ||
-      (!cycle && (
-        this.currentTrackIndex < 0 ||
-        this.currentTrackIndex > playlist.length - 2
-      ))
-    ) {
-      return;
-    }
-    let index = this.currentTrackIndex + 1;
-    if (index >= playlist.length) {
-      index = 0;
-    }
-    this.selectTrackIndex(index);
-  }
-
   backSkip () {
     const { playlist, stayOnBackSkipThreshold, cycle } = this.props;
     const { audio } = this;
@@ -445,6 +427,24 @@ class AudioPlayer extends Component {
     let index = this.currentTrackIndex - 1;
     if (index < 0) {
       index = playlist.length - 1;
+    }
+    this.selectTrackIndex(index);
+  }
+
+  forwardSkip () {
+    const { playlist, cycle } = this.props;
+    if (
+      !isPlaylistValid(playlist) ||
+      (!cycle && (
+        this.currentTrackIndex < 0 ||
+        this.currentTrackIndex > playlist.length - 2
+      ))
+    ) {
+      return;
+    }
+    let index = this.currentTrackIndex + 1;
+    if (index >= playlist.length) {
+      index = 0;
     }
     this.selectTrackIndex(index);
   }
@@ -542,7 +542,7 @@ class AudioPlayer extends Component {
               onTogglePause={this.togglePause}
               onSelectTrackIndex={this.selectTrackIndex}
               onBackSkip={this.backSkip}
-              onForwardSkip={this.skipToNextTrack}
+              onForwardSkip={this.forwardSkip}
               onSeekPreview={this.seekPreview}
               onSeekComplete={this.seekComplete}
               onSetVolume={this.setVolume}

@@ -561,6 +561,7 @@ AudioPlayer.propTypes = {
       'backskip',
       'forwardskip',
       'progress',
+      'progressdisplay',
       'spacer'
     ])
   ]).isRequired),

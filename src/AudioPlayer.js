@@ -412,8 +412,14 @@ class AudioPlayer extends Component {
   }
 
   skipToNextTrack () {
-    const { playlist } = this.props;
-    if (!isPlaylistValid(playlist)) {
+    const { playlist, cycle } = this.props;
+    if (
+      !isPlaylistValid(playlist) ||
+      (!cycle && (
+        this.currentTrackIndex < 0 ||
+        this.currentTrackIndex > playlist.length - 2
+      ))
+    ) {
       return;
     }
     let index = this.currentTrackIndex + 1;
@@ -424,12 +430,15 @@ class AudioPlayer extends Component {
   }
 
   backSkip () {
-    const { playlist, stayOnBackSkipThreshold } = this.props;
+    const { playlist, stayOnBackSkipThreshold, cycle } = this.props;
     const { audio } = this;
     if (!isPlaylistValid(playlist)) {
       return;
     }
-    if (audio.currentTime >= stayOnBackSkipThreshold) {
+    if (
+      audio.currentTime >= stayOnBackSkipThreshold ||
+      (!cycle && this.currentTrackIndex < 1)
+    ) {
       audio.currentTime = 0;
       return;
     }

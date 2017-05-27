@@ -1,0 +1,39 @@
+@import 'variables';
+
+$size: 40px;
+$maincolor: $rr_audio_player_btn_bg_color;
+
+@import "~icono/sass/variables";
+@import "~icono/sass/mixins";
+@import "~icono/sass/functions";
+@import "~icono/sass/generals";
+@import "~icono/sass/icons/volume";
+
+[class*="icono-"] {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  font-style: normal;
+  color: $maincolor;
+  text-align: left;
+  text-indent: -9999px;
+  direction: ltr;
+  &:before, &:after{
+    content:'';
+    pointer-events: none;
+  }
+  &, & *{
+    box-sizing: border-box;
+  }
+}
+
+[class*="icono-volume"] {
+  margin-left: 0;
+}
+
+.rr_audio_player {
+
+  &__volume_control {
+    width: 40px;
+  }
+}

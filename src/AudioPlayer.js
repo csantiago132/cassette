@@ -569,6 +569,7 @@ AudioPlayer.propTypes = {
       'playpause',
       'backskip',
       'forwardskip',
+      'volume',
       'progress',
       'progressdisplay',
       'spacer'

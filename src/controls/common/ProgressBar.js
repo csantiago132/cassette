@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ResizeObserver from 'resize-observer-polyfill';
 
 import ProgressBarDisplay from './ProgressBarDisplay';
 import PurePropTypesComponent from './PurePropTypesComponent';

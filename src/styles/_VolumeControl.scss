@@ -35,5 +35,19 @@ $maincolor: $rr_audio_player_btn_bg_color;
 
   &__volume_control {
     width: 40px;
+    position: relative;
+
+    &__volume_bar {
+      position: absolute;
+      height: 20px;
+      width: 100px;
+      bottom: 50px;
+      background-color: red;
+      z-index: 1;
+
+      .volume {
+        background-color: blue;
+      }
+    }
   }
 }

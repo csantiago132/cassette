@@ -109,7 +109,7 @@ ProgressBar.propTypes = {
   adjusting: PropTypes.bool.isRequired,
   readonly: PropTypes.bool.isRequired,
   onAdjustProgress: PropTypes.func.isRequired,
-  onAdjustComplete: PropTypes.func
+  onAdjustComplete: PropTypes.func.isRequired
 };
 
 ProgressBar.defaultProps = {

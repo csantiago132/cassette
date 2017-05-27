@@ -22,6 +22,10 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         style={style}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
+        onClick={e => {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }}
       >
         <div style={{ position: 'relative', height: '100%' }}>
           <div

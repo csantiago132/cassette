@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import PurePropTypesComponent from './PurePropTypesComponent';
-import stopPropagation from '../../utils/reactStopPropagation';
 
 class ProgressBarDisplay extends PurePropTypesComponent {
   render () {
@@ -14,6 +13,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
       handle,
       onMouseDown,
       onTouchStart,
+      onClick,
       progressBarRef
     } = this.props;
     return (
@@ -23,7 +23,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         style={style}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
-        onClick={stopPropagation}
+        onClick={onClick}
       >
         <div style={{ position: 'relative', height: '100%' }}>
           <div
@@ -61,6 +61,7 @@ ProgressBarDisplay.propTypes = {
   handle: PropTypes.element,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,
+  onClick: PropTypes.func,
   progressBarRef: PropTypes.func
 };
 

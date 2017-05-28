@@ -22,14 +22,22 @@
       bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
-      width: 10px;
+      width: 16px;
       height: 85px;
-      border-radius: 5px;
+      border-radius: 8px;
       background-color: red;
 
       .volume {
-        border-radius: 5px;
+        border-radius: 8px;
         background-color: blue;
+      }
+
+      .handle {
+        cursor: pointer;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: green;
       }
     }
   }

@@ -52,16 +52,18 @@ class VolumeControl extends PurePropTypesComponent {
           getVolumeIconClassName(volume, muted)
         )} />
         {(this.state.hover || setVolumeInProgress) && (
-          <ProgressBar
-            className="rr_audio_player__volume_control__volume_bar"
-            progressClassName="volume"
-            progress={muted ? 0 : volume}
-            progressDirection="up"
-            handle={<div style={{ width: 20, height: 20, background: 'green', borderRadius: '50%' }} />}
-            adjusting={setVolumeInProgress}
-            onAdjustProgress={onSetVolume}
-            onAdjustComplete={onSetVolumeComplete}
-          />
+          <div className="rr_audio_player__volume_control__volume_bar_container">
+            <ProgressBar
+              className="rr_audio_player__volume_control__volume_bar"
+              progressClassName="volume"
+              progress={muted ? 0 : volume}
+              progressDirection="up"
+              handle={<div style={{ width: 20, height: 20, background: 'green', borderRadius: '50%' }} />}
+              adjusting={setVolumeInProgress}
+              onAdjustProgress={onSetVolume}
+              onAdjustComplete={onSetVolumeComplete}
+            />
+          </div>
         )}
       </div>
     );

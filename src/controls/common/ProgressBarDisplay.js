@@ -28,7 +28,12 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         onTouchStart={onTouchStart}
         onClick={onClick}
       >
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          touchAction: 'none'
+        }}>
           <div
             className={progressClassName}
             style={getProgressStyle(progress, progressDirection)}

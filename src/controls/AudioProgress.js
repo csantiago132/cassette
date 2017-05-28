@@ -46,6 +46,7 @@ class AudioProgress extends Component {
           className="rr_audio_player__audio_progress_bar"
           progressClassName="progress"
           progress={displayedProgress}
+          progressDirection="right"
           adjusting={seekInProgress}
           readonly={seekUnavailable}
           onAdjustProgress={this.handleSeekPreview}

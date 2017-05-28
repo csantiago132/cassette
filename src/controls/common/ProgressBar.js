@@ -41,6 +41,27 @@ class ProgressBar extends PurePropTypesComponent {
     this.progressContainer = ref;
   };
 
+  getProgressFromPageCoordinates (pageX, pageY) {
+    const {
+      left,
+      top,
+      width,
+      height
+    } = this.progressContainer.getBoundingClientRect();
+    const { scrollLeft, scrollTop } = document.body;
+    switch (this.props.progressDirection) {
+      case 'down':
+        return (pageY - top - scrollTop) / height;
+      case 'left':
+        return 1 - ((pageX - left - scrollLeft) / width);
+      case 'up':
+        return 1 - ((pageY - top - scrollTop) / height);
+      case 'right':
+      default:
+        return (pageX - left - scrollLeft) / width;
+    }
+  }
+
   handleAdjustProgress (event) {
     const { readonly, adjusting, onAdjustProgress } = this.props;
     if (readonly) {
@@ -58,9 +79,8 @@ class ProgressBar extends PurePropTypesComponent {
     event.preventDefault();
     const isTouch = event.type.slice(0, 5) === 'touch';
     const pageX = isTouch ? event.targetTouches.item(0).pageX : event.pageX;
-    const boundingRect = this.progressContainer.getBoundingClientRect();
-    const position = pageX - boundingRect.left - document.body.scrollLeft;
-    const progress = position / boundingRect.width;
+    const pageY = isTouch ? event.targetTouches.item(0).pageY : event.pageY;
+    const progress = this.getProgressFromPageCoordinates(pageX, pageY);
     const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
     onAdjustProgress(progressInBounds);
   }
@@ -85,7 +105,14 @@ class ProgressBar extends PurePropTypesComponent {
   }
 
   render () {
-    const { className, progressClassName, style, progress, handle } = this.props;
+    const {
+      className,
+      progressClassName,
+      style,
+      progress,
+      progressDirection,
+      handle
+    } = this.props;
     return (
       <ProgressBarDisplay
         progressBarRef={this.setProgressContainerRef}
@@ -93,6 +120,7 @@ class ProgressBar extends PurePropTypesComponent {
         progressClassName={progressClassName}
         style={style}
         progress={progress}
+        progressDirection={progressDirection}
         handle={handle}
         onMouseDown={this.handleAdjustProgress}
         onTouchStart={this.handleAdjustProgress}
@@ -107,6 +135,7 @@ ProgressBar.propTypes = {
   progressClassName: PropTypes.string,
   style: PropTypes.object,
   progress: PropTypes.number.isRequired,
+  progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
   handle: PropTypes.element,
   adjusting: PropTypes.bool.isRequired,
   readonly: PropTypes.bool.isRequired,

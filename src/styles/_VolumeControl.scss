@@ -39,8 +39,8 @@ $maincolor: $rr_audio_player_btn_bg_color;
 
     &__volume_bar {
       position: absolute;
-      height: 20px;
-      width: 100px;
+      height: 100px;
+      width: 10px;
       bottom: 50px;
       background-color: red;
       z-index: 1;

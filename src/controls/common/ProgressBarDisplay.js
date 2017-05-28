@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import PurePropTypesComponent from './PurePropTypesComponent';
+import getProgressStyle from '../../utils/getProgressStyle';
+import getHandleStyle from '../../utils/getHandleStyle';
 
 class ProgressBarDisplay extends PurePropTypesComponent {
   render () {
@@ -10,6 +12,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
       progressClassName,
       style,
       progress,
+      progressDirection,
       handle,
       onMouseDown,
       onTouchStart,
@@ -25,25 +28,13 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         onTouchStart={onTouchStart}
         onClick={onClick}
       >
-        <div style={{ position: 'relative', height: '100%' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <div
             className={progressClassName}
-            style={{
-              height: '100%',
-              willChange: 'width',
-              width: `${(progress || 0) * 100}%`
-            }}
+            style={getProgressStyle(progress, progressDirection)}
           />
           {handle && (
-            <div
-              style={{
-                position: 'absolute',
-                willChange: 'left',
-                left: `${(progress || 0) * 100}%`,
-                top: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}
-            >
+            <div style={getHandleStyle(progress, progressDirection)}>
               {handle}
             </div>
           )}
@@ -58,6 +49,7 @@ ProgressBarDisplay.propTypes = {
   progressClassName: PropTypes.string,
   style: PropTypes.object,
   progress: PropTypes.number.isRequired,
+  progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
   handle: PropTypes.element,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,

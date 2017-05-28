@@ -56,6 +56,8 @@ class VolumeControl extends PurePropTypesComponent {
             className="rr_audio_player__volume_control__volume_bar"
             progressClassName="volume"
             progress={muted ? 0 : volume}
+            progressDirection="up"
+            handle={<div style={{ width: 20, height: 20, background: 'green', borderRadius: '50%' }} />}
             adjusting={setVolumeInProgress}
             onAdjustProgress={onSetVolume}
             onAdjustComplete={onSetVolumeComplete}

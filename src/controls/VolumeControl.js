@@ -62,7 +62,7 @@ class VolumeControl extends PurePropTypesComponent {
               progressClassName="volume"
               progress={muted ? 0 : volume}
               progressDirection="up"
-              handle={<div style={{ width: 20, height: 20, background: 'green', borderRadius: '50%' }} />}
+              handle={<div style={{ cursor: 'pointer', width: 20, height: 20, background: 'green', borderRadius: '50%' }} />}
               adjusting={setVolumeInProgress}
               onAdjustProgress={onSetVolume}
               onAdjustComplete={onSetVolumeComplete}

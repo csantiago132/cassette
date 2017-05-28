@@ -6,6 +6,8 @@ import PurePropTypesComponent from './common/PurePropTypesComponent';
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 
+const handle = <div className="handle"><div /></div>;
+
 class VolumeControl extends PurePropTypesComponent {
   constructor (props) {
     super(props);
@@ -62,7 +64,7 @@ class VolumeControl extends PurePropTypesComponent {
               progressClassName="volume"
               progress={muted ? 0 : volume}
               progressDirection="up"
-              handle={<div className="handle" />}
+              handle={handle}
               adjusting={setVolumeInProgress}
               onAdjustProgress={onSetVolume}
               onAdjustComplete={onSetVolumeComplete}

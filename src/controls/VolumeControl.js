@@ -42,15 +42,19 @@ class VolumeControl extends PurePropTypesComponent {
     } = this.props;
     return (
       <div
-        className="rr_audio_player__audio_button rr_audio_player__volume_control"
+        className="rr_audio_player__volume_control"
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
-        onClick={onToggleMuted}
       >
-        <div className={classNames(
-          'foreground',
-          getVolumeIconClassName(volume, muted)
-        )} />
+        <div
+          className="button rr_audio_player__audio_button"
+          onClick={onToggleMuted}
+        >
+          <div className={classNames(
+            'foreground',
+            getVolumeIconClassName(volume, muted)
+          )} />
+        </div>
         {(this.state.hover || setVolumeInProgress) && (
           <div className="rr_audio_player__volume_control__volume_bar_container">
             <ProgressBar

@@ -5,7 +5,6 @@ import ResizeObserver from 'resize-observer-polyfill';
 import ProgressBarDisplay from './ProgressBarDisplay';
 import PurePropTypesComponent from './PurePropTypesComponent';
 import convertToNumberWithinIntervalBounds from '../../utils/convertToNumberWithinIntervalBounds';
-import stopPropagation from '../../utils/reactStopPropagation';
 
 class ProgressBar extends PurePropTypesComponent {
   constructor (props) {
@@ -124,7 +123,6 @@ class ProgressBar extends PurePropTypesComponent {
         handle={handle}
         onMouseDown={this.handleAdjustProgress}
         onTouchStart={this.handleAdjustProgress}
-        onClick={stopPropagation}
       />
     );
   }

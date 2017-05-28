@@ -1,8 +1,11 @@
 .rr_audio_player {
 
   &__volume_control {
-    width: 40px;
     position: relative;
+
+    .button {
+      width: 40px;
+    }
 
     &__volume_bar_container {
       position: absolute;
@@ -10,20 +13,22 @@
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
-      height: 100px;
-      padding-top: 40px;
+      height: 140px;
       z-index: 1;
     }
 
     &__volume_bar {
       position: absolute;
+      bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
       width: 10px;
-      height: 100px;
+      height: 85px;
+      border-radius: 5px;
       background-color: red;
 
       .volume {
+        border-radius: 5px;
         background-color: blue;
       }
     }

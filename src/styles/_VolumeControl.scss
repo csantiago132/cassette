@@ -15,22 +15,56 @@
     }
     &__volume_bar_container {
       position: absolute;
-      bottom: $rr_audio_player_volume_control_height;
       left: 50%;
       transform: translateX(-50%);
-      width: 100%;
-      height: $rr_audio_player_volume_bar_height + $rr_audio_player_volume_bar_gutter_close + $rr_audio_player_volume_bar_gutter_far;
       z-index: 1;
+
+      &.hiddenup,
+      &.hiddenright {
+        visibility: hidden;
+      }
+      &.hiddenup,
+      &.upabove {
+        width: 100%;
+        height: $rr_audio_player_volume_bar_height + $rr_audio_player_volume_bar_gutter_close + $rr_audio_player_volume_bar_gutter_far;
+      }
+      &.hiddenright,
+      &.rightabove,
+      &.rightbelow {
+        width: $rr_audio_player_volume_bar_height + $rr_audio_player_volume_bar_gutter_far * 2;
+        height: $rr_audio_player_volume_bar_width + $rr_audio_player_volume_bar_gutter_close * 2;
+      }
+      &.hiddenup,
+      &.hiddenright,
+      &.upabove,
+      &.rightabove {
+        bottom: $rr_audio_player_volume_control_height;
+      }
+      &.rightbelow {
+        top: $rr_audio_player_volume_control_height;
+      }
     }
     &__volume_bar {
       position: absolute;
-      bottom: $rr_audio_player_volume_bar_gutter_close;
-      top: $rr_audio_player_volume_bar_gutter_far;
-      left: 50%;
-      transform: translateX(-50%);
-      width: $rr_audio_player_volume_bar_width;
       border-radius: $rr_audio_player_volume_bar_width / 2;
       background-color: $rr_audio_player_base_bg_color;
+
+      &.hiddenup,
+      &.upabove {
+        bottom: $rr_audio_player_volume_bar_gutter_close;
+        top: $rr_audio_player_volume_bar_gutter_far;
+        left: 50%;
+        transform: translateX(-50%);
+        width: $rr_audio_player_volume_bar_width;
+      }
+      &.hiddenright,
+      &.rightabove,
+      &.rightbelow {
+        bottom: $rr_audio_player_volume_bar_gutter_close;
+        top: $rr_audio_player_volume_bar_gutter_close;
+        left: $rr_audio_player_volume_bar_gutter_far;
+        right: $rr_audio_player_volume_bar_gutter_far;
+      }
 
       .volume {
         border-radius: $rr_audio_player_volume_bar_width / 2;

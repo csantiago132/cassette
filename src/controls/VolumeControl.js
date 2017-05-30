@@ -6,6 +6,11 @@ import PurePropTypesComponent from './common/PurePropTypesComponent';
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
+import stopPropagation from '../utils/reactStopPropagation';
+
+const volumeControlStyle = {
+  touchAction: 'none'
+};
 
 const handle = <div className="handle"><div /></div>;
 
@@ -20,13 +25,33 @@ class VolumeControl extends PurePropTypesComponent {
     };
 
     this.volumeControlRef = null;
+    this.muteToggleRef = null;
     this.volumeBarContainerRef = null;
 
     // bind methods fired on React events
     this.setVolumeControlRef = this.setVolumeControlRef.bind(this);
+    this.setMuteToggleRef = this.setMuteToggleRef.bind(this);
     this.setVolumeBarContainerRef = this.setVolumeBarContainerRef.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+
+    // bind listeners to add on mount and remove on unmount
+    this.handleMuteToggleTouchStart = this.handleMuteToggleTouchStart.bind(this);
+  }
+
+  componentDidMount () {
+    /* this should be a normal React listener but there seems to be a bug
+     * in React preventing that from working as expected:
+     * https://github.com/facebook/react/issues/9809
+     */
+    this.muteToggleRef.addEventListener(
+      'touchstart',
+      this.handleMuteToggleTouchStart
+    );
+    /* since touchstart bubbling from inside this component is canceled
+     * we need to manually trigger mouseleave for touch devices
+     */
+    document.addEventListener('touchstart', this.handleMouseLeave);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -77,8 +102,20 @@ class VolumeControl extends PurePropTypesComponent {
     }
   }
 
+  componentWillUnmount () {
+    this.muteToggleRef.removeEventListener(
+      'touchstart',
+      this.handleMuteToggleTouchStart
+    );
+    document.removeEventListener('touchstart', this.handleMouseLeave);
+  }
+
   setVolumeControlRef (ref) {
     this.volumeControlRef = ref;
+  }
+
+  setMuteToggleRef (ref) {
+    this.muteToggleRef = ref;
   }
 
   setVolumeBarContainerRef (ref) {
@@ -101,6 +138,13 @@ class VolumeControl extends PurePropTypesComponent {
     });
   }
 
+  handleMuteToggleTouchStart (e) {
+    if (!this.state.hover) {
+      e.preventDefault();
+      this.handleMouseEnter();
+    }
+  }
+
   render () {
     const {
       volume,
@@ -115,10 +159,13 @@ class VolumeControl extends PurePropTypesComponent {
       <div
         ref={this.setVolumeControlRef}
         className="rr_audio_player__volume_control"
+        style={volumeControlStyle}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
+        onTouchStart={stopPropagation}
       >
         <div
+          ref={this.setMuteToggleRef}
           className="button rr_audio_player__audio_button"
           onClick={onToggleMuted}
         >

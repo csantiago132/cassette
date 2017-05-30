@@ -4,6 +4,8 @@
 
 ### [see a live demo here](https://benwiley4000.github.io/react-responsive-audio-player/)
 
+## the replaceable responsive audio player
+
 React Component wrapper for the HTML audio tag. Out of the box, provides a featured, clean-looking audio player which works great on desktop and mobile. Offers a powerful API for building a rich, totally customized audio player UI.
 
 [![NPM](https://nodei.co/npm/react-responsive-audio-player.png)](https://npmjs.org/package/react-responsive-audio-player)

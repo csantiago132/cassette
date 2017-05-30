@@ -1,6 +1,7 @@
 var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+var postcssPlugins = require('./postcssPlugins');
 
 var webpackConfig = {
   entry: './src/index.js',
@@ -32,7 +33,7 @@ var webpackConfig = {
     ]
   },
   postcss: function () {
-    return [autoprefixer({ browsers: ['> 2%'] })];
+    return postcssPlugins;
   },
   externals: {
     'prop-types': {

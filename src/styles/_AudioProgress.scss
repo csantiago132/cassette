@@ -10,7 +10,7 @@
   &__audio_progress_bar {
     height: 100%;
 
-    > div {
+    .progress {
       background-color: $rr_audio_player_progress_bg_color;
     }
   }

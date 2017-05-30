@@ -112,11 +112,16 @@ class AudioPlayer extends Component {
       // whether to loop the current track
       loop: props.defaultLoop,
       // Rate at which audio should be played. 1.0 is normal speed.
-      playbackRate: props.defaultPlaybackRate
+      playbackRate: props.defaultPlaybackRate,
+      // true if user is currently dragging mouse to change the volume
+      setVolumeInProgress: false
     };
 
     // index matching requested track (whether track has loaded or not)
     this.currentTrackIndex = props.startingTrackIndex;
+
+    // volume at last time we were unmuted and not actively setting volume
+    this.lastStableVolume = this.state.volume;
 
     // set of keys to use in controls render
     this.controlKeys = props.controls.map(getNextControlKey);
@@ -132,6 +137,7 @@ class AudioPlayer extends Component {
     this.seekPreview = this.seekPreview.bind(this);
     this.seekComplete = this.seekComplete.bind(this);
     this.setVolume = this.setVolume.bind(this);
+    this.setVolumeComplete = this.setVolumeComplete.bind(this);
     this.toggleMuted = this.toggleMuted.bind(this);
     this.toggleLoop = this.toggleLoop.bind(this);
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
@@ -492,12 +498,31 @@ class AudioPlayer extends Component {
   }
 
   setVolume (volume) {
-    this.audio.volume = convertToNumberWithinIntervalBounds(volume, 0, 1);
+    if (!this.state.setVolumeInProgress) {
+      this.setState({
+        setVolumeInProgress: true
+      });
+    }
+    const volumeInBounds = convertToNumberWithinIntervalBounds(volume, 0, 1);
+    this.audio.muted = volumeInBounds === 0 ? true : false;
+    this.audio.volume = volumeInBounds;
+  }
+
+  setVolumeComplete () {
+    this.setState({
+      setVolumeInProgress: false
+    });
+    if (!this.audio.muted) {
+      this.lastStableVolume = this.audio.volume;
+    }
   }
 
   toggleMuted (value) {
     const muted = typeof value === 'boolean' ? value : !this.state.muted;
     this.audio.muted = muted;
+    if (!muted) {
+      this.audio.volume = this.lastStableVolume;
+    }
   }
 
   toggleLoop (value) {
@@ -546,6 +571,7 @@ class AudioPlayer extends Component {
               onSeekPreview={this.seekPreview}
               onSeekComplete={this.seekComplete}
               onSetVolume={this.setVolume}
+              onSetVolumeComplete={this.setVolumeComplete}
               onToggleMuted={this.toggleMuted}
               onToggleLoop={this.toggleLoop}
               onSetPlaybackRate={this.setPlaybackRate}
@@ -569,6 +595,7 @@ AudioPlayer.propTypes = {
       'playpause',
       'backskip',
       'forwardskip',
+      'volume',
       'progress',
       'progressdisplay',
       'spacer'

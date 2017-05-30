@@ -1,0 +1,102 @@
+@import 'variables';
+
+.rr_audio_player {
+
+  &__volume_control {
+    height: $rr_audio_player_volume_control_height;
+    position: relative;
+
+    .button {
+      width: $rr_audio_player_volume_btn_width;
+
+      [class*='icono-volume'] {
+        margin-left: 0;
+      }
+    }
+    &__volume_bar_container {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+
+      &.hiddenup,
+      &.hiddenright {
+        visibility: hidden;
+      }
+      &.hiddenup,
+      &.upabove {
+        width: 100%;
+        height: $rr_audio_player_volume_bar_height + $rr_audio_player_volume_bar_gutter_close + $rr_audio_player_volume_bar_gutter_far;
+      }
+      &.hiddenright,
+      &.rightabove,
+      &.rightbelow {
+        width: $rr_audio_player_volume_bar_height + $rr_audio_player_volume_bar_gutter_far * 2;
+        height: $rr_audio_player_volume_bar_width + $rr_audio_player_volume_bar_gutter_close * 2;
+      }
+      &.hiddenup,
+      &.hiddenright,
+      &.upabove,
+      &.rightabove {
+        bottom: $rr_audio_player_volume_control_height;
+      }
+      &.rightbelow {
+        top: $rr_audio_player_volume_control_height;
+      }
+    }
+    &__volume_bar {
+      position: absolute;
+      border-radius: $rr_audio_player_volume_bar_width / 2;
+      background-color: $rr_audio_player_base_bg_color;
+
+      &.hiddenup,
+      &.upabove {
+        bottom: $rr_audio_player_volume_bar_gutter_close;
+        top: $rr_audio_player_volume_bar_gutter_far;
+        left: 50%;
+        transform: translateX(-50%);
+        width: $rr_audio_player_volume_bar_width;
+      }
+      &.hiddenright,
+      &.rightabove,
+      &.rightbelow {
+        bottom: $rr_audio_player_volume_bar_gutter_close;
+        top: $rr_audio_player_volume_bar_gutter_close;
+        left: $rr_audio_player_volume_bar_gutter_far;
+        right: $rr_audio_player_volume_bar_gutter_far;
+      }
+
+      .volume {
+        border-radius: $rr_audio_player_volume_bar_width / 2;
+        background-color: $rr_audio_player_volume_bar_color;
+      }
+      .handle {
+        cursor: pointer;
+        width: $rr_audio_player_volume_handle_size + $rr_audio_player_volume_handle_border_width * 2;
+        height: $rr_audio_player_volume_handle_size + $rr_audio_player_volume_handle_border_width * 2;
+        border-radius: 50%;
+        background-color: $rr_audio_player_volume_bar_color;
+        box-shadow: $rr_audio_player_volume_handle_box_shadow;
+        position: relative;
+
+        > div {
+          position: absolute;
+          top: $rr_audio_player_volume_handle_border_width;
+          left: $rr_audio_player_volume_handle_border_width;
+          width: $rr_audio_player_volume_handle_size;
+          height: $rr_audio_player_volume_handle_size;
+          border-radius: 50%;
+          background-color: $rr_audio_player_volume_handle_color;
+          opacity: $rr_audio_player_volume_handle_normal_opacity;
+        }
+        &:hover > div,
+        &.highlight > div {
+          opacity: $rr_audio_player_volume_handle_hover_opacity;
+        }
+        &:active > div {
+          opacity: $rr_audio_player_volume_handle_active_opacity;
+        }
+      }
+    }
+  }
+}

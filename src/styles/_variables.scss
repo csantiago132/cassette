@@ -6,6 +6,9 @@ $rr_audio_player_btn_bg_color: #fff !default;
 $rr_audio_player_btn_height: $rr_audio_player_base_height !default;
 $rr_audio_player_btn_margin: 4px !default;
 $rr_audio_player_btn_padding: 11px !default;
+$rr_audio_player_btn_normal_opacity: 0.8 !default;
+$rr_audio_player_btn_hover_opacity: 1.0 !default;
+$rr_audio_player_btn_active_opacity: 0.7 !default;
 
 $rr_audio_player_spacer_width: 10px !default;
 
@@ -23,3 +26,21 @@ $rr_audio_player_play_btn_inner_width: 30px !default;
 $rr_audio_player_play_btn_triangle_color: $rr_audio_player_base_bg_color !default;
 
 $rr_audio_player_progress_bg_color: #4a4a4a !default;
+
+$rr_audio_player_volume_control_height: $rr_audio_player_base_height !default;
+
+$rr_audio_player_volume_btn_width: 40px !default;
+
+$rr_audio_player_volume_bar_color: $rr_audio_player_progress_bg_color !default;
+$rr_audio_player_volume_bar_width: 22px !default;
+$rr_audio_player_volume_bar_height: 80px !default;
+$rr_audio_player_volume_bar_gutter_close: 28px !default;
+$rr_audio_player_volume_bar_gutter_far: 50px !default;
+
+$rr_audio_player_volume_handle_color: $rr_audio_player_btn_bg_color !default;
+$rr_audio_player_volume_handle_box_shadow: 1px 1px 6px 0px rgba($rr_audio_player_base_bg_color, 0.8);
+$rr_audio_player_volume_handle_size: 34px !default;
+$rr_audio_player_volume_handle_border_width: 0px !default;
+$rr_audio_player_volume_handle_normal_opacity: $rr_audio_player_btn_normal_opacity !default;
+$rr_audio_player_volume_handle_hover_opacity: $rr_audio_player_btn_hover_opacity !default;
+$rr_audio_player_volume_handle_active_opacity: $rr_audio_player_btn_hover_opacity !default; // on purpose

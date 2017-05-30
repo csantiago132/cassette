@@ -15,13 +15,14 @@
     height: $rr_audio_player_btn_height;
 
     .foreground {
-      opacity: 0.8;
+      opacity: $rr_audio_player_btn_normal_opacity;
     }
-    &:hover .foreground {
-      opacity: 1.0;
+    &:hover .foreground,
+    &.highlight .foreground {
+      opacity: $rr_audio_player_btn_hover_opacity;
     }
     &:active .foreground {
-      opacity: 0.7;
+      opacity: $rr_audio_player_btn_active_opacity;
     }
   }
 }

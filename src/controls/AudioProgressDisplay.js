@@ -22,6 +22,7 @@ class AudioProgressDisplay extends Component {
       <div className="rr_audio_player__audio_progress_container">
         <ProgressBarDisplay
           className="rr_audio_player__audio_progress_bar"
+          progressClassName="progress"
           progress={progress}
         />
         <AudioStatusBar

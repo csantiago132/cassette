@@ -76,6 +76,7 @@
         height: $rr_audio_player_volume_handle_size + $rr_audio_player_volume_handle_border_width * 2;
         border-radius: 50%;
         background-color: $rr_audio_player_volume_bar_color;
+        box-shadow: $rr_audio_player_volume_handle_box_shadow;
         position: relative;
 
         > div {

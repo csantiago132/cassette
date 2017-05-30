@@ -12,8 +12,6 @@ const volumeControlStyle = {
   touchAction: 'none'
 };
 
-const handle = <div className="handle"><div /></div>;
-
 class VolumeControl extends PurePropTypesComponent {
   constructor (props) {
     super(props);
@@ -145,6 +143,17 @@ class VolumeControl extends PurePropTypesComponent {
     }
   }
 
+  renderHandle () {
+    return (
+      <div className={classNames(
+        'handle',
+        { highlight: this.props.setVolumeInProgress }
+      )}>
+        <div />
+      </div>
+    );
+  }
+
   render () {
     const {
       volume,
@@ -193,7 +202,7 @@ class VolumeControl extends PurePropTypesComponent {
               progressClassName="volume"
               progress={muted ? 0 : volume}
               progressDirection={getVolumeBarDirectionFromPosition(volumeBarPosition)}
-              handle={handle}
+              handle={this.renderHandle()}
               adjusting={setVolumeInProgress}
               onAdjustProgress={onSetVolume}
               onAdjustComplete={onSetVolumeComplete}

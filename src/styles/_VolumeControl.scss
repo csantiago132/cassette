@@ -89,7 +89,8 @@
           background-color: $rr_audio_player_volume_handle_color;
           opacity: $rr_audio_player_volume_handle_normal_opacity;
         }
-        &:hover > div {
+        &:hover > div,
+        &.highlight > div {
           opacity: $rr_audio_player_volume_handle_hover_opacity;
         }
         &:active > div {

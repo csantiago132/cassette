@@ -17,7 +17,8 @@
     .foreground {
       opacity: $rr_audio_player_btn_normal_opacity;
     }
-    &:hover .foreground {
+    &:hover .foreground,
+    &.highlight .foreground {
       opacity: $rr_audio_player_btn_hover_opacity;
     }
     &:active .foreground {

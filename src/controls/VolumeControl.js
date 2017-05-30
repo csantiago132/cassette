@@ -154,7 +154,7 @@ class VolumeControl extends PurePropTypesComponent {
       onSetVolumeComplete,
       onToggleMuted
     } = this.props;
-    const { volumeBarPosition } = this.state;
+    const { hover, volumeBarPosition } = this.state;
     return (
       <div
         ref={this.setVolumeControlRef}
@@ -166,7 +166,10 @@ class VolumeControl extends PurePropTypesComponent {
       >
         <div
           ref={this.setMuteToggleRef}
-          className="button rr_audio_player__audio_button"
+          className={classNames(
+            'button rr_audio_player__audio_button',
+            { highlight: hover }
+          )}
           onClick={onToggleMuted}
         >
           <div className={classNames(

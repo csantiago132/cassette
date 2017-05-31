@@ -6,8 +6,10 @@ import classNames from 'classnames';
 import createAudioElementWithLoopEvent from './factories/createAudioElementWithLoopEvent';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
+import getRepeatStrategy from './utils/getRepeatStrategy';
 import getControlComponent from './utils/getControlComponent';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
+import { repeatStrategyOptions } from './constants';
 
 import './styles/index.scss';
 
@@ -110,9 +112,9 @@ class AudioPlayer extends Component {
       // true if the audio has been muted
       muted: props.defaultMuted,
       // whether to loop the current track
-      loop: props.defaultLoop,
+      loop: props.defaultRepeatStrategy === 'track',
       // true if playlist should continue at start after completion
-      cycle: props.defaultCycle,
+      cycle: props.defaultRepeatStrategy === 'playlist',
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
@@ -141,7 +143,7 @@ class AudioPlayer extends Component {
     this.setVolume = this.setVolume.bind(this);
     this.setVolumeComplete = this.setVolumeComplete.bind(this);
     this.toggleMuted = this.toggleMuted.bind(this);
-    this.toggleLoop = this.toggleLoop.bind(this);
+    this.setRepeatStrategy = this.setRepeatStrategy.bind(this);
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
 
     // bind audio event listeners to add on mount and remove on unmount
@@ -530,9 +532,36 @@ class AudioPlayer extends Component {
     }
   }
 
-  toggleLoop (value) {
-    const loop = typeof value === 'boolean' ? value : !this.state.loop;
-    this.audio.loop = loop;
+  setRepeatStrategy (repeatStrategy) {
+    if (repeatStrategyOptions.indexOf(repeatStrategy) === -1) {
+      logWarning(
+        'repeatStrategy "' + repeatStrategy + '" is not one of: ' +
+        repeatStrategyOptions.split(', ') + '.'
+      );
+      return;
+    }
+    switch (repeatStrategy) {
+      case 'track':
+        // let event listener take care of state change.
+        this.audio.loop = true;
+        break;
+      case 'playlist':
+        this.setState({
+          loop: false,
+          cycle: true
+        });
+        this.audio.loop = false;
+        break;
+      case 'none':
+        this.setState({
+          loop: false,
+          cycle: false
+        });
+        this.audio.loop = false;
+        break;
+      default:
+        break;
+    }
   }
 
   setPlaybackRate (rate) {
@@ -543,44 +572,52 @@ class AudioPlayer extends Component {
     return Boolean(!this.audio || !this.audio.src);
   }
 
-  render () {
-    const { playlist, controls, style } = this.props;
+  getControlProps (controlIndex) {
     const unknownProps = Object.keys(this.props).reduce((memo, propName) => {
       if (!(propName in AudioPlayer.propTypes)) {
         memo[propName] = this.props[propName];
       }
       return memo;
     }, {});
+
+    const stateProps = { ...this.state };
+    const { loop, cycle } = stateProps;
+    // since we'll be passing repeatStrategy let's leave these out.
+    delete stateProps.loop;
+    delete stateProps.cycle;
+
+    return {
+      ...unknownProps,
+      ...stateProps,
+      key: this.controlKeys[controlIndex],
+      playlist: this.props.playlist,
+      seekUnavailable: this.isSeekUnavailable(),
+      repeatStrategy: getRepeatStrategy(loop, cycle),
+      onTogglePause: this.togglePause,
+      onSelectTrackIndex: this.selectTrackIndex,
+      onBackSkip: this.backSkip,
+      onForwardSkip: this.forwardSkip,
+      onSeekPreview: this.seekPreview,
+      onSeekComplete: this.seekComplete,
+      onSetVolume: this.setVolume,
+      onSetVolumeComplete: this.setVolumeComplete,
+      onToggleMuted: this.toggleMuted,
+      onSetRepeatStrategy: this.setRepeatStrategy,
+      onSetPlaybackRate: this.setPlaybackRate
+    };
+  }
+
+  render () {
     return (
       <div
         className="rr_audio_player"
-        title={getDisplayText(playlist, this.state.activeTrackIndex)}
-        style={style}
+        title={getDisplayText(this.props.playlist, this.state.activeTrackIndex)}
+        style={this.props.style}
       >
-        {controls.map((control, index) => {
+        {this.props.controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
-          if (!ControlComponent) {
-            return null;
-          }
-          return (
-            <ControlComponent
-              {...unknownProps}
-              {...this.state}
-              key={this.controlKeys[index]}
-              playlist={playlist}
-              seekUnavailable={this.isSeekUnavailable()}
-              onTogglePause={this.togglePause}
-              onSelectTrackIndex={this.selectTrackIndex}
-              onBackSkip={this.backSkip}
-              onForwardSkip={this.forwardSkip}
-              onSeekPreview={this.seekPreview}
-              onSeekComplete={this.seekComplete}
-              onSetVolume={this.setVolume}
-              onSetVolumeComplete={this.setVolumeComplete}
-              onToggleMuted={this.toggleMuted}
-              onToggleLoop={this.toggleLoop}
-              onSetPlaybackRate={this.setPlaybackRate}
-            />
+          return ControlComponent && (
+            <ControlComponent {...this.getControlProps(index)} />
           );
         })}
       </div>
@@ -612,8 +649,7 @@ AudioPlayer.propTypes = {
   crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   defaultVolume: PropTypes.number,
   defaultMuted: PropTypes.bool,
-  defaultLoop: PropTypes.bool,
-  defaultCycle: PropTypes.bool,
+  defaultRepeatStrategy: PropTypes.oneOf(repeatStrategyOptions),
   defaultPlaybackRate: PropTypes.number,
   startingTime: PropTypes.number,
   startingTrackIndex: PropTypes.number,
@@ -640,8 +676,7 @@ AudioPlayer.defaultProps = {
   gapLengthInSeconds: 0,
   defaultVolume: 1,
   defaultMuted: false,
-  defaultLoop: false,
-  defaultCycle: true,
+  defaultRepeatStrategy: 'playlist',
   defaultPlaybackRate: 1,
   startingTime: 0,
   startingTrackIndex: 0,

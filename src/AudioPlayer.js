@@ -111,6 +111,8 @@ class AudioPlayer extends Component {
       muted: props.defaultMuted,
       // whether to loop the current track
       loop: props.defaultLoop,
+      // true if playlist should continue at start after completion
+      cycle: props.defaultCycle,
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
@@ -309,11 +311,11 @@ class AudioPlayer extends Component {
 
   handleAudioEnded () {
     clearTimeout(this.gapLengthTimeout);
-    const { playlist, cycle } = this.props;
+    const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
     }
-    if (!cycle && this.currentTrackIndex + 1 >= playlist.length) {
+    if (!this.state.cycle && this.currentTrackIndex + 1 >= playlist.length) {
       if (this.props.loadFirstTrackOnPlaylistComplete) {
         this.selectTrackIndex(0, false);
       }
@@ -421,14 +423,14 @@ class AudioPlayer extends Component {
   }
 
   backSkip () {
-    const { playlist, stayOnBackSkipThreshold, cycle } = this.props;
+    const { playlist, stayOnBackSkipThreshold } = this.props;
     const { audio } = this;
     if (!isPlaylistValid(playlist)) {
       return;
     }
     if (
       audio.currentTime >= stayOnBackSkipThreshold ||
-      (!cycle && this.currentTrackIndex < 1)
+      (!this.state.cycle && this.currentTrackIndex < 1)
     ) {
       audio.currentTime = 0;
       return;
@@ -441,10 +443,10 @@ class AudioPlayer extends Component {
   }
 
   forwardSkip () {
-    const { playlist, cycle } = this.props;
+    const { playlist } = this.props;
     if (
       !isPlaylistValid(playlist) ||
-      (!cycle && (
+      (!this.state.cycle && (
         this.currentTrackIndex < 0 ||
         this.currentTrackIndex > playlist.length - 2
       ))
@@ -608,10 +610,10 @@ AudioPlayer.propTypes = {
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
   crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
-  cycle: PropTypes.bool,
   defaultVolume: PropTypes.number,
   defaultMuted: PropTypes.bool,
   defaultLoop: PropTypes.bool,
+  defaultCycle: PropTypes.bool,
   defaultPlaybackRate: PropTypes.number,
   startingTime: PropTypes.number,
   startingTrackIndex: PropTypes.number,
@@ -636,10 +638,10 @@ AudioPlayer.defaultProps = {
   autoplay: false,
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,
-  cycle: true,
   defaultVolume: 1,
   defaultMuted: false,
   defaultLoop: false,
+  defaultCycle: true,
   defaultPlaybackRate: 1,
   startingTime: 0,
   startingTrackIndex: 0,

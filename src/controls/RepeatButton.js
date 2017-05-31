@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import RepeatIcon from 'svg-react-loader?name=RepeatIcon!material-design-icons/av/svg/design/ic_repeat_48px.svg';
+import RepeatOneIcon from 'svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg';
 
 import PurePropTypesComponent from './common/PurePropTypesComponent';
 import { repeatStrategyOptions } from '../constants';
@@ -29,18 +31,16 @@ class RepeatButton extends PurePropTypesComponent {
 
   render () {
     const { repeatStrategy } = this.props;
+    const Icon = repeatStrategy === 'track' ? RepeatOneIcon : RepeatIcon;
     return (
       <div
         className={classNames(
           'rr_audio_player__repeat_button rr_audio_player__audio_button',
-          {
-            repeat: repeatStrategy !== 'none',
-            one: repeatStrategy === 'track'
-          }
+          { repeat: repeatStrategy !== 'none' }
         )}
         onClick={this.handleNextRepeatStrategy}
       >
-        {repeatStrategy}
+        <Icon className="foreground" />
       </div>
     );
   }

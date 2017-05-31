@@ -57,6 +57,7 @@
     "gulp-sass": "^3.1.0",
     "gulp-uglifycss": "^1.0.8",
     "icono": "git+https://github.com/benwiley4000/icono.git#override-sass-variables",
+    "material-design-icons": "^3.0.1",
     "node-sass": "^3.4.2",
     "opn": "^4.0.2",
     "portfinder": "^1.0.9",
@@ -64,6 +65,7 @@
     "rimraf": "^2.5.4",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.0",
+    "svg-react-loader": "^0.4.0-beta.2",
     "uglify-js": "^3.0.10",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.16.2"

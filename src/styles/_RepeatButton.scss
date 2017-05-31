@@ -3,9 +3,14 @@
 .rr_audio_player {
 
   &__repeat_button {
-    svg {
+    .inner {
       margin-left: -8px;
       margin-right: -8px;
+      width: 48px;
+      height: 42px;
+    }
+
+    svg {
       fill: darken($rr_audio_player_repeat_btn_bg_color, 50%);
     }
 

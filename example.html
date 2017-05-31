@@ -52,8 +52,6 @@
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,
-          autoplay: true,
-          defaultMuted: true,
           style: { position: 'fixed', bottom: 0, width: '100%' },
           audioElementRef: function (elem) {
             audioElement = elem;

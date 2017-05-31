@@ -418,10 +418,12 @@ class AudioPlayer extends Component {
     this.currentTrackIndex = index;
     this.setState({
       activeTrackIndex: -1,
-      currentTime: 0,
-      loop: shouldSetLoopFalse ? false : this.state.loop
+      currentTime: 0
     }, () => {
       this.updateSource();
+      if (shouldSetLoopFalse) {
+        this.audio.loop = false;
+      }
       this.togglePause(!shouldPlay);
     });
   }

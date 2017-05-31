@@ -414,10 +414,12 @@ class AudioPlayer extends Component {
       logWarning(`Playlist index ${index} is out of bounds!`);
       return;
     }
+    const shouldSetLoopFalse = this.currentTrackIndex !== index;
     this.currentTrackIndex = index;
     this.setState({
       activeTrackIndex: -1,
-      currentTime: 0
+      currentTime: 0,
+      loop: shouldSetLoopFalse ? false : this.state.loop
     }, () => {
       this.updateSource();
       this.togglePause(!shouldPlay);

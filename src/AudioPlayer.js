@@ -366,7 +366,7 @@ class AudioPlayer extends Component {
   }
 
   updateSource () {
-    const { playlist } = this.props;
+    const { playlist, onActiveTrackUpdate } = this.props;
     if (!isPlaylistValid(playlist)) {
       this.audio.src = '';
       return;
@@ -375,6 +375,9 @@ class AudioPlayer extends Component {
     this.audio.src = playlist[this.currentTrackIndex].url;
     // We want to keep the playbackRate where it is when we switch tracks
     this.audio.playbackRate = previousPlaybackRate;
+    if (typeof onActiveTrackUpdate === 'function') {
+      onActiveTrackUpdate(this.currentTrackIndex, playlist);
+    }
   }
 
   togglePause (value) {
@@ -616,6 +619,7 @@ AudioPlayer.propTypes = {
   pauseOnSeekPreview: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
+  onActiveTrackUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func
 };

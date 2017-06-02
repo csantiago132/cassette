@@ -1,48 +1,48 @@
-$rr_audio_player_base_height: 50px !default;
-$rr_audio_player_base_bg_color: #333 !default;
-$rr_audio_player_base_text_color: #fff !default;
+$rrap_base_height: 50px !default;
+$rrap_base_bg_color: #333 !default;
+$rrap_base_text_color: #fff !default;
 
-$rr_audio_player_btn_bg_color: #fff !default;
-$rr_audio_player_btn_height: $rr_audio_player_base_height !default;
-$rr_audio_player_btn_margin: 4px !default;
-$rr_audio_player_btn_padding: 11px !default;
-$rr_audio_player_btn_normal_opacity: 0.8 !default;
-$rr_audio_player_btn_hover_opacity: 1.0 !default;
-$rr_audio_player_btn_active_opacity: 0.7 !default;
+$rrap_btn_bg_color: #fff !default;
+$rrap_btn_height: $rrap_base_height !default;
+$rrap_btn_margin: 4px !default;
+$rrap_btn_padding: 11px !default;
+$rrap_btn_normal_opacity: 0.8 !default;
+$rrap_btn_hover_opacity: 1.0 !default;
+$rrap_btn_active_opacity: 0.7 !default;
 
-$rr_audio_player_spacer_width: 10px !default;
+$rrap_spacer_width: 10px !default;
 
-$rr_audio_player_info_font_size: 19.2px !default;
-$rr_audio_player_time_font_size: 23px !default;
-$rr_audio_player_time_margin: 20px !default;
+$rrap_info_font_size: 19.2px !default;
+$rrap_time_font_size: 23px !default;
+$rrap_time_margin: 20px !default;
 
-$rr_audio_player_marquee_margin: $rr_audio_player_spacer_width !default;
-$rr_audio_player_marquee_width: calc(100% - 180px) !default;
+$rrap_marquee_margin: $rrap_spacer_width !default;
+$rrap_marquee_width: calc(100% - 180px) !default;
 
-$rr_audio_player_play_btn_border_color: $rr_audio_player_btn_bg_color !default;
-$rr_audio_player_play_btn_pause_bar_width: 36% !default;
-$rr_audio_player_play_btn_inner_height: 30px !default;
-$rr_audio_player_play_btn_inner_width: 30px !default;
-$rr_audio_player_play_btn_triangle_color: $rr_audio_player_base_bg_color !default;
+$rrap_play_btn_border_color: $rrap_btn_bg_color !default;
+$rrap_play_btn_pause_bar_width: 36% !default;
+$rrap_play_btn_inner_height: 30px !default;
+$rrap_play_btn_inner_width: 30px !default;
+$rrap_play_btn_triangle_color: $rrap_base_bg_color !default;
 
-$rr_audio_player_progress_bg_color: #4a4a4a !default;
+$rrap_progress_bg_color: #4a4a4a !default;
 
-$rr_audio_player_volume_control_height: $rr_audio_player_base_height !default;
+$rrap_volume_control_height: $rrap_base_height !default;
 
-$rr_audio_player_volume_btn_width: 40px !default;
+$rrap_volume_btn_width: 40px !default;
 
-$rr_audio_player_volume_bar_color: $rr_audio_player_progress_bg_color !default;
-$rr_audio_player_volume_bar_width: 22px !default;
-$rr_audio_player_volume_bar_height: 80px !default;
-$rr_audio_player_volume_bar_gutter_close: 28px !default;
-$rr_audio_player_volume_bar_gutter_far: 50px !default;
+$rrap_volume_bar_color: $rrap_progress_bg_color !default;
+$rrap_volume_bar_width: 22px !default;
+$rrap_volume_bar_height: 80px !default;
+$rrap_volume_bar_gutter_close: 28px !default;
+$rrap_volume_bar_gutter_far: 50px !default;
 
-$rr_audio_player_volume_handle_color: $rr_audio_player_btn_bg_color !default;
-$rr_audio_player_volume_handle_box_shadow: 1px 1px 6px 0px rgba($rr_audio_player_base_bg_color, 0.8);
-$rr_audio_player_volume_handle_size: 34px !default;
-$rr_audio_player_volume_handle_border_width: 0px !default;
-$rr_audio_player_volume_handle_normal_opacity: $rr_audio_player_btn_normal_opacity !default;
-$rr_audio_player_volume_handle_hover_opacity: $rr_audio_player_btn_hover_opacity !default;
-$rr_audio_player_volume_handle_active_opacity: $rr_audio_player_btn_hover_opacity !default; // on purpose
+$rrap_volume_handle_color: $rrap_btn_bg_color !default;
+$rrap_volume_handle_box_shadow: 1px 1px 6px 0px rgba($rrap_base_bg_color, 0.8);
+$rrap_volume_handle_size: 34px !default;
+$rrap_volume_handle_border_width: 0px !default;
+$rrap_volume_handle_normal_opacity: $rrap_btn_normal_opacity !default;
+$rrap_volume_handle_hover_opacity: $rrap_btn_hover_opacity !default;
+$rrap_volume_handle_active_opacity: $rrap_btn_hover_opacity !default; // on purpose
 
-$rr_audio_player_repeat_btn_bg_color: $rr_audio_player_btn_bg_color !default;
+$rrap_repeat_btn_bg_color: $rrap_btn_bg_color !default;

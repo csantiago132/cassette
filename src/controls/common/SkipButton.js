@@ -10,7 +10,7 @@ class SkipButton extends PurePropTypesComponent {
     return (
       <div
         className={classNames(
-          'rr_audio_player__skip_button rr_audio_player__audio_button',
+          'rrap__skip_button rrap__audio_button',
           { back }
         )}
         onClick={onClick}

@@ -41,9 +41,9 @@ class AudioProgress extends Component {
     const time = seekInProgress ? seekPreviewTime : currentTime;
     const displayedProgress = duration ? time / duration : 0;
     return (
-      <div className="rr_audio_player__audio_progress_container">
+      <div className="rrap__audio_progress_container">
         <ProgressBar
-          className="rr_audio_player__audio_progress_bar"
+          className="rrap__audio_progress_bar"
           progressClassName="progress"
           progress={displayedProgress}
           progressDirection="right"

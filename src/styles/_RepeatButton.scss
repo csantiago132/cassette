@@ -1,6 +1,6 @@
 @import 'variables';
 
-.rr_audio_player {
+.rrap {
 
   &__repeat_button {
     .inner {
@@ -11,11 +11,11 @@
     }
 
     svg {
-      fill: darken($rr_audio_player_repeat_btn_bg_color, 50%);
+      fill: darken($rrap_repeat_btn_bg_color, 50%);
     }
 
     &.repeat svg {
-      fill: $rr_audio_player_repeat_btn_bg_color;
+      fill: $rrap_repeat_btn_bg_color;
     }
   }
 }

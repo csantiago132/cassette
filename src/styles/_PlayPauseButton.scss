@@ -1,13 +1,13 @@
 @import 'variables';
 
-.rr_audio_player {
+.rrap {
 
   /* http://codepen.io/aralon/pen/NqGWXZ */
   &__play_pause_button {
 
     .play_pause_inner {
-      height: $rr_audio_player_play_btn_inner_height;
-      width: $rr_audio_player_play_btn_inner_width;
+      height: $rrap_play_btn_inner_height;
+      width: $rrap_play_btn_inner_width;
       overflow: hidden;
       position: relative;
     }
@@ -25,7 +25,7 @@
       background-color: transparent;
       width: 0;
       height: 0;
-      border-right: 30px solid $rr_audio_player_play_btn_triangle_color;
+      border-right: 30px solid $rrap_play_btn_triangle_color;
       border-top: 15px solid transparent;
       border-bottom: 15px solid transparent;
       transition: transform 0.25s ease;
@@ -33,8 +33,8 @@
     .left,
     .right {
       height: 100%;
-      background-color: $rr_audio_player_btn_bg_color;
-      width: $rr_audio_player_play_btn_pause_bar_width;
+      background-color: $rrap_btn_bg_color;
+      width: $rrap_play_btn_pause_bar_width;
       transition: all 0.25s ease;
     }
     .left {

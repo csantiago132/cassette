@@ -1,6 +1,6 @@
 @import 'variables';
 
-.rr_audio_player {
+.rrap {
 
   &__skip_button {
 
@@ -15,7 +15,7 @@
     .right_facing_triangle {
       width: 0;
       height: 0;
-      border-left: 16px solid $rr_audio_player_play_btn_border_color;
+      border-left: 16px solid $rrap_play_btn_border_color;
       border-top: 16px solid transparent;
       border-bottom: 16px solid transparent;
     }

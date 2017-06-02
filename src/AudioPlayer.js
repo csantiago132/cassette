@@ -573,7 +573,7 @@ class AudioPlayer extends Component {
   }
 
   isSeekUnavailable () {
-    return Boolean(!this.audio || !this.audio.src);
+    return Boolean(this.state.activeTrackIndex < 0);
   }
 
   getControlProps (controlIndex) {

@@ -10,7 +10,7 @@ class PlayPauseButton extends PurePropTypesComponent {
     return (
       <div
         className={classNames(
-          'rr_audio_player__play_pause_button rr_audio_player__audio_button',
+          'rrap__play_pause_button rrap__audio_button',
           { paused: paused && !awaitingResumeOnSeekComplete }
         )}
         onClick={onTogglePause}

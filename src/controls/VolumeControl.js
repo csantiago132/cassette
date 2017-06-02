@@ -167,7 +167,7 @@ class VolumeControl extends PurePropTypesComponent {
     return (
       <div
         ref={this.setVolumeControlRef}
-        className="rr_audio_player__volume_control"
+        className="rrap__volume_control"
         style={volumeControlStyle}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
@@ -176,7 +176,7 @@ class VolumeControl extends PurePropTypesComponent {
         <div
           ref={this.setMuteToggleRef}
           className={classNames(
-            'button rr_audio_player__audio_button',
+            'button rrap__audio_button',
             { highlight: hover }
           )}
           onClick={onToggleMuted}
@@ -190,13 +190,13 @@ class VolumeControl extends PurePropTypesComponent {
           <div
             ref={this.setVolumeBarContainerRef}
             className={classNames(
-              'rr_audio_player__volume_control__volume_bar_container',
+              'rrap__volume_control__volume_bar_container',
               volumeBarPosition
             )}
           >
             <ProgressBar
               className={classNames(
-                'rr_audio_player__volume_control__volume_bar',
+                'rrap__volume_control__volume_bar',
                 volumeBarPosition
               )}
               progressClassName="volume"

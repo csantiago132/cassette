@@ -614,7 +614,7 @@ class AudioPlayer extends Component {
   render () {
     return (
       <div
-        className="rr_audio_player"
+        className="rrap"
         title={getDisplayText(this.props.playlist, this.state.activeTrackIndex)}
         style={this.props.style}
       >

@@ -53,18 +53,18 @@ class AudioStatusBar extends PurePropTypesComponent {
     return (
       <div
         ref={this.setStatusBarRef}
-        className={classNames('rr_audio_player__audio_status_bar', className)}
+        className={classNames('rrap__audio_status_bar', className)}
         style={style}
       >
-        <div className="rr_audio_player__audio_info_marquee">
+        <div className="rrap__audio_info_marquee">
           <div className={classNames(
-            'rr_audio_player__audio_info',
+            'rrap__audio_info',
             this.state.elementSizeClassName
           )}>
             {displayText}
           </div>
         </div>
-        <div className="rr_audio_player__audio_time_progress">{displayTime}</div>
+        <div className="rrap__audio_time_progress">{displayTime}</div>
       </div>
     );
   }

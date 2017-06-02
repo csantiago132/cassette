@@ -1,8 +1,8 @@
 @import 'variables';
 
-.rr_audio_player {
+.rrap {
   display: flex;
   flex-direction: row;
-  height: $rr_audio_player_base_height;
-  background-color: $rr_audio_player_base_bg_color;
+  height: $rrap_base_height;
+  background-color: $rrap_base_bg_color;
 }

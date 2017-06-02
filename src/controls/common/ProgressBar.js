@@ -67,7 +67,7 @@ class ProgressBar extends PurePropTypesComponent {
     }
     // make sure we don't select stuff in the background
     if (event.type === 'mousedown' || event.type === 'touchstart') {
-      document.body.classList.add('rr_audio_player__noselect');
+      document.body.classList.add('rrap__noselect');
     } else if (!adjusting) {
       return;
     }
@@ -86,10 +86,10 @@ class ProgressBar extends PurePropTypesComponent {
   handleAdjustComplete (event) {
     const { adjusting, onAdjustComplete } = this.props;
     /* this function is activated when the user lets go of
-     * the mouse, so if .rr_audio_player__noselect was applied
+     * the mouse, so if .rrap__noselect was applied
      * to the document body, get rid of it.
      */
-    document.body.classList.remove('rr_audio_player__noselect');
+    document.body.classList.remove('rrap__noselect');
     if (!adjusting) {
       return;
     }

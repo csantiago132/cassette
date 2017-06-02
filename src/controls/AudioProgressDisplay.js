@@ -19,9 +19,9 @@ class AudioProgressDisplay extends Component {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;
     return (
-      <div className="rr_audio_player__audio_progress_container">
+      <div className="rrap__audio_progress_container">
         <ProgressBarDisplay
-          className="rr_audio_player__audio_progress_bar"
+          className="rrap__audio_progress_bar"
           progressClassName="progress"
           progress={progress}
         />

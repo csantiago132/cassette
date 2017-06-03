@@ -20,7 +20,7 @@ class ShuffleManager {
 
   findNextItem () {
     if (!this.list.length) {
-      return null;
+      return undefined;
     }
     for (let i = 1; i <= this.forwardStack.length; i++) {
       if (this.list.indexOf(this.forwardStack[this.forwardStack.length - i]) !== -1) {
@@ -49,7 +49,7 @@ class ShuffleManager {
 
   findPreviousItem () {
     if (!this.list.length) {
-      return null;
+      return undefined;
     }
     for (let i = 1; i <= this.backStack.length; i++) {
       if (this.list.indexOf(this.backStack[this.backStack.length - i]) !== -1) {
@@ -58,7 +58,7 @@ class ShuffleManager {
       }
     }
     if (!this.allowBackShuffle)
-      return null;
+      return undefined;
     }
     if (allItemsMatch(this.list, this.currentItem)) {
       // we can serve this as our "next" item but we
@@ -81,7 +81,7 @@ class ShuffleManager {
 
   pickNextItem (index) {
     if (this.list[index] === undefined) {
-      return null;
+      return undefined;
     }
     if (this.currentItem !== undefined) {
       this.backStack.push(this.currentItem);

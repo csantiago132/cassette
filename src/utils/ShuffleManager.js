@@ -11,71 +11,32 @@
 class ShuffleManager {
   constructor (list, options = {}) {
     this.list = list;
-    this.backStack = [];
     this.forwardStack = [];
-    this.currentItem = null;
+    this.backStack = [];
+    this.currentItem = undefined;
 
     this.setOptions(options);
   }
 
   findNextItem () {
-    if (!this.list.length) {
-      return undefined;
-    }
-    for (let i = 1; i <= this.forwardStack.length; i++) {
-      if (this.list.indexOf(this.forwardStack[this.forwardStack.length - i]) !== -1) {
-        goForward(this, i);
-        return this.currentItem;
-      }
-    }
-    if (allItemsMatch(this.list, this.currentItem)) {
-      // we can serve this as our "next" item but we
-      // won't modify our history since it's the same.
-      return this.currentItem;
-    }
-    let nextItem;
-    do {
-        nextItem = this.list[Math.floor(Math.random() * this.list.length)];
-    } while (this.currentItem === nextItem || nextItem === undefined);
-    // if we're skipping items that aren't in our current list we may
-    // have some items in our forwardStack - make sure we move to the front.
-    goForward(this, this.forwardStack.length);
-    if (this.currentItem !== undefined) {
-      this.backStack.push(this.currentItem);
-    }
-    this.currentItem = nextItem;
+    this.currentItem = _findNextItem(
+      this.list,
+      this.forwardStack,
+      this.backStack,
+      this.currentItem,
+      true
+    );
     return this.currentItem;
   }
 
   findPreviousItem () {
-    if (!this.list.length) {
-      return undefined;
-    }
-    for (let i = 1; i <= this.backStack.length; i++) {
-      if (this.list.indexOf(this.backStack[this.backStack.length - i]) !== -1) {
-        goBack(this, i);
-        return this.currentItem;
-      }
-    }
-    if (!this.allowBackShuffle)
-      return undefined;
-    }
-    if (allItemsMatch(this.list, this.currentItem)) {
-      // we can serve this as our "next" item but we
-      // won't modify our history since it's the same.
-      return this.currentItem;
-    }
-    let previousItem;
-    do {
-        previousItem = this.list[Math.floor(Math.random() * this.list.length)];
-    } while (this.currentItem === previousItem || previousItem === undefined);
-    // if we're skipping items that aren't in our current list we may
-    // have some items in our backStack - make sure we move to the back.
-    goBack(this, this.backStack.length);
-    if (this.currentItem !== undefined) {
-      this.forwardStack.push(this.currentItem);
-    }
-    this.currentItem = previousItem;
+    this.currentItem = _findNextItem(
+      this.list,
+      this.backStack,
+      this.forwardStack,
+      this.currentItem,
+      this.allowBackShuffle
+    );
     return this.currentItem;
   }
 
@@ -100,13 +61,27 @@ class ShuffleManager {
   }
 
   clear () {
-    this.backStack.length = 0;
     this.forwardStack.length = 0;
-    this.currentItem = null;
+    this.backStack.length = 0;
+    this.currentItem = undefined;
   }
 }
 
-function allItemsMatch (list, item) {
+function _goForward (n, forwardStack, backStack, currentItem) {
+  let item = currentItem;
+  for (let i = 0; i < n; i++) {
+    if (!forwardStack.length) {
+      // rollback before erroring (note stack reversal)
+      _goForward(i, backStack, forwardStack, item);
+      throw `Moving ${n} places was not possible!`;
+    }
+    backStack.push(item);
+    item = forwardStack.pop();
+  }
+  return item;
+}
+
+function _allItemsMatch (list, item) {
   if (!list.length) {
     return false;
   }
@@ -118,26 +93,35 @@ function allItemsMatch (list, item) {
   return true;
 }
 
-function goForward (sm, n) {
-  for (let i = 0; i < n; i++) {
-    if (!sm.forwardStack.length) {
-      sm.goBack(i); // rollback before erroring
-      throw `Could not go forward ${n} times!`;
-    }
-    sm.backStack.push(sm.currentItem);
-    sm.currentItem = sm.forwardStack.pop();
+function _findNextItem (list, forwardStack, backStack, currentItem, allowMore) {
+  let item = currentItem;
+  if (!list.length) {
+    return undefined;
   }
-}
-
-function goBack (sm, n) {
-  for (let i = 0; i < n; i++) {
-    if (!sm.backStack.length) {
-      sm.goForward(i); // rollback before erroring
-      throw `Could not go back ${n} times!`;
+  for (let i = 1; i <= forwardStack.length; i++) {
+    if (list.indexOf(forwardStack[forwardStack.length - i]) !== -1) {
+      return _goForward(i, forwardStack, backStack, item);
     }
-    sm.forwardStack.push(sm.currentItem);
-    sm.currentItem = sm.backStack.pop();
   }
+  if (!allowMore) {
+    return undefined;
+  }
+  if (_allItemsMatch(list, item)) {
+    // we can serve this as our "next" item but we
+    // won't modify our history since it's the same.
+    return item;
+  }
+  let nextItem;
+  do {
+      nextItem = list[Math.floor(Math.random() * list.length)];
+  } while (item === nextItem || nextItem === undefined);
+  // if we're skipping items that aren't in our current list we may
+  // have some items in our forwardStack - make sure we move to the front.
+  item = _goForward(forwardStack.length, forwardStack, backStack, item);
+  if (item !== undefined) {
+    backStack.push(item);
+  }
+  return nextItem;
 }
 
 module.exports = ShuffleManager;

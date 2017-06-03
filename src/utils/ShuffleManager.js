@@ -1,3 +1,13 @@
+/* ShuffleManager
+ *
+ * Manages navigation throughout a list which is:
+ * - Sourced from another provided list
+ * - In random order (except to avoid consecutive duplicates)
+ * - Extended endlessly on-the-fly, as needed
+ * - Able to have future history overwritten by non-random choices
+ * - Able to swap source lists and maintain shuffle order for common members
+ */
+
 class ShuffleManager {
   constructor (list) {
     this.list = list;

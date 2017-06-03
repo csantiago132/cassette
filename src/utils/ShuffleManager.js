@@ -10,57 +10,57 @@
 
 class ShuffleManager {
   constructor (list, options = {}) {
-    this.list = list;
-    this.forwardStack = [];
-    this.backStack = [];
-    this.currentItem = undefined;
+    this._list = list;
+    this._forwardStack = [];
+    this._backStack = [];
+    this._currentItem = undefined;
 
     this.setOptions(options);
   }
 
   findNextItem () {
-    this.currentItem = _findNextItem(
-      this.list,
-      this.forwardStack,
-      this.backStack,
-      this.currentItem,
+    this._currentItem = _findNextItem(
+      this._list,
+      this._forwardStack,
+      this._backStack,
+      this._currentItem,
       true
     );
-    return this.currentItem;
+    return this._currentItem;
   }
 
   findPreviousItem () {
-    this.currentItem = _findNextItem(
-      this.list,
-      this.backStack,
-      this.forwardStack,
-      this.currentItem,
-      this.allowBackShuffle
+    this._currentItem = _findNextItem(
+      this._list,
+      this._backStack,
+      this._forwardStack,
+      this._currentItem,
+      this._allowBackShuffle
     );
-    return this.currentItem;
+    return this._currentItem;
   }
 
   pickNextItem (index) {
-    if (this.list[index] === undefined) {
+    if (this._list[index] === undefined) {
       return undefined;
     }
-    if (this.currentItem !== undefined) {
-      this.backStack.push(this.currentItem);
+    if (this._currentItem !== undefined) {
+      this._backStack.push(this._currentItem);
     }
-    this.forwardStack.length = 0;
-    this.currentItem = this.list[index];
-    return this.currentItem;
+    this._forwardStack.length = 0;
+    this._currentItem = this._list[index];
+    return this._currentItem;
   }
 
   setList (list) {
-    this.list = list;
+    this._list = list;
   }
 
   setOptions (options) {
     for (const o of Object.keys(options)) {
       switch (o) {
         case 'allowBackShuffle':
-          this[o] = Boolean(options[o]);
+          this[`_${o}`] = Boolean(options[o]);
           break;
         default:
           break;
@@ -69,9 +69,9 @@ class ShuffleManager {
   }
 
   clear () {
-    this.forwardStack.length = 0;
-    this.backStack.length = 0;
-    this.currentItem = undefined;
+    this._forwardStack.length = 0;
+    this._backStack.length = 0;
+    this._currentItem = undefined;
   }
 }
 

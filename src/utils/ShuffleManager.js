@@ -9,11 +9,13 @@
  */
 
 class ShuffleManager {
-  constructor (list) {
+  constructor (list, options = {}) {
     this.list = list;
     this.backStack = [];
     this.forwardStack = [];
     this.currentItem = null;
+
+    this.setOptions(options);
   }
 
   findNextItem () {
@@ -55,7 +57,26 @@ class ShuffleManager {
         return this.currentItem;
       }
     }
-    return null;
+    if (!this.allowBackShuffle)
+      return null;
+    }
+    if (allItemsMatch(this.list, this.currentItem)) {
+      // we can serve this as our "next" item but we
+      // won't modify our history since it's the same.
+      return this.currentItem;
+    }
+    let previousItem;
+    do {
+        previousItem = this.list[Math.floor(Math.random() * this.list.length)];
+    } while (this.currentItem === previousItem || previousItem === undefined);
+    // if we're skipping items that aren't in our current list we may
+    // have some items in our backStack - make sure we move to the back.
+    goBack(this, this.backStack.length);
+    if (this.currentItem !== undefined) {
+      this.forwardStack.push(this.currentItem);
+    }
+    this.currentItem = previousItem;
+    return this.currentItem;
   }
 
   pickNextItem (index) {
@@ -72,6 +93,10 @@ class ShuffleManager {
 
   setList (list) {
     this.list = list;
+  }
+
+  setOptions (options) {
+    this.allowBackShuffle = Boolean(options.allowBackShuffle);
   }
 
   clear () {

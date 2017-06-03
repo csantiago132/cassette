@@ -15,7 +15,7 @@ class ShuffleManager {
     this._backStack = [];
     this._currentItem = undefined;
 
-    this.setOptions(options);
+    this._allowBackShuffle = Boolean(options.allowBackShuffle);
   }
 
   findNextItem () {

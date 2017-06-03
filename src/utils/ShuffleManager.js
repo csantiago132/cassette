@@ -57,7 +57,15 @@ class ShuffleManager {
   }
 
   setOptions (options) {
-    this.allowBackShuffle = Boolean(options.allowBackShuffle);
+    for (const o of Object.keys(options)) {
+      switch (o) {
+        case 'allowBackShuffle':
+          this[o] = Boolean(options[o]);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   clear () {

@@ -14,4 +14,4 @@ ForwardSkipButton.propTypes = {
   onForwardSkip: PropTypes.func.isRequired
 };
 
-module.exports = ForwardSkipButton;
+export default ForwardSkipButton;

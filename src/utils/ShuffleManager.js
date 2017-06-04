@@ -149,4 +149,4 @@ function _findNextItem (list, forwardStack, backStack, currentItem, allowMore) {
   return nextItem;
 }
 
-module.exports = ShuffleManager;
+export default ShuffleManager;

@@ -14,4 +14,4 @@ function getVolumeIconClassName (volume, muted) {
   return 'icono-volumeHigh';
 }
 
-module.exports = getVolumeIconClassName;
+export default getVolumeIconClassName;

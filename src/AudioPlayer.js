@@ -771,4 +771,4 @@ AudioPlayer.defaultProps = {
   stayOnBackSkipThreshold: 5
 };
 
-module.exports = AudioPlayer;
+export default AudioPlayer;

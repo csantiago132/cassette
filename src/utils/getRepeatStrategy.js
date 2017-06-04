@@ -8,4 +8,4 @@ function getRepeatStrategy (loop, cycle) {
   return 'none';
 }
 
-module.exports = getRepeatStrategy;
+export default getRepeatStrategy;

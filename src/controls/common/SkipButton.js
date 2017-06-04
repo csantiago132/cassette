@@ -30,4 +30,4 @@ SkipButton.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-module.exports = SkipButton;
+export default SkipButton;

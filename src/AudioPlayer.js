@@ -260,7 +260,21 @@ class AudioPlayer extends Component {
     }
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps, prevState) {
+    if (typeof this.props.onRepeatStrategyUpdate === 'function') {
+      const prevRepeatStrategy = getRepeatStrategy(
+        prevState.loop,
+        prevState.cycle
+      );
+      const newRepeatStrategy = getRepeatStrategy(
+        this.state.loop,
+        this.state.cycle
+      );
+      if (prevRepeatStrategy !== newRepeatStrategy) {
+        this.props.onRepeatStrategyUpdate(newRepeatStrategy);
+      }
+    }
+
     /* if we loaded a new playlist and the currently playing track couldn't
      * be found, pause and load the first track in the new playlist.
      */
@@ -726,6 +740,7 @@ AudioPlayer.propTypes = {
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
   onActiveTrackUpdate: PropTypes.func,
+  onRepeatStrategyUpdate: PropTypes.func,
   onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func

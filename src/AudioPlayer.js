@@ -590,6 +590,9 @@ class AudioPlayer extends Component {
   toggleShuffle (value) {
     const shuffle = typeof value === 'boolean' ? value : !this.state.shuffle;
     this.setState({ shuffle });
+    if (typeof this.props.onShuffleUpdate === 'function') {
+      this.props.onShuffleUpdate(shuffle);
+    }
   }
 
   setRepeatStrategy (repeatStrategy) {
@@ -723,6 +726,7 @@ AudioPlayer.propTypes = {
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
   onActiveTrackUpdate: PropTypes.func,
+  onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func
 };

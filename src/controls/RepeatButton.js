@@ -35,8 +35,8 @@ class RepeatButton extends PurePropTypesComponent {
     return (
       <div
         className={classNames(
-          'rrap__repeat_button rrap__audio_button',
-          { repeat: repeatStrategy !== 'none' }
+          'rrap__material_toggle rrap__audio_button',
+          { on: repeatStrategy !== 'none' }
         )}
         onClick={this.handleNextRepeatStrategy}
       >

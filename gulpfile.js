@@ -8,8 +8,6 @@ var postcss = require('gulp-postcss');
 var uglifycss = require('gulp-uglifycss');
 var rename = require('gulp-rename');
 
-var postcssPlugins = require('./postcssPlugins');
-
 // aim to emulate sass import resolution of webpack sass-loader
 // based in part on example at http://stackoverflow.com/a/29924381/4956731
 var aliases = {};
@@ -43,7 +41,7 @@ gulp.task('compilecss', function () {
     .pipe(sass({
       importer: nodeModuleSassImporter
     }).on('error', sass.logError))
-    .pipe(postcss(postcssPlugins))
+    .pipe(postcss())
     .pipe(gulp.dest('./dist/component_css'));
 });
 

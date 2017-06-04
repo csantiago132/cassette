@@ -411,7 +411,7 @@ class AudioPlayer extends Component {
     // We want to keep the playbackRate where it is when we switch tracks
     this.audio.playbackRate = previousPlaybackRate;
     if (typeof onActiveTrackUpdate === 'function') {
-      onActiveTrackUpdate(this.currentTrackIndex, playlist);
+      onActiveTrackUpdate(this.currentTrackIndex);
     }
   }
 

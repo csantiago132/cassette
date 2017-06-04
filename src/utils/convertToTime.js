@@ -7,4 +7,4 @@ function convertToTime (number) {
   return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-module.exports = convertToTime;
+export default convertToTime;

@@ -11,4 +11,4 @@ function getStatusBarSizeClassName (width) {
   return getClassNameForRange(516);
 }
 
-module.exports = getStatusBarSizeClassName;
+export default getStatusBarSizeClassName;

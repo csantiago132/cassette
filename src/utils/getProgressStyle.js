@@ -30,4 +30,4 @@ function getProgressStyle (progress, progressDirection) {
   return style;
 }
 
-module.exports = getProgressStyle;
+export default getProgressStyle;

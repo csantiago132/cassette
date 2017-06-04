@@ -13,4 +13,4 @@ Spacer.propTypes = {
   style: PropTypes.object
 };
 
-module.exports = Spacer;
+export default Spacer;

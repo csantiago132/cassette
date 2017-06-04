@@ -27,4 +27,4 @@ class PurePropTypesComponent extends Component {
   }
 }
 
-module.exports = PurePropTypesComponent;
+export default PurePropTypesComponent;

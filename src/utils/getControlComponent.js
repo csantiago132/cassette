@@ -39,4 +39,4 @@ function getControlComponent (control) {
   return null;
 }
 
-module.exports = getControlComponent;
+export default getControlComponent;

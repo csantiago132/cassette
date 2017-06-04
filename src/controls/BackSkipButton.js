@@ -14,4 +14,4 @@ BackSkipButton.propTypes = {
   onBackSkip: PropTypes.func.isRequired,
 };
 
-module.exports = BackSkipButton;
+export default BackSkipButton;

@@ -77,4 +77,4 @@ AudioProgress.propTypes = {
   onSeekComplete: PropTypes.func.isRequired
 };
 
-module.exports = AudioProgress;
+export default AudioProgress;

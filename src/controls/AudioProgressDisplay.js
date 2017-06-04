@@ -45,4 +45,4 @@ AudioProgressDisplay.propTypes = {
   duration: PropTypes.number.isRequired
 };
 
-module.exports = AudioProgressDisplay;
+export default AudioProgressDisplay;

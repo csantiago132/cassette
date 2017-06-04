@@ -15,4 +15,4 @@ function createAudioElementWithLoopEvent () {
   return audio;
 }
 
-module.exports = createAudioElementWithLoopEvent;
+export default createAudioElementWithLoopEvent;

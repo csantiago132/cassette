@@ -12,6 +12,7 @@ import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
 import PurePropTypesComponent from './controls/common/PurePropTypesComponent';
 
 module.exports = AudioPlayer;
+module.exports.AudioPlayer = AudioPlayer;
 module.exports.PlayPauseButton = PlayPauseButton;
 module.exports.BackSkipButton = BackSkipButton;
 module.exports.ForwardSkipButton = ForwardSkipButton;

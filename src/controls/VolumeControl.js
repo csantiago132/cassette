@@ -223,4 +223,4 @@ VolumeControl.propTypes = {
   onToggleMuted: PropTypes.func.isRequired
 };
 
-module.exports = VolumeControl;
+export default VolumeControl;

@@ -3,4 +3,4 @@ function stopPropagation (e) {
   e.nativeEvent.stopImmediatePropagation();
 }
 
-module.exports = stopPropagation;
+export default stopPropagation;

@@ -1,12 +1,10 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var postcssPlugins = require('./postcssPlugins');
-
 var webpackConfig = {
   entry: './src/index.js',
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   output: {
     path: __dirname + '/dist',
@@ -15,25 +13,32 @@ var webpackConfig = {
     library: 'AudioPlayer',
     filename: 'audioplayer.js'
   },
+  devServer: {
+    inline: true,
+    staticOptions: { index: 'example.html' }
+  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        })
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css!postcss!sass')
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader!postcss-loader!sass-loader'
+        })
       },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        use: 'babel-loader'
       }
     ]
-  },
-  postcss: function () {
-    return postcssPlugins;
   },
   externals: {
     'prop-types': {
@@ -56,10 +61,8 @@ var webpackConfig = {
     }
   },
   plugins: [
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('audioplayer.css', {
-      allChunks: true
-    })
+    new webpack.NoEmitOnErrorsPlugin(),
+    new ExtractTextPlugin('audioplayer.css')
   ]
 };
 

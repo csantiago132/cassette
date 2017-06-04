@@ -1,0 +1,22 @@
+// used by RepeatButton and ShuffleButton components
+
+@import 'variables';
+
+.rrap {
+
+  &__material_toggle {
+
+    .inner {
+      margin-left: -8px;
+      margin-right: -8px;
+      width: 48px;
+      height: 42px;
+    }
+    svg {
+      fill: $rrap_material_toggle_btn_off_color;
+    }
+    &.on svg {
+      fill: $rrap_material_toggle_btn_on_color;
+    }
+  }
+}

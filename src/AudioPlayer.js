@@ -4,6 +4,9 @@ import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
 import createAudioElementWithLoopEvent from './factories/createAudioElementWithLoopEvent';
+import ShuffleManager from './utils/ShuffleManager';
+import getSourceList from './utils/getSourceList';
+import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
 import getRepeatStrategy from './utils/getRepeatStrategy';
@@ -115,6 +118,8 @@ class AudioPlayer extends Component {
       loop: props.defaultRepeatStrategy === 'track',
       // true if playlist should continue at start after completion
       cycle: props.defaultRepeatStrategy === 'playlist',
+      // whether to randomly pick next track from playlist after one finishes
+      shuffle: props.defaultShuffle,
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
@@ -130,6 +135,11 @@ class AudioPlayer extends Component {
     // set of keys to use in controls render
     this.controlKeys = props.controls.map(getNextControlKey);
 
+    // used to keep track of play history when we are shuffling
+    this.shuffler = new ShuffleManager(getSourceList(props.playlist), {
+      allowBackShuffle: props.allowBackShuffle
+    });
+
     // html audio element used for playback
     this.audio = null;
 
@@ -143,6 +153,7 @@ class AudioPlayer extends Component {
     this.setVolume = this.setVolume.bind(this);
     this.setVolumeComplete = this.setVolumeComplete.bind(this);
     this.toggleMuted = this.toggleMuted.bind(this);
+    this.toggleShuffle = this.toggleShuffle.bind(this);
     this.setRepeatStrategy = this.setRepeatStrategy.bind(this);
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
 
@@ -221,6 +232,12 @@ class AudioPlayer extends Component {
     });
 
     const newPlaylist = nextProps.playlist;
+
+    this.shuffler.setList(getSourceList(newPlaylist));
+    this.shuffler.setOptions({
+      allowBackShuffle: nextProps.allowBackShuffle
+    });
+
     if (!isPlaylistValid(newPlaylist)) {
       this.audio.src = '';
       this.currentTrackIndex = 0;
@@ -248,7 +265,7 @@ class AudioPlayer extends Component {
      * be found, pause and load the first track in the new playlist.
      */
     if (this.currentTrackIndex === -1) {
-      this.selectTrackIndex(0, false);
+      this.goToTrack(0, false);
     }
   }
 
@@ -405,7 +422,28 @@ class AudioPlayer extends Component {
     }
   }
 
-  selectTrackIndex (index, shouldPlay = true) {
+  goToTrack (index, shouldPlay = true) {
+    if (!isPlaylistValid(this.props.playlist)) {
+      return;
+    }
+    const isNewTrack = this.currentTrackIndex !== index;
+    this.currentTrackIndex = index;
+    this.setState({
+      activeTrackIndex: -1,
+      currentTime: 0
+    }, () => {
+      this.updateSource();
+      if (isNewTrack) {
+        this.audio.loop = false;
+        if (!this.state.shuffle) {
+          this.shuffler.clear();
+        }
+      }
+      this.togglePause(!shouldPlay);
+    });
+  }
+
+  selectTrackIndex (index) {
     const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
@@ -414,18 +452,10 @@ class AudioPlayer extends Component {
       logWarning(`Playlist index ${index} is out of bounds!`);
       return;
     }
-    const shouldSetLoopFalse = this.currentTrackIndex !== index;
-    this.currentTrackIndex = index;
-    this.setState({
-      activeTrackIndex: -1,
-      currentTime: 0
-    }, () => {
-      this.updateSource();
-      if (shouldSetLoopFalse) {
-        this.audio.loop = false;
-      }
-      this.togglePause(!shouldPlay);
-    });
+    if (this.state.shuffle) {
+      this.shuffler.pickNextItem(index, this.currentTrackIndex);
+    }
+    this.goToTrack(index);
   }
 
   backSkip () {
@@ -441,11 +471,24 @@ class AudioPlayer extends Component {
       audio.currentTime = 0;
       return;
     }
-    let index = this.currentTrackIndex - 1;
-    if (index < 0) {
-      index = playlist.length - 1;
+    let index;
+    if (this.state.shuffle) {
+      const previousItem = this.shuffler.findPreviousItem(
+        this.currentTrackIndex
+      );
+      if (previousItem === undefined) {
+        // if we aren't allowing backShuffle then we'll hit a stopping point.
+        audio.currentTime = 0;
+        return;
+      }
+      index = findTrackIndexByUrl(playlist, previousItem);
+    } else {
+      index = this.currentTrackIndex - 1;
+      if (index < 0) {
+        index = playlist.length - 1;
+      }
     }
-    this.selectTrackIndex(index);
+    this.goToTrack(index);
   }
 
   forwardSkip () {
@@ -459,11 +502,19 @@ class AudioPlayer extends Component {
     ) {
       return;
     }
-    let index = this.currentTrackIndex + 1;
-    if (index >= playlist.length) {
-      index = 0;
+    let index;
+    if (this.state.shuffle) {
+      index = findTrackIndexByUrl(
+        playlist,
+        this.shuffler.findNextItem(this.currentTrackIndex)
+      );
+    } else {
+      index = this.currentTrackIndex + 1;
+      if (index >= playlist.length) {
+        index = 0;
+      }
     }
-    this.selectTrackIndex(index);
+    this.goToTrack(index);
   }
 
   seekPreview (targetTime) {
@@ -536,6 +587,11 @@ class AudioPlayer extends Component {
     }
   }
 
+  toggleShuffle (value) {
+    const shuffle = typeof value === 'boolean' ? value : !this.state.shuffle;
+    this.setState({ shuffle });
+  }
+
   setRepeatStrategy (repeatStrategy) {
     if (repeatStrategyOptions.indexOf(repeatStrategy) === -1) {
       logWarning(
@@ -606,6 +662,7 @@ class AudioPlayer extends Component {
       onSetVolume: this.setVolume,
       onSetVolumeComplete: this.setVolumeComplete,
       onToggleMuted: this.toggleMuted,
+      onToggleShuffle: this.toggleShuffle,
       onSetRepeatStrategy: this.setRepeatStrategy,
       onSetPlaybackRate: this.setPlaybackRate
     };
@@ -643,6 +700,7 @@ AudioPlayer.propTypes = {
       'forwardskip',
       'volume',
       'repeat',
+      'shuffle',
       'progress',
       'progressdisplay',
       'spacer'
@@ -655,11 +713,13 @@ AudioPlayer.propTypes = {
   defaultVolume: PropTypes.number,
   defaultMuted: PropTypes.bool,
   defaultRepeatStrategy: PropTypes.oneOf(repeatStrategyOptions),
+  defaultShuffle: PropTypes.bool,
   defaultPlaybackRate: PropTypes.number,
   startingTime: PropTypes.number,
   startingTrackIndex: PropTypes.number,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
+  allowBackShuffle: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
   onActiveTrackUpdate: PropTypes.func,
@@ -682,11 +742,13 @@ AudioPlayer.defaultProps = {
   defaultVolume: 1,
   defaultMuted: false,
   defaultRepeatStrategy: 'playlist',
+  defaultShuffle: false,
   defaultPlaybackRate: 1,
   startingTime: 0,
   startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
+  allowBackShuffle: false,
   stayOnBackSkipThreshold: 5
 };
 

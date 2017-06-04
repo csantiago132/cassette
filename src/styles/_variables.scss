@@ -38,11 +38,12 @@ $rrap_volume_bar_gutter_close: 28px !default;
 $rrap_volume_bar_gutter_far: 50px !default;
 
 $rrap_volume_handle_color: $rrap_btn_bg_color !default;
-$rrap_volume_handle_box_shadow: 1px 1px 6px 0px rgba($rrap_base_bg_color, 0.8);
+$rrap_volume_handle_box_shadow: 1px 1px 6px 0px rgba($rrap_base_bg_color, 0.8) !default;
 $rrap_volume_handle_size: 34px !default;
 $rrap_volume_handle_border_width: 0px !default;
 $rrap_volume_handle_normal_opacity: $rrap_btn_normal_opacity !default;
 $rrap_volume_handle_hover_opacity: $rrap_btn_hover_opacity !default;
 $rrap_volume_handle_active_opacity: $rrap_btn_hover_opacity !default; // on purpose
 
-$rrap_repeat_btn_bg_color: $rrap_btn_bg_color !default;
+$rrap_material_toggle_btn_on_color: $rrap_btn_bg_color !default;
+$rrap_material_toggle_btn_off_color: darken($rrap_material_toggle_btn_on_color, 50%) !default;

@@ -336,7 +336,7 @@ class AudioPlayer extends Component {
     }
     if (!this.state.cycle && this.currentTrackIndex + 1 >= playlist.length) {
       if (this.props.loadFirstTrackOnPlaylistComplete) {
-        this.selectTrackIndex(0, false);
+        this.goToTrack(0, false);
       }
       return;
     }

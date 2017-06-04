@@ -40,8 +40,8 @@ class RepeatButton extends PurePropTypesComponent {
         )}
         onClick={this.handleNextRepeatStrategy}
       >
-        <div className="inner">
-          <Icon className="foreground" width="100%" height="100%" />
+        <div className="inner foreground">
+          <Icon width="100%" height="100%" />
         </div>
       </div>
     );

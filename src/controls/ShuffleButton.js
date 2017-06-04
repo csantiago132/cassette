@@ -16,8 +16,8 @@ class ShuffleButton extends PurePropTypesComponent {
         )}
         onClick={onToggleShuffle}
       >
-        <div className="inner">
-          <ShuffleIcon className="foreground" width="100%" height="100%" />
+        <div className="inner foreground">
+          <ShuffleIcon width="100%" height="100%" />
         </div>
       </div>
     );

@@ -10,4 +10,4 @@ function getVolumeBarDirectionFromPosition (volumeBarPosition) {
   }
 }
 
-module.exports = getVolumeBarDirectionFromPosition;
+export default getVolumeBarDirectionFromPosition;

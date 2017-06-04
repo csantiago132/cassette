@@ -35,4 +35,4 @@ function getHandleStyle (progress, progressDirection) {
   return style;
 }
 
-module.exports = getHandleStyle;
+export default getHandleStyle;

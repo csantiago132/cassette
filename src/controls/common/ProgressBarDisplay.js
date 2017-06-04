@@ -67,4 +67,4 @@ ProgressBarDisplay.propTypes = {
   progressBarRef: PropTypes.func
 };
 
-module.exports = ProgressBarDisplay;
+export default ProgressBarDisplay;

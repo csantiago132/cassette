@@ -53,4 +53,4 @@ RepeatButton.propTypes = {
   onSetRepeatStrategy: PropTypes.func.isRequired
 };
 
-module.exports = RepeatButton;
+export default RepeatButton;

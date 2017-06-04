@@ -7,4 +7,4 @@ function getDisplayText (playlist, activeTrackIndex) {
   return activeTrackIndex < 0 ? null : playlist[activeTrackIndex].displayText;
 }
 
-module.exports = getDisplayText;
+export default getDisplayText;

@@ -29,4 +29,4 @@ ShuffleButton.propTypes = {
   onToggleShuffle: PropTypes.func.isRequired
 };
 
-module.exports = ShuffleButton;
+export default ShuffleButton;

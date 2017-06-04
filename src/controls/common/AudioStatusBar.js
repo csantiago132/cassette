@@ -77,4 +77,4 @@ AudioStatusBar.propTypes = {
   displayTime: PropTypes.string.isRequired
 };
 
-module.exports = AudioStatusBar;
+export default AudioStatusBar;

@@ -32,4 +32,4 @@ PlayPauseButton.propTypes = {
   onTogglePause: PropTypes.func.isRequired
 };
 
-module.exports = PlayPauseButton;
+export default PlayPauseButton;

@@ -147,4 +147,4 @@ ProgressBar.defaultProps = {
   readonly: false
 };
 
-module.exports = ProgressBar;
+export default ProgressBar;

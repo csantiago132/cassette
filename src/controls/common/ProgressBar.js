@@ -107,6 +107,7 @@ class ProgressBar extends PurePropTypesComponent {
       className,
       progressClassName,
       style,
+      progressStyle,
       progress,
       progressDirection,
       handle
@@ -117,6 +118,7 @@ class ProgressBar extends PurePropTypesComponent {
         className={className}
         progressClassName={progressClassName}
         style={style}
+        progressStyle={progressStyle}
         progress={progress}
         progressDirection={progressDirection}
         handle={handle}
@@ -131,6 +133,7 @@ ProgressBar.propTypes = {
   className: PropTypes.string,
   progressClassName: PropTypes.string,
   style: PropTypes.object,
+  progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
   progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
   handle: PropTypes.element,

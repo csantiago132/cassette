@@ -260,7 +260,21 @@ class AudioPlayer extends Component {
     }
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps, prevState) {
+    if (typeof this.props.onRepeatStrategyUpdate === 'function') {
+      const prevRepeatStrategy = getRepeatStrategy(
+        prevState.loop,
+        prevState.cycle
+      );
+      const newRepeatStrategy = getRepeatStrategy(
+        this.state.loop,
+        this.state.cycle
+      );
+      if (prevRepeatStrategy !== newRepeatStrategy) {
+        this.props.onRepeatStrategyUpdate(newRepeatStrategy);
+      }
+    }
+
     /* if we loaded a new playlist and the currently playing track couldn't
      * be found, pause and load the first track in the new playlist.
      */
@@ -397,7 +411,7 @@ class AudioPlayer extends Component {
     // We want to keep the playbackRate where it is when we switch tracks
     this.audio.playbackRate = previousPlaybackRate;
     if (typeof onActiveTrackUpdate === 'function') {
-      onActiveTrackUpdate(this.currentTrackIndex, playlist);
+      onActiveTrackUpdate(this.currentTrackIndex);
     }
   }
 
@@ -590,6 +604,9 @@ class AudioPlayer extends Component {
   toggleShuffle (value) {
     const shuffle = typeof value === 'boolean' ? value : !this.state.shuffle;
     this.setState({ shuffle });
+    if (typeof this.props.onShuffleUpdate === 'function') {
+      this.props.onShuffleUpdate(shuffle);
+    }
   }
 
   setRepeatStrategy (repeatStrategy) {
@@ -723,6 +740,8 @@ AudioPlayer.propTypes = {
   stayOnBackSkipThreshold: PropTypes.number,
   style: PropTypes.object,
   onActiveTrackUpdate: PropTypes.func,
+  onRepeatStrategyUpdate: PropTypes.func,
+  onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func
 };

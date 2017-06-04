@@ -11,6 +11,7 @@ class ProgressBarDisplay extends PurePropTypesComponent {
       className,
       progressClassName,
       style,
+      progressStyle,
       progress,
       progressDirection,
       handle,
@@ -36,7 +37,10 @@ class ProgressBarDisplay extends PurePropTypesComponent {
         }}>
           <div
             className={progressClassName}
-            style={getProgressStyle(progress, progressDirection)}
+            style={{
+              ...getProgressStyle(progress, progressDirection),
+              ...(progressStyle || {})
+            }}
           />
           {handle && (
             <div style={getHandleStyle(progress, progressDirection)}>
@@ -53,6 +57,7 @@ ProgressBarDisplay.propTypes = {
   className: PropTypes.string,
   progressClassName: PropTypes.string,
   style: PropTypes.object,
+  progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
   progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
   handle: PropTypes.element,

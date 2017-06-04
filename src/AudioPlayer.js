@@ -144,6 +144,7 @@ class AudioPlayer extends Component {
     this.audio = null;
 
     // bind methods fired on React events
+    this.setAudioElementRef = this.setAudioElementRef.bind(this);
     this.togglePause = this.togglePause.bind(this);
     this.selectTrackIndex = this.selectTrackIndex.bind(this);
     this.forwardSkip = this.forwardSkip.bind(this);
@@ -172,7 +173,7 @@ class AudioPlayer extends Component {
   }
 
   componentDidMount () {
-    const audio = this.audio = createAudioElementWithLoopEvent();
+    const audio = this.audio = createAudioElementWithLoopEvent(this.audio);
 
     // initialize audio properties
     audio.crossOrigin = this.props.crossOrigin;
@@ -205,10 +206,6 @@ class AudioPlayer extends Component {
           this.togglePause(false);
         }, this.props.autoplayDelayInSeconds * 1000);
       }
-    }
-
-    if (this.props.audioElementRef) {
-      this.props.audioElementRef(audio);
     }
   }
 
@@ -304,9 +301,12 @@ class AudioPlayer extends Component {
 
     // pause the audio element before we unmount
     audio.pause();
+  }
 
-    if (this.props.audioElementRef) {
-      this.props.audioElementRef(audio);
+  setAudioElementRef (ref) {
+    this.audio = ref;
+    if (typeof this.props.audioElementRef === 'function') {
+      this.props.audioElementRef(ref);
     }
   }
 
@@ -692,6 +692,7 @@ class AudioPlayer extends Component {
         title={getDisplayText(this.props.playlist, this.state.activeTrackIndex)}
         style={this.props.style}
       >
+        <audio ref={this.setAudioElementRef} />
         {this.props.controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
           return ControlComponent && (

@@ -1,7 +1,6 @@
 let loopchange;
 
-function createAudioElementWithLoopEvent () {
-  const audio = document.createElement('audio');
+function createAudioElementWithLoopEvent (audio = document.createElement('audio')) {
   new MutationObserver(() => {
     // we shouldn't initialize loopchange at the module
     // level since our code could be run inside of Node

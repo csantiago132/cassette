@@ -15,9 +15,10 @@ class SkipButton extends PurePropTypesComponent {
         )}
         onClick={onClick}
       >
-        <div className="skip_button_inner">
-          <div className="right_facing_triangle foreground"></div>
-          <div className="right_facing_triangle foreground"></div>
+        <div className="skip_button_inner foreground">
+          <div className="right_facing_triangle"></div>
+          <div className="right_facing_triangle"></div>
+          <div className="vertical_bar"></div>
         </div>
       </div>
     );

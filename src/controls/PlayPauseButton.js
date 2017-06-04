@@ -15,9 +15,9 @@ class PlayPauseButton extends PurePropTypesComponent {
         )}
         onClick={onTogglePause}
       >
-        <div className="play_pause_inner">
-          <div className="left foreground"></div>
-          <div className="right foreground"></div>
+        <div className="play_pause_inner foreground">
+          <div className="left"></div>
+          <div className="right"></div>
           <div className="triangle_1"></div>
           <div className="triangle_2"></div>
         </div>

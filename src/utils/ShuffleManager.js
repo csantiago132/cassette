@@ -18,7 +18,10 @@ class ShuffleManager {
     this._allowBackShuffle = Boolean(options.allowBackShuffle);
   }
 
-  findNextItem () {
+  findNextItem (currentIndex) {
+    if (currentIndex !== undefined) {
+      this.setCurrentIndex(currentIndex);
+    }
     this._currentItem = _findNextItem(
       this._list,
       this._forwardStack,
@@ -29,7 +32,10 @@ class ShuffleManager {
     return this._currentItem;
   }
 
-  findPreviousItem () {
+  findPreviousItem (currentIndex) {
+    if (currentIndex !== undefined) {
+      this.setCurrentIndex(currentIndex);
+    }
     this._currentItem = _findNextItem(
       this._list,
       this._backStack,
@@ -40,7 +46,10 @@ class ShuffleManager {
     return this._currentItem;
   }
 
-  pickNextItem (index) {
+  pickNextItem (index, currentIndex) {
+    if (currentIndex !== undefined) {
+      this.setCurrentIndex(currentIndex);
+    }
     if (this._list[index] === undefined) {
       return undefined;
     }
@@ -65,6 +74,14 @@ class ShuffleManager {
         default:
           break;
       }
+    }
+  }
+
+  setCurrentIndex (currentIndex) {
+    const item = this._list[currentIndex];
+    if (this._currentItem !== item) {
+      this.clear();
+      this._currentItem = item;
     }
   }
 

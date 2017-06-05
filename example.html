@@ -108,13 +108,13 @@
           archiveDotOrgUrl: 'https://archive.org/details/RACHMANINOFFRhapsodyOnAThemeByPaganini-Rachmaninoff-NEWTRANSFER'
         }
       ];
-      var audioElement = {};
       var trackTitle = document.querySelector('p.source .track_title');
       var webLink = document.querySelector('p.source .link');
       var muteMessage = document.querySelector('.mute_message');
       var muteMessageTimeout = setTimeout(function () {
         muteMessage.classList.remove('hidden');
       }, 5000);
+      var muted = true;
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,
@@ -131,18 +131,19 @@
             'spacer',
             'progress'
           ],
-          defaultMuted: true,
+          defaultMuted: muted,
           defaultShuffle: false,
-          audioElementRef: function (elem) {
-            audioElement = elem;
-          },
           onActiveTrackUpdate: function (index) {
             var track = playlist[index];
             trackTitle.innerText = track.displayText;
             webLink.href = track.archiveDotOrgUrl;
           },
           onMediaEvent: {
-            volumechange: function () {
+            volumechange: function (e) {
+              if (muted !== e.target.muted) {
+                muted = e.target.muted;
+                console.log(muted ? 'muted!' : 'unmuted!');
+              }
               clearTimeout(muteMessageTimeout);
               muteMessage.classList.add('hidden');
             }

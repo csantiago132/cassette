@@ -649,54 +649,70 @@ class AudioPlayer extends Component {
     return Boolean(this.state.activeTrackIndex < 0);
   }
 
-  getControlProps (controlIndex) {
-    const unknownProps = Object.keys(this.props).reduce((memo, propName) => {
+  render () {
+    const {
+      state, props, setAudioElementRef, controlKeys, togglePause,
+      selectTrackIndex, backSkip, forwardSkip, seekPreview, seekComplete,
+      setVolume, setVolumeComplete, toggleMuted, toggleShuffle,
+      setRepeatStrategy, setPlaybackRate
+    } = this;
+    const { playlist, style, controls } = props;
+    const {
+      activeTrackIndex, paused, currentTime, seekPreviewTime, seekInProgress,
+      awaitingResumeOnSeekComplete, duration, buffered, played, volume,
+      muted, shuffle, playbackRate, setVolumeInProgress, loop, cycle
+    } = state;
+    const unknownProps = Object.keys(props).reduce((memo, propName) => {
       if (!(propName in AudioPlayer.propTypes)) {
-        memo[propName] = this.props[propName];
+        memo[propName] = props[propName];
       }
       return memo;
     }, {});
-
-    const stateProps = { ...this.state };
-    const { loop, cycle } = stateProps;
-    // since we'll be passing repeatStrategy let's leave these out.
-    delete stateProps.loop;
-    delete stateProps.cycle;
-
-    return {
-      ...unknownProps,
-      ...stateProps,
-      key: this.controlKeys[controlIndex],
-      playlist: this.props.playlist,
-      seekUnavailable: this.isSeekUnavailable(),
-      repeatStrategy: getRepeatStrategy(loop, cycle),
-      onTogglePause: this.togglePause,
-      onSelectTrackIndex: this.selectTrackIndex,
-      onBackSkip: this.backSkip,
-      onForwardSkip: this.forwardSkip,
-      onSeekPreview: this.seekPreview,
-      onSeekComplete: this.seekComplete,
-      onSetVolume: this.setVolume,
-      onSetVolumeComplete: this.setVolumeComplete,
-      onToggleMuted: this.toggleMuted,
-      onToggleShuffle: this.toggleShuffle,
-      onSetRepeatStrategy: this.setRepeatStrategy,
-      onSetPlaybackRate: this.setPlaybackRate
-    };
-  }
-
-  render () {
+    const seekUnavailable = this.isSeekUnavailable();
+    const repeatStrategy = getRepeatStrategy(loop, cycle);
     return (
       <div
         className="rrap"
-        title={getDisplayText(this.props.playlist, this.state.activeTrackIndex)}
-        style={this.props.style}
+        title={getDisplayText(playlist, activeTrackIndex)}
+        style={style}
       >
-        <audio ref={this.setAudioElementRef} />
-        {this.props.controls.map((control, index) => {
+        <audio ref={setAudioElementRef} />
+        {controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
           return ControlComponent && (
-            <ControlComponent {...this.getControlProps(index)} />
+            <ControlComponent
+              {...unknownProps}
+              key={controlKeys[index]}
+              playlist={playlist}
+              activeTrackIndex={activeTrackIndex}
+              paused={paused}
+              currentTime={currentTime}
+              seekPreviewTime={seekPreviewTime}
+              seekInProgress={seekInProgress}
+              awaitingResumeOnSeekComplete={awaitingResumeOnSeekComplete}
+              duration={duration}
+              buffered={buffered}
+              played={played}
+              volume={volume}
+              muted={muted}
+              shuffle={shuffle}
+              playbackRate={playbackRate}
+              setVolumeInProgress={setVolumeInProgress}
+              seekUnavailable={seekUnavailable}
+              repeatStrategy={repeatStrategy}
+              onTogglePause={togglePause}
+              onSelectTrackIndex={selectTrackIndex}
+              onBackSkip={backSkip}
+              onForwardSkip={forwardSkip}
+              onSeekPreview={seekPreview}
+              onSeekComplete={seekComplete}
+              onSetVolume={setVolume}
+              onSetVolumeComplete={setVolumeComplete}
+              onToggleMuted={toggleMuted}
+              onToggleShuffle={toggleShuffle}
+              onSetRepeatStrategy={setRepeatStrategy}
+              onSetPlaybackRate={setPlaybackRate}
+            />
           );
         })}
       </div>

@@ -26,6 +26,13 @@
         font-style: italic;
         font-size: 18px;
       }
+      .mute_message {
+        margin-left: 2.6rem;
+        margin-right: 1rem;
+      }
+      .mute_message.hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -36,6 +43,8 @@
           <span class="track_title"></span> on archive.org
         </a>
       </p>
+      <p class="mute_message hidden">
+        (You won't hear anything until you unmute the audio.)
       </p>
       <div id="audio_player_container"></div>
     </main>
@@ -102,10 +111,28 @@
       var audioElement = {};
       var trackTitle = document.querySelector('p.source .track_title');
       var webLink = document.querySelector('p.source .link');
+      var muteMessage = document.querySelector('.mute_message');
+      var muteMessageTimeout = setTimeout(function () {
+        muteMessage.classList.remove('hidden');
+      }, 5000);
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,
           style: { position: 'fixed', bottom: 0, width: '100%' },
+          autoplay: true,
+          controls: [
+            'spacer',
+            'backskip',
+            'playpause',
+            'forwardskip',
+            'volume',
+            'shuffle',
+            'repeat',
+            'spacer',
+            'progress'
+          ],
+          defaultMuted: true,
+          defaultShuffle: false,
           audioElementRef: function (elem) {
             audioElement = elem;
           },
@@ -115,11 +142,9 @@
             webLink.href = track.archiveDotOrgUrl;
           },
           onMediaEvent: {
-            'playing': function (e) {
-              console.log('Playback has started', audioElement.src);
-            },
-            'pause': function (e) {
-              console.log('Playback was paused', audioElement.src);
+            volumechange: function () {
+              clearTimeout(muteMessageTimeout);
+              muteMessage.classList.add('hidden');
             }
           }
         }),

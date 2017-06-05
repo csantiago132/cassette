@@ -19,11 +19,24 @@
         color: #222;
         font-size: 42px;
       }
+      .source {
+        margin-top: 2rem;
+        margin-left: 2.6rem;
+        margin-right: 1rem;
+        font-style: italic;
+        font-size: 18px;
+      }
     </style>
   </head>
   <body>
     <main class="demo">
       <h1 class="header">React Responsive Audio Player</h1>
+      <p class="source">
+        <a class="link" target="_blank">
+          <span class="track_title"></span> on archive.org
+        </a>
+      </p>
+      </p>
       <div id="audio_player_container"></div>
     </main>
 
@@ -36,25 +49,70 @@
     <script>
       var playlist = [
         {
-          url: 'http://benwiley4000.github.io/react-responsive-audio-player/audio/secret_of_trash_island.mp3',
-          displayText: 'Trash Island'
+          url: 'https://ia801406.us.archive.org/9/items/BillyWilliams_288/ATaleOfParis1910_64kb.mp3',
+          displayText: 'Billy Williams - A Tale of Paris',
+          archiveDotOrgUrl: 'https://archive.org/details/BillyWilliams_288/ATaleOfParis1910.mp3'
         },
         {
-          url: 'http://benwiley4000.github.io/react-responsive-audio-player/audio/marty_mcpaper_theme.mp3',
-          displayText: 'Marty McPaper'
+          url: 'https://ia800509.us.archive.org/4/items/BenWebster79JazzPlaylist/Ben%20Webster%20-%20Blue%20Skies%201944.mp3',
+          displayText: 'Ben Webster - Blue Skies',
+          archiveDotOrgUrl: 'https://archive.org/details/BenWebster79JazzPlaylist/Ben+Webster+-+Blue+Skies+1944.mp3'
         },
         {
-          url: 'http://benwiley4000.github.io/react-responsive-audio-player/audio/in_the_hall_of_the_mountain_king.mp3',
-          displayText: 'Mountain King'
+          url: 'https://ia600302.us.archive.org/28/items/sourire1906/sourire1906_64kb.mp3',
+          displayText: 'Columbia Orchestra - Sourire d\'Avril',
+          archiveDotOrgUrl: 'https://archive.org/details/sourire1906'
+        },
+        {
+          url: 'https://ia800200.us.archive.org/2/items/AdaJoneswithVictorLightOperaCompany/AdaJoneswithVictorLightOperaCompany-TheYamaYamaMan_2.mp3',
+          displayText: 'Ada Jones - Yama Yama Man',
+          archiveDotOrgUrl: 'https://archive.org/details/AdaJoneswithVictorLightOperaCompany/AdaJoneswithVictorLightOperaCompany-TheYamaYamaMan_2.mp3'
+        },
+        {
+          url: 'https://ia801400.us.archive.org/2/items/rhapblue11924/rhapblue11924_64kb.mp3',
+          displayText: 'Paul Whiteman and George Gershwin - Rhapsody in Blue pt. 1',
+          archiveDotOrgUrl: 'https://archive.org/details/rhapblue11924'
+        },
+        {
+          url: 'https://ia801406.us.archive.org/27/items/EDIS-SRP-0198-15/EDIS-SRP-0198-15.mp3',
+          displayText: 'Frank Luther - Barbara Allen',
+          archiveDotOrgUrl: 'https://archive.org/details/EDIS-SRP-0198-15'
+        },
+        {
+          url: 'https://ia800309.us.archive.org/14/items/rhapblue21924/rhapblue21924_64kb.mp3',
+          displayText: 'Paul Whiteman and George Gershwin - Rhapsody in Blue pt. 2',
+          archiveDotOrgUrl: 'https://archive.org/details/rhapblue21924'
+        },
+        {
+          url: 'https://ia800509.us.archive.org/4/items/BenWebster79JazzPlaylist/Ben%20Webster%20And%20Duke%20Ellington%20-%20Cotton%20Tail%201940.mp3',
+          displayText: 'Ben Webster and Duke Ellington - Cotton Tail',
+          archiveDotOrgUrl: 'https://archive.org/details/BenWebster79JazzPlaylist/Ben+Webster+And+Duke+Ellington+-+Cotton+Tail+1940.mp3'
+        },
+        {
+          url: 'https://ia601409.us.archive.org/11/items/MidsommerDansen--scandinavian/MidsommerDansen--scandinavian.mp3',
+          displayText: 'Midsommer Schottische',
+          archiveDotOrgUrl: 'https://archive.org/details/MidsommerDansen--scandinavian'
+        },
+        {
+          url: 'https://ia800907.us.archive.org/15/items/RACHMANINOFFRhapsodyOnAThemeByPaganini-Rachmaninoff-NEWTRANSFER/Rachmaninoff-RhapsodyOnAThemeByPaganiniOp.43.mp3',
+          displayText: 'Sergei Rachmaninoff - Rhapsody on a Theme of Paganini',
+          archiveDotOrgUrl: 'https://archive.org/details/RACHMANINOFFRhapsodyOnAThemeByPaganini-Rachmaninoff-NEWTRANSFER'
         }
       ];
       var audioElement = {};
+      var trackTitle = document.querySelector('p.source .track_title');
+      var webLink = document.querySelector('p.source .link');
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,
           style: { position: 'fixed', bottom: 0, width: '100%' },
           audioElementRef: function (elem) {
             audioElement = elem;
+          },
+          onActiveTrackUpdate: function (index) {
+            var track = playlist[index];
+            trackTitle.innerText = track.displayText;
+            webLink.href = track.archiveDotOrgUrl;
           },
           onMediaEvent: {
             'playing': function (e) {

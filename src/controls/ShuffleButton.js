@@ -11,7 +11,7 @@ class ShuffleButton extends PurePropTypesComponent {
     return (
       <div
         className={classNames(
-          'rrap__material_toggle rrap__audio_button',
+          'rrap__material_toggle rrap__audio_button rrap__shuffle_btn',
           { on: shuffle }
         )}
         onClick={onToggleShuffle}

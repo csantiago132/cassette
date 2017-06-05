@@ -179,3 +179,13 @@ $audio_player_base_bg_color: firebrick;
 # Development
 
 For building and testing instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+# Icons
+
+The standard control components make use of icons from various sources.
+
+The CSS YouTube-style play/pause button and the skip button were authored in part by [@benwiley4000](https://github.com/benwiley4000), with heavy assistance from [this CodePen](https://codepen.io/aralon/pen/NqGWXZ%20) by [@aralon](https://github.com/Aralon).
+
+The CSS volume icon set is from [icono](https://github.com/saeedalipoor/icono) by [@saeedalipoor](https://github.com/saeedalipoor).
+
+The SVG repeat icons and shuffle icon come from Google's [material-design-icons](https://github.com/google/material-design-icons).

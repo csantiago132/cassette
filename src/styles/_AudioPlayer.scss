@@ -3,6 +3,11 @@
 .rrap {
   display: flex;
   flex-direction: row;
-  height: $rrap_base_height;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
   background-color: $rrap_base_bg_color;
+
+  > * {
+    height: $rrap_base_height;
+  }
 }

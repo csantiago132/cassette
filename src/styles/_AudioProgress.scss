@@ -4,8 +4,8 @@
 
   &__audio_progress_container {
     position: relative;
-    height: 100%;
     flex-grow: 1;
+    min-width: 300px;
   }
   &__audio_progress_bar {
     height: 100%;

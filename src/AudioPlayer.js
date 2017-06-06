@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import arrayFindIndex from 'array-find-index';
 import classNames from 'classnames';
 
-import createAudioElementWithLoopEvent from './factories/createAudioElementWithLoopEvent';
+import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import getSourceList from './utils/getSourceList';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
@@ -161,6 +160,7 @@ class AudioPlayer extends Component {
     // bind audio event listeners to add on mount and remove on unmount
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
     this.handleAudioPause = this.handleAudioPause.bind(this);
+    this.handleAudioSrcchange = this.handleAudioSrcchange.bind(this);
     this.handleAudioEnded = this.handleAudioEnded.bind(this);
     this.handleAudioStalled = this.handleAudioStalled.bind(this);
     this.handleAudioTimeupdate = this.handleAudioTimeupdate.bind(this);
@@ -173,7 +173,7 @@ class AudioPlayer extends Component {
   }
 
   componentDidMount () {
-    const audio = this.audio = createAudioElementWithLoopEvent(this.audio);
+    const audio = this.audio = createCustomAudioElement(this.audio);
 
     // initialize audio properties
     audio.crossOrigin = this.props.crossOrigin;
@@ -187,6 +187,7 @@ class AudioPlayer extends Component {
     audio.preload = 'metadata';
     audio.addEventListener('play', this.handleAudioPlay);
     audio.addEventListener('pause', this.handleAudioPause);
+    audio.addEventListener('srcchange', this.handleAudioSrcchange);
     audio.addEventListener('ended', this.handleAudioEnded);
     audio.addEventListener('stalled', this.handleAudioStalled);
     audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
@@ -244,16 +245,21 @@ class AudioPlayer extends Component {
     const oldPlaylist = this.props.playlist;
 
     const currentTrackUrl = ((oldPlaylist || [])[this.currentTrackIndex] || {}).url;
-    this.currentTrackIndex = arrayFindIndex(newPlaylist, track => {
-      return track.url && currentTrackUrl === track.url;
-    });
-    /* if the track we're already playing is in the new playlist, update the
-     * activeTrackIndex.
-     */
-    if (this.currentTrackIndex !== -1) {
-      this.setState({
-        activeTrackIndex: this.currentTrackIndex
-      });
+    if (
+      currentTrackUrl !== (
+        newPlaylist[this.currentTrackIndex] &&
+        newPlaylist[this.currentTrackIndex].url
+      )
+    ) {
+      this.currentTrackIndex = findTrackIndexByUrl(newPlaylist, currentTrackUrl);
+      /* if the track we're already playing is in the new playlist, update the
+       * activeTrackIndex.
+       */
+      if (this.currentTrackIndex !== -1) {
+        this.setState({
+          activeTrackIndex: this.currentTrackIndex
+        });
+      }
     }
   }
 
@@ -285,6 +291,7 @@ class AudioPlayer extends Component {
     // remove event listeners on the audio element
     audio.removeEventListener('play', this.handleAudioPlay);
     audio.removeEventListener('pause', this.handleAudioPause);
+    audio.removeEventListener('srcchange', this.handleAudioSrcchange);
     audio.removeEventListener('ended', this.handleAudioEnded);
     audio.removeEventListener('stalled', this.handleAudioStalled);
     audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
@@ -340,6 +347,43 @@ class AudioPlayer extends Component {
 
   handleAudioPause () {
     this.setState({ paused: true });
+  }
+
+  handleAudioSrcchange () {
+    const { playlist } = this.props;
+    const currentTrackUrl = (
+      playlist &&
+      playlist[this.currentTrackIndex] &&
+      playlist[this.currentTrackIndex].url
+    );
+    const newSrc = this.audio.src;
+    if (currentTrackUrl === newSrc) {
+      // we're good! nothing to update.
+      return;
+    }
+    // looks like 'src' was set from outside our component. let's
+    // see if we can use it or if we have to reset it.
+    const newTrackIndex = findTrackIndexByUrl(playlist, newSrc);
+    if (newTrackIndex === -1) {
+      // this isn't in our playlist - use our latest state
+      // to try to preserve everything how it was.
+      this.audio.src = currentTrackUrl;
+      this.audio.currentTime = this.state.currentTime;
+      this.audio.playbackRate = this.state.playbackRate;
+      this.audio[this.state.paused ? 'pause' : 'play']();
+      logError(
+        `Source '${newSrc}' does not exist in the loaded playlist. ` +
+        `Make sure you've updated the 'playlist' prop to AudioPlayer ` +
+        `before you select this track!`
+      );
+      return;
+    }
+    // even if our new track selection is fine, we'll need to
+    // restore the playbackRate (at least until the HTML spec
+    // changes to stop resetting it on source change).
+    // https://github.com/whatwg/html/issues/2739
+    this.audio.playbackRate = this.state.playbackRate;
+    this.selectTrackIndex(newTrackIndex);
   }
 
   handleAudioEnded () {

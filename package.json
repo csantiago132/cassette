@@ -11,6 +11,7 @@
     "build:component_css": "gulp styles",
     "build": "npm run build:webpack && npm run build:minify && npm run build:component_css",
     "dev": "webpack-dev-server --open",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

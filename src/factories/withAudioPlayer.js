@@ -12,10 +12,13 @@ function withAudioPlayer () {
       }
 
       componentDidMount () {
-        this.unsubscribe = this.context.audioPlayer.subscribe(() => {
-          this.setState({
-            controlProps: this.context.audioPlayer.controlProps
-          });
+        const { audioPlayer } = this.context;
+        this.unsubscribe = audioPlayer.subscribe(() => {
+          if (audioPlayer.controlProps !== this.state.controlProps) {
+            this.setState({
+              controlProps: audioPlayer.controlProps
+            });
+          }
         });
       }
 

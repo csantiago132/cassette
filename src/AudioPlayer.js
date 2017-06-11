@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
+import AudioPlayerContext from './utils/AudioPlayerContext';
 import getSourceList from './utils/getSourceList';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
@@ -139,6 +140,11 @@ class AudioPlayer extends Component {
       allowBackShuffle: props.allowBackShuffle
     });
 
+    // used to communicate updates to descendant components via subscription
+    this.audioPlayerContext = new AudioPlayerContext(
+      this.getControlProps(props, this.state)
+    );
+
     // html audio element used for playback
     this.audio = null;
 
@@ -263,7 +269,16 @@ class AudioPlayer extends Component {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    this.audioPlayerContext.setControlProps(
+      this.getControlProps(nextProps, nextState)
+    );
+    return true;
+  }
+
   componentDidUpdate (prevProps, prevState) {
+    this.audioPlayerContext.notifySubscribers();
+
     if (typeof this.props.onRepeatStrategyUpdate === 'function') {
       const prevRepeatStrategy = getRepeatStrategy(
         prevState.loop,
@@ -308,6 +323,12 @@ class AudioPlayer extends Component {
 
     // pause the audio element before we unmount
     audio.pause();
+  }
+
+  getChildContext () {
+    return {
+      audioPlayer: this.audioPlayerContext
+    };
   }
 
   setAudioElementRef (ref) {
@@ -576,7 +597,7 @@ class AudioPlayer extends Component {
   }
 
   seekPreview (targetTime) {
-    if (this.isSeekUnavailable()) {
+    if (this.isSeekUnavailable(this.state)) {
       return;
     }
     const { paused, awaitingResumeOnSeekComplete } = this.state;
@@ -689,12 +710,11 @@ class AudioPlayer extends Component {
     this.audio.playbackRate = rate;
   }
 
-  isSeekUnavailable () {
-    return Boolean(this.state.activeTrackIndex < 0);
+  isSeekUnavailable (state) {
+    return Boolean(state.activeTrackIndex < 0);
   }
 
-  getControlProps () {
-    const { props, state } = this;
+  getControlProps (props, state) {
     const unknownProps = Object.keys(props).reduce((memo, propName) => {
       if (!(propName in AudioPlayer.propTypes)) {
         memo[propName] = props[propName];
@@ -718,7 +738,7 @@ class AudioPlayer extends Component {
       shuffle: state.shuffle,
       playbackRate: state.playbackRate,
       setVolumeInProgress: state.setVolumeInProgress,
-      seekUnavailable: this.isSeekUnavailable(),
+      seekUnavailable: this.isSeekUnavailable(state),
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),
       onTogglePause: this.togglePause,
       onSelectTrackIndex: this.selectTrackIndex,
@@ -736,7 +756,7 @@ class AudioPlayer extends Component {
   }
 
   render () {
-    const controlProps = this.getControlProps();
+    const { controlProps } = this.audioPlayerContext;
     return (
       <div
         className="rrap"
@@ -744,7 +764,7 @@ class AudioPlayer extends Component {
         style={this.props.style}
       >
         <audio ref={this.setAudioElementRef} />
-        {this.props.controls.map((control, index) => {
+        {this.props.children || this.props.controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
           return ControlComponent && (
             <ControlComponent {...controlProps} key={this.controlKeys[index]} />
@@ -755,6 +775,12 @@ class AudioPlayer extends Component {
   }
 
 }
+
+AudioPlayer.childContextTypes = {
+  audioPlayer: PropTypes.shape({
+    controlProps: PropTypes.object.isRequired
+  }).isRequired
+};
 
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({

@@ -28,4 +28,4 @@ class AudioPlayerContext {
   }
 }
 
-module.exports = AudioPlayerContext;
+export default AudioPlayerContext;

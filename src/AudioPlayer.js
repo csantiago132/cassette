@@ -127,7 +127,10 @@ class AudioPlayer extends Component {
     };
 
     // index matching requested track (whether track has loaded or not)
-    this.currentTrackIndex = props.startingTrackIndex;
+    this.currentTrackIndex = convertToNumberWithinIntervalBounds(
+      props.startingTrackIndex,
+      0
+    );
 
     // volume at last time we were unmuted and not actively setting volume
     this.lastStableVolume = this.state.volume;

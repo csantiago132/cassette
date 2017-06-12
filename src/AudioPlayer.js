@@ -312,20 +312,6 @@ class AudioPlayer extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     this.audioPlayerContext.notifySubscribers();
-
-    if (typeof this.props.onRepeatStrategyUpdate === 'function') {
-      const prevRepeatStrategy = getRepeatStrategy(
-        prevState.loop,
-        prevState.cycle
-      );
-      const newRepeatStrategy = getRepeatStrategy(
-        this.state.loop,
-        this.state.cycle
-      );
-      if (prevRepeatStrategy !== newRepeatStrategy) {
-        this.props.onRepeatStrategyUpdate(newRepeatStrategy);
-      }
-    }
   }
 
   componentWillUnmount () {
@@ -708,6 +694,10 @@ class AudioPlayer extends Component {
       );
       return;
     }
+    const prevRepeatStrategy = getRepeatStrategy(
+      this.state.loop,
+      this.state.cycle
+    );
     switch (repeatStrategy) {
       case 'track':
         // let event listener take care of state change.
@@ -729,6 +719,12 @@ class AudioPlayer extends Component {
         break;
       default:
         break;
+    }
+    if (
+      typeof this.props.onRepeatStrategyUpdate === 'function' &&
+      prevRepeatStrategy !== repeatStrategy
+    ) {
+      this.props.onRepeatStrategyUpdate(repeatStrategy);
     }
   }
 

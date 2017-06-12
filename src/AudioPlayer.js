@@ -143,12 +143,9 @@ class AudioPlayer extends Component {
       allowBackShuffle: props.allowBackShuffle
     });
 
-    // passed to control components and compared for shouldComponentUpdate
-    this.unknownProps = this.getUnknownProps(props);
-
     // used to communicate updates to descendant components via subscription
     this.audioPlayerContext = new AudioPlayerContext(
-      this.getControlProps(props, this.state, this.unknownProps)
+      this.getControlProps(props, this.state)
     );
 
     // html audio element used for playback
@@ -282,26 +279,14 @@ class AudioPlayer extends Component {
   // there's not a great solution besides this one at the moment.
   // see: https://github.com/facebook/react/issues/9922
   shouldComponentUpdate (nextProps, nextState) {
-    const lastUnknownProps = this.unknownProps;
-    const nextUnknownProps = this.unknownProps = this.getUnknownProps(nextProps);
     this.audioPlayerContext.setControlProps(
-      this.getControlProps(nextProps, nextState, nextUnknownProps)
+      this.getControlProps(nextProps, nextState)
     );
     if (
       React.Children.count(nextProps.children) === 0 ||
       this.props.children !== nextProps.children
     ) {
       return true;
-    }
-    for (const key of Object.keys(lastUnknownProps)) {
-      if (!(key in nextUnknownProps)) {
-        return true;
-      }
-    }
-    for (const key of Object.keys(nextUnknownProps)) {
-      if(!(lastUnknownProps[key] === nextUnknownProps[key])) {
-        return true;
-      }
     }
     // since we aren't going to render, we should go ahead
     // and trigger subscription updates (which otherwise would
@@ -736,18 +721,8 @@ class AudioPlayer extends Component {
     return Boolean(state.activeTrackIndex < 0);
   }
 
-  getUnknownProps (props) {
-    return Object.keys(props).reduce((memo, propName) => {
-      if (!(propName in AudioPlayer.propTypes)) {
-        memo[propName] = props[propName];
-      }
-      return memo;
-    }, {});
-  }
-
-  getControlProps (props, state, unknownProps) {
+  getControlProps (props, state) {
     return {
-      ...unknownProps,
       playlist: props.playlist,
       activeTrackIndex: state.activeTrackIndex,
       paused: state.paused,
@@ -781,8 +756,14 @@ class AudioPlayer extends Component {
   }
 
   render () {
-    const { controlProps } = this.audioPlayerContext;
     const hasChildren = Boolean(React.Children.count(this.props.children));
+    const unknownProps = Object.keys(this.props).reduce((memo, propName) => {
+      if (!(propName in AudioPlayer.propTypes)) {
+        memo[propName] = this.props[propName];
+      }
+      return memo;
+    }, {});
+    const { controlProps } = this.audioPlayerContext;
     return (
       <div
         className="rrap"
@@ -794,7 +775,11 @@ class AudioPlayer extends Component {
         {!hasChildren && this.props.controls.map((control, index) => {
           const ControlComponent = getControlComponent(control);
           return ControlComponent && (
-            <ControlComponent {...controlProps} key={this.controlKeys[index]} />
+            <ControlComponent
+              {...unknownProps}
+              {...controlProps}
+              key={this.controlKeys[index]}
+            />
           );
         })}
       </div>

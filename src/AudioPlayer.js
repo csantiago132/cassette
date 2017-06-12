@@ -303,8 +303,9 @@ class AudioPlayer extends Component {
         return true;
       }
     }
-    // since we aren't going to render, we can go ahead
-    // and trigger subscription updates.
+    // since we aren't going to render, we should go ahead
+    // and trigger subscription updates (which otherwise would
+    // need to happen after our render).
     this.audioPlayerContext.notifySubscribers();
     return false;
   }

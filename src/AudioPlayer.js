@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import AudioPlayerContext from './utils/AudioPlayerContext';
@@ -764,24 +765,30 @@ class AudioPlayer extends Component {
       return memo;
     }, {});
     const { controlProps } = this.audioPlayerContext;
+    const ControlWrapper = this.props.controlWrapper;
     return (
-      <div
-        className="rrap"
-        title={getDisplayText(this.props.playlist, this.state.activeTrackIndex)}
-        style={this.props.style}
-      >
+      <div style={this.props.style}>
         <audio ref={this.setAudioElementRef} />
         {hasChildren && this.props.children}
-        {!hasChildren && this.props.controls.map((control, index) => {
-          const ControlComponent = getControlComponent(control);
-          return ControlComponent && (
-            <ControlComponent
-              {...unknownProps}
-              {...controlProps}
-              key={this.controlKeys[index]}
-            />
-          );
-        })}
+        {!hasChildren && (
+          <ControlWrapper
+            title={getDisplayText(
+              this.props.playlist,
+              this.state.activeTrackIndex
+            )}
+          >
+            {this.props.controls.map((control, index) => {
+              const ControlComponent = getControlComponent(control);
+              return ControlComponent && (
+                <ControlComponent
+                  {...unknownProps}
+                  {...controlProps}
+                  key={this.controlKeys[index]}
+                />
+              );
+            })}
+          </ControlWrapper>
+        )}
       </div>
     );
   }
@@ -813,6 +820,7 @@ AudioPlayer.propTypes = {
       'spacer'
     ])
   ]).isRequired),
+  controlWrapper: PropTypes.func,
   autoplay: PropTypes.bool,
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,
@@ -845,6 +853,7 @@ AudioPlayer.defaultProps = {
     'spacer',
     'progress'
   ],
+  controlWrapper: AudioControlBar,
   autoplay: false,
   autoplayDelayInSeconds: 0,
   gapLengthInSeconds: 0,

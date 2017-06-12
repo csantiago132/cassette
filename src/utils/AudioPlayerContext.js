@@ -16,7 +16,10 @@ class AudioPlayerContext {
   }
 
   subscribe (f) {
-    this._subscriptions.push(f);
+    const index = this._subscriptions.indexOf(f);
+    if (index === -1) {
+      this._subscriptions.push(f);
+    }
     return () => this._unsubscribe(f);
   }
 

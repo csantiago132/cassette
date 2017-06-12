@@ -264,13 +264,16 @@ class AudioPlayer extends Component {
       )
     ) {
       this.currentTrackIndex = findTrackIndexByUrl(newPlaylist, currentTrackUrl);
-      /* if the track we're already playing is in the new playlist, update the
-       * activeTrackIndex.
-       */
       if (this.currentTrackIndex !== -1) {
+        /* if the track we're already playing is in the new playlist, update the
+         * activeTrackIndex.
+         */
         this.setState({
           activeTrackIndex: this.currentTrackIndex
         });
+      } else {
+        // if not, then load the first track in the new playlist, and pause.
+        this.goToTrack(0, false);
       }
     }
   }
@@ -321,13 +324,6 @@ class AudioPlayer extends Component {
       if (prevRepeatStrategy !== newRepeatStrategy) {
         this.props.onRepeatStrategyUpdate(newRepeatStrategy);
       }
-    }
-
-    /* if we loaded a new playlist and the currently playing track couldn't
-     * be found, pause and load the first track in the new playlist.
-     */
-    if (this.currentTrackIndex === -1) {
-      this.goToTrack(0, false);
     }
   }
 
@@ -531,10 +527,9 @@ class AudioPlayer extends Component {
     }
   }
 
+  // assumes playlist is valid - don't call without checking
+  // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
-    if (!isPlaylistValid(this.props.playlist)) {
-      return;
-    }
     const isNewTrack = this.currentTrackIndex !== index;
     this.currentTrackIndex = index;
     this.setState({

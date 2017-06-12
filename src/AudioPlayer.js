@@ -310,7 +310,7 @@ class AudioPlayer extends Component {
     return false;
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate () {
     this.audioPlayerContext.notifySubscribers();
   }
 

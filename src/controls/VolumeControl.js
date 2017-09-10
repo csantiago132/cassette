@@ -173,7 +173,7 @@ class VolumeControl extends PurePropTypesComponent {
         onMouseLeave={this.handleMouseLeave}
         onTouchStart={stopPropagation}
       >
-        <div
+        <button
           ref={this.setMuteToggleRef}
           className={classNames(
             'button rrap__audio_button',
@@ -185,7 +185,7 @@ class VolumeControl extends PurePropTypesComponent {
             'foreground',
             getVolumeIconClassName(volume, muted)
           )} />
-        </div>
+        </button>
         {volumeBarPosition && (
           <div
             ref={this.setVolumeBarContainerRef}

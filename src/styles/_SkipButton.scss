@@ -3,6 +3,8 @@
 .rrap {
 
   &__skip_button {
+    background: none;
+    border: none;
 
     &.back {
       transform: rotate(180deg);

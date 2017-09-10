@@ -4,6 +4,8 @@
 
   /* http://codepen.io/aralon/pen/NqGWXZ */
   &__play_pause_button {
+    background: none;
+    border: none;
 
     .play_pause_inner {
       height: $rrap_play_btn_inner_height;

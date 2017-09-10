@@ -33,7 +33,7 @@ class RepeatButton extends PurePropTypesComponent {
     const { repeatStrategy } = this.props;
     const Icon = repeatStrategy === 'track' ? RepeatOneIcon : RepeatIcon;
     return (
-      <div
+      <button
         className={classNames(
           'rrap__material_toggle rrap__audio_button rrap__repeat_btn',
           { on: repeatStrategy !== 'none' }
@@ -43,7 +43,7 @@ class RepeatButton extends PurePropTypesComponent {
         <div className="inner foreground">
           <Icon width="100%" height="100%" />
         </div>
-      </div>
+      </button>
     );
   }
 }

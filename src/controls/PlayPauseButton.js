@@ -8,7 +8,7 @@ class PlayPauseButton extends PurePropTypesComponent {
   render () {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (
-      <div
+      <button
         className={classNames(
           'rrap__play_pause_button rrap__audio_button',
           { paused: paused && !awaitingResumeOnSeekComplete }
@@ -21,7 +21,7 @@ class PlayPauseButton extends PurePropTypesComponent {
           <div className="triangle_1"></div>
           <div className="triangle_2"></div>
         </div>
-      </div>
+      </button>
     );
   }
 }

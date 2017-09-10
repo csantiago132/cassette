@@ -8,7 +8,7 @@ class SkipButton extends PurePropTypesComponent {
   render () {
     const { back, onClick } = this.props;
     return (
-      <div
+      <button
         className={classNames(
           'rrap__skip_button rrap__audio_button',
           { back }
@@ -20,7 +20,7 @@ class SkipButton extends PurePropTypesComponent {
           <div className="right_facing_triangle"></div>
           <div className="vertical_bar"></div>
         </div>
-      </div>
+      </button>
     );
   }
 }

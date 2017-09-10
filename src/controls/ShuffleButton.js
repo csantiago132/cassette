@@ -9,7 +9,7 @@ class ShuffleButton extends PurePropTypesComponent {
   render () {
     const { shuffle, onToggleShuffle } = this.props;
     return (
-      <div
+      <button
         className={classNames(
           'rrap__material_toggle rrap__audio_button rrap__shuffle_btn',
           { on: shuffle }
@@ -19,7 +19,7 @@ class ShuffleButton extends PurePropTypesComponent {
         <div className="inner foreground">
           <ShuffleIcon width="100%" height="100%" />
         </div>
-      </div>
+      </button>
     );
   }
 }

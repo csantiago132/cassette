@@ -7,6 +7,8 @@
     position: relative;
 
     .button {
+      background: none;
+      border: none;
       width: $rrap_volume_btn_width;
 
       [class*='icono-volume'] {

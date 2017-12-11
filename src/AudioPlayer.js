@@ -56,6 +56,9 @@ function getNextControlKey () {
  * pauses audio while user is selecting new time
  * for playback)
  *
+ * Accepts 'maintainPlaybackRate' prop (default false,
+ * stops playback rate from changing on src update)
+ *
  * Accepts 'stayOnBackSkipThreshold' prop, default 5,
  * is number of seconds to progress until pressing back skip
  * restarts the current track.
@@ -191,7 +194,7 @@ class AudioPlayer extends Component {
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.loop = this.state.loop;
-    audio.playbackRate = this.state.playbackRate;
+    audio.defaultPlaybackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
     audio.preload = 'metadata';
@@ -370,7 +373,7 @@ class AudioPlayer extends Component {
   }
 
   handleAudioSrcchange () {
-    const { playlist } = this.props;
+    const { playlist, maintainPlaybackRate } = this.props;
     const currentTrackUrl = (
       playlist &&
       playlist[this.currentTrackIndex] &&
@@ -398,11 +401,9 @@ class AudioPlayer extends Component {
       );
       return;
     }
-    // even if our new track selection is fine, we'll need to
-    // restore the playbackRate (at least until the HTML spec
-    // changes to stop resetting it on source change).
-    // https://github.com/whatwg/html/issues/2739
-    this.audio.playbackRate = this.state.playbackRate;
+    if (maintainPlaybackRate) {
+      this.audio.playbackRate = this.state.playbackRate;
+    }
     this.selectTrackIndex(newTrackIndex);
   }
 
@@ -472,8 +473,9 @@ class AudioPlayer extends Component {
     }
     const previousPlaybackRate = this.audio.playbackRate;
     this.audio.src = playlist[this.currentTrackIndex].url;
-    // We want to keep the playbackRate where it is when we switch tracks
-    this.audio.playbackRate = previousPlaybackRate;
+    if (this.props.maintainPlaybackRate) {
+      this.audio.playbackRate = previousPlaybackRate;
+    }
     if (typeof onActiveTrackUpdate === 'function') {
       onActiveTrackUpdate(this.currentTrackIndex);
     }
@@ -866,6 +868,7 @@ AudioPlayer.defaultProps = {
   startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
   pauseOnSeekPreview: false,
+  maintainPlaybackRate: false,
   allowBackShuffle: false,
   stayOnBackSkipThreshold: 5
 };

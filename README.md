@@ -64,16 +64,15 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player/dist/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.2.0/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
 
-    <script src="https://unpkg.com/react@15/dist/react.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
-    <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-audio-player@1.1.3/dist/audioplayer.js"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.2.0/dist/audioplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', displayText: 'Track 1 - a track to remember' },
@@ -83,7 +82,8 @@ The fastest way to get off the ground with this module is to paste the following
           playlist: playlist,
           autoplay: true,
           autoplayDelayInSeconds: 2.1,
-          style: { position: 'fixed', bottom: 0 }
+          style: { position: 'fixed', bottom: 0 },
+          controls: ['playpause', 'forwardskip', 'progressdisplay']
         }),
         document.getElementById('audio_player_container')
       );
@@ -109,6 +109,17 @@ If you prefer not to use a package bundler, you can find built releases to downl
 Options can be passed to the AudioPlayer element as props. Currently supported props are:
 
 * `playlist`: an array containing urls and display text for each of the tracks you wish to play (see above example for format). **undefined** by default.
+
+* `controls`: an array of keyword strings which correspond to available audio control components. The order of keywords translates to the order of rendered controls. The default array is: `['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress']`. The possible keyword values are:
+  - `'playpause'` (play/pause toggle button)
+  - `'backskip'` (previous track skip button)
+  - `'forwardskip'` (next track skip button)
+  - `'volume'` (a control for adjusting volume and toggling mute)
+  - `'repeat'` (a control which cycles between no-repeat, repeat-playlist, repeat-track)
+  - `'shuffle'` (a control which toggles a shuffle mode)
+  - `'progress'` (a drag-to-seek audio progress bar)
+  - `'progressdisplay'` (a read-only [non-draggable] progress bar)
+  - `'spacer'` (a transparent space-filling element whose default width is `10px`, although [the style of the `.spacer` class can be overridden](src/styles/_Spacer.scss))
 
 * `autoplay`: a boolean value (`true`/`false`) that if true will cause the player to begin automatically once mounted. **false** by default.
 

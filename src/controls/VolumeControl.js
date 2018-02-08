@@ -6,6 +6,7 @@ import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
 import stopPropagation from '../utils/reactStopPropagation';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 const volumeControlStyle = {
   touchAction: 'none'
@@ -221,5 +222,14 @@ VolumeControl.propTypes = {
   onSetVolumeComplete: PropTypes.func.isRequired,
   onToggleMuted: PropTypes.func.isRequired
 };
+
+export const renderVolumeControl = createControlRenderProp(VolumeControl, [
+  'volume',
+  'muted',
+  'setVolumeInProgress',
+  'onSetVolume',
+  'onSetVolumeComplete',
+  'onToggleMuted'
+]);
 
 export default VolumeControl;

@@ -5,6 +5,7 @@ import RepeatIcon from 'svg-react-loader?name=RepeatIcon!material-design-icons/a
 import RepeatOneIcon from 'svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
 import { repeatStrategyOptions } from '../constants';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 function getNextRepeatStrategy (repeatStrategy) {
   let nextIndex = repeatStrategyOptions.indexOf(repeatStrategy) + 1;
@@ -51,5 +52,10 @@ RepeatButton.propTypes = {
   repeatStrategy: PropTypes.oneOf(repeatStrategyOptions).isRequired,
   onSetRepeatStrategy: PropTypes.func.isRequired
 };
+
+export const renderRepeatButton = createControlRenderProp(RepeatButton, [
+  'repeatStrategy',
+  'onSetRepeatStrategy'
+]);
 
 export default RepeatButton;

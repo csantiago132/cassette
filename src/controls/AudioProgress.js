@@ -5,6 +5,7 @@ import ProgressBar from './common/ProgressBar';
 import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 const audioStatusBarStyle = {
   pointerEvents: 'none',
@@ -76,5 +77,17 @@ AudioProgress.propTypes = {
   onSeekPreview: PropTypes.func.isRequired,
   onSeekComplete: PropTypes.func.isRequired
 };
+
+export const renderAudioProgress = createControlRenderProp(AudioProgress, [
+  'playlist',
+  'activeTrackIndex',
+  'currentTime',
+  'seekPreviewTime',
+  'seekInProgress',
+  'seekUnavailable',
+  'duration',
+  'onSeekPreview',
+  'onSeekComplete'
+]);
 
 export default AudioProgress;

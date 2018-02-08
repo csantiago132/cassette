@@ -11,7 +11,7 @@ import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
 import getRepeatStrategy from './utils/getRepeatStrategy';
-import getControlComponent from './utils/getControlComponent';
+import getControlRenderProp from './utils/getControlRenderProp';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
 import { repeatStrategyOptions } from './constants';
 
@@ -678,12 +678,6 @@ class AudioPlayer extends Component {
 
   render () {
     const hasChildren = Boolean(React.Children.count(this.props.children));
-    const unknownProps = Object.keys(this.props).reduce((memo, propName) => {
-      if (!(propName in AudioPlayer.propTypes)) {
-        memo[propName] = this.props[propName];
-      }
-      return memo;
-    }, {});
     const ControlWrapper = this.props.controlWrapper;
     return (
       <div style={this.props.style}>
@@ -699,13 +693,10 @@ class AudioPlayer extends Component {
             >
               <PlayerContext.Consumer>
                 {controlProps => this.props.controls.map((control, index) => {
-                  const ControlComponent = getControlComponent(control);
-                  return ControlComponent && (
-                    <ControlComponent
-                      {...unknownProps}
-                      {...controlProps}
-                      key={this.controlKeys[index]}
-                    />
+                  const renderControl = getControlRenderProp(control);
+                  return renderControl && React.cloneElement(
+                    renderControl(controlProps),
+                    { key: this.controlKeys[index] }
                   );
                 })}
               </PlayerContext.Consumer>

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import SkipButton from './common/SkipButton';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 class BackSkipButton extends PureComponent {
   render () {
@@ -10,7 +11,11 @@ class BackSkipButton extends PureComponent {
 }
 
 BackSkipButton.propTypes = {
-  onBackSkip: PropTypes.func.isRequired,
+  onBackSkip: PropTypes.func.isRequired
 };
+
+export const renderBackSkipButton = createControlRenderProp(BackSkipButton, [
+  'onBackSkip'
+]);
 
 export default BackSkipButton;

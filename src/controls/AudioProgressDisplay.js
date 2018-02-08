@@ -5,6 +5,7 @@ import ProgressBarDisplay from './common/ProgressBarDisplay';
 import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 const audioStatusBarStyle = {
   position: 'absolute',
@@ -44,5 +45,10 @@ AudioProgressDisplay.propTypes = {
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired
 };
+
+export const renderAudioProgressDisplay = createControlRenderProp(
+  AudioProgressDisplay,
+  ['playlist', 'activeTrackIndex', 'currentTime', 'duration']
+);
 
 export default AudioProgressDisplay;

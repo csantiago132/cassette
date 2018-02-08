@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import ProgressBarDisplay from './ProgressBarDisplay';
-import PurePropTypesComponent from './PurePropTypesComponent';
 import convertToNumberWithinIntervalBounds from '../../utils/convertToNumberWithinIntervalBounds';
 
-class ProgressBar extends PurePropTypesComponent {
+class ProgressBar extends PureComponent {
   constructor (props) {
     super(props);
 

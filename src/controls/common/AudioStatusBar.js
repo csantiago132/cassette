@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import PurePropTypesComponent from './PurePropTypesComponent';
 import getStatusBarSizeClassName from '../../utils/getStatusBarSizeClassName';
 
-class AudioStatusBar extends PurePropTypesComponent {
+class AudioStatusBar extends PureComponent {
   constructor (props) {
     super(props);
 

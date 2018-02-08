@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ShuffleIcon from 'svg-react-loader?name=ShuffleIcon!material-design-icons/av/svg/design/ic_shuffle_48px.svg?';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
-class ShuffleButton extends PurePropTypesComponent {
+class ShuffleButton extends PureComponent {
   render () {
     const { shuffle, onToggleShuffle } = this.props;
     return (
@@ -28,5 +28,10 @@ ShuffleButton.propTypes = {
   shuffle: PropTypes.bool.isRequired,
   onToggleShuffle: PropTypes.func.isRequired
 };
+
+export const renderShuffleButton = createControlRenderProp(ShuffleButton, [
+  'shuffle',
+  'onToggleShuffle'
+]);
 
 export default ShuffleButton;

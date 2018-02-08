@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
-
-class Spacer extends PurePropTypesComponent {
+class Spacer extends PureComponent {
   render () {
-    return <div className="rrap__spacer" style={this.props.style} />;
+    return <div className="rrap__spacer" />;
   }
 }
 
 Spacer.propTypes = {
   style: PropTypes.object
 };
+
+export const renderSpacer = () => <Spacer />;
 
 export default Spacer;

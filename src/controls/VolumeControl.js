@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
 import stopPropagation from '../utils/reactStopPropagation';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
 const volumeControlStyle = {
   touchAction: 'none'
 };
 
-class VolumeControl extends PurePropTypesComponent {
+class VolumeControl extends PureComponent {
   constructor (props) {
     super(props);
 
@@ -222,5 +222,14 @@ VolumeControl.propTypes = {
   onSetVolumeComplete: PropTypes.func.isRequired,
   onToggleMuted: PropTypes.func.isRequired
 };
+
+export const renderVolumeControl = createControlRenderProp(VolumeControl, [
+  'volume',
+  'muted',
+  'setVolumeInProgress',
+  'onSetVolume',
+  'onSetVolumeComplete',
+  'onToggleMuted'
+]);
 
 export default VolumeControl;

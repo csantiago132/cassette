@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
+import createControlRenderProp from '../factories/createControlRenderProp';
 
-class PlayPauseButton extends PurePropTypesComponent {
+class PlayPauseButton extends PureComponent {
   render () {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (
@@ -31,5 +31,11 @@ PlayPauseButton.propTypes = {
   awaitingResumeOnSeekComplete: PropTypes.bool.isRequired,
   onTogglePause: PropTypes.func.isRequired
 };
+
+export const renderPlayPauseButton = createControlRenderProp(PlayPauseButton, [
+  'paused',
+  'awaitingResumeOnSeekComplete',
+  'onTogglePause'
+]);
 
 export default PlayPauseButton;

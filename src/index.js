@@ -1,4 +1,5 @@
 import AudioPlayer from './AudioPlayer';
+import PlayerContext from './PlayerContext';
 import { renderPlayPauseButton } from './controls/PlayPauseButton';
 import { renderBackSkipButton } from './controls/BackSkipButton';
 import { renderForwardSkipButton } from './controls/ForwardSkipButton';
@@ -11,6 +12,8 @@ import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
 
 module.exports = AudioPlayer;
 module.exports.AudioPlayer = AudioPlayer;
+module.exports.PlayerContextProvider = AudioPlayer;
+module.exports.PlayerContextConsumer = PlayerContext.Consumer;
 module.exports.renderPlayPauseButton = renderPlayPauseButton;
 module.exports.renderBackSkipButton = renderBackSkipButton;
 module.exports.renderForwardSkipButton = renderForwardSkipButton;

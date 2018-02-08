@@ -13,6 +13,16 @@ const volumeControlStyle = {
 };
 
 class VolumeControl extends PureComponent {
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const { hover, volumeBarPosition } = prevState;
+    if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {
+      return {
+        volumeBarPosition: null
+      };
+    }
+    return null;
+  }
+
   constructor (props) {
     super(props);
 
@@ -50,15 +60,6 @@ class VolumeControl extends PureComponent {
      * we need to manually trigger mouseleave for touch devices
      */
     document.addEventListener('touchstart', this.handleMouseLeave);
-  }
-
-  componentWillReceiveProps (nextProps) {
-    const { hover, volumeBarPosition } = this.state;
-    if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {
-      this.setState({
-        volumeBarPosition: null
-      });
-    }
   }
 
   componentDidUpdate () {

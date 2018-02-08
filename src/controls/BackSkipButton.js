@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
 import SkipButton from './common/SkipButton';
 
-class BackSkipButton extends PurePropTypesComponent {
+class BackSkipButton extends PureComponent {
   render () {
     return <SkipButton back onClick={this.props.onBackSkip} />;
   }

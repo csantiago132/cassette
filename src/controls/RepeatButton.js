@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import RepeatIcon from 'svg-react-loader?name=RepeatIcon!material-design-icons/av/svg/design/ic_repeat_48px.svg?';
 import RepeatOneIcon from 'svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
 import { repeatStrategyOptions } from '../constants';
 
 function getNextRepeatStrategy (repeatStrategy) {
@@ -15,7 +14,7 @@ function getNextRepeatStrategy (repeatStrategy) {
   return repeatStrategyOptions[nextIndex];
 }
 
-class RepeatButton extends PurePropTypesComponent {
+class RepeatButton extends PureComponent {
   constructor (props) {
     super(props);
 

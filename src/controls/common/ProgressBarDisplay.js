@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import PurePropTypesComponent from './PurePropTypesComponent';
 import getProgressStyle from '../../utils/getProgressStyle';
 import getHandleStyle from '../../utils/getHandleStyle';
 
-class ProgressBarDisplay extends PurePropTypesComponent {
+class ProgressBarDisplay extends PureComponent {
   render () {
     const {
       className,

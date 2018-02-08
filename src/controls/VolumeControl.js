@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import PurePropTypesComponent from './common/PurePropTypesComponent';
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
@@ -12,7 +11,7 @@ const volumeControlStyle = {
   touchAction: 'none'
 };
 
-class VolumeControl extends PurePropTypesComponent {
+class VolumeControl extends PureComponent {
   constructor (props) {
     super(props);
 

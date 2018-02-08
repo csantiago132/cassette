@@ -10,7 +10,6 @@ import Spacer from './controls/Spacer';
 import ProgressBar from './controls/common/ProgressBar';
 import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
 import PurePropTypesComponent from './controls/common/PurePropTypesComponent';
-import withAudioPlayer from './factories/withAudioPlayer';
 
 module.exports = AudioPlayer;
 module.exports.AudioPlayer = AudioPlayer;
@@ -25,4 +24,3 @@ module.exports.Spacer = Spacer;
 module.exports.ProgressBar = ProgressBar;
 module.exports.ProgressBarDisplay = ProgressBarDisplay;
 module.exports.PurePropTypesComponent = PurePropTypesComponent;
-module.exports.withAudioPlayer = withAudioPlayer;

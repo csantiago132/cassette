@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import PlayerContext from './PlayerContext';
 import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
-import AudioPlayerContext from './utils/AudioPlayerContext';
 import getSourceList from './utils/getSourceList';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
@@ -98,11 +98,6 @@ class AudioPlayer extends Component {
     this.shuffler = new ShuffleManager(getSourceList(props.playlist), {
       allowBackShuffle: props.allowBackShuffle
     });
-
-    // used to communicate updates to descendant components via subscription
-    this.audioPlayerContext = new AudioPlayerContext(
-      this.getControlProps(props, this.state)
-    );
 
     // html audio element used for playback
     this.audio = null;
@@ -231,30 +226,6 @@ class AudioPlayer extends Component {
     }
   }
 
-  // shouldComponentUpdate shouldn't really have side effects, but
-  // there's not a great solution besides this one at the moment.
-  // see: https://github.com/facebook/react/issues/9922
-  shouldComponentUpdate (nextProps, nextState) {
-    this.audioPlayerContext.setControlProps(
-      this.getControlProps(nextProps, nextState)
-    );
-    if (
-      React.Children.count(nextProps.children) === 0 ||
-      this.props.children !== nextProps.children
-    ) {
-      return true;
-    }
-    // since we aren't going to render, we should go ahead
-    // and trigger subscription updates (which otherwise would
-    // need to happen after our render).
-    this.audioPlayerContext.notifySubscribers();
-    return false;
-  }
-
-  componentDidUpdate () {
-    this.audioPlayerContext.notifySubscribers();
-  }
-
   componentWillUnmount () {
     const { audio } = this;
     // remove event listeners on the audio element
@@ -277,12 +248,6 @@ class AudioPlayer extends Component {
 
     // pause the audio element before we unmount
     audio.pause();
-  }
-
-  getChildContext () {
-    return {
-      audioPlayer: this.audioPlayerContext
-    };
   }
 
   setAudioElementRef (ref) {
@@ -676,7 +641,8 @@ class AudioPlayer extends Component {
     return Boolean(state.activeTrackIndex < 0);
   }
 
-  getControlProps (props, state) {
+  getControlProps () {
+    const { props, state } = this;
     return {
       playlist: props.playlist,
       activeTrackIndex: state.activeTrackIndex,
@@ -718,42 +684,39 @@ class AudioPlayer extends Component {
       }
       return memo;
     }, {});
-    const { controlProps } = this.audioPlayerContext;
     const ControlWrapper = this.props.controlWrapper;
     return (
       <div style={this.props.style}>
         <audio ref={this.setAudioElementRef} />
-        {hasChildren && this.props.children}
-        {!hasChildren && (
-          <ControlWrapper
-            title={getDisplayText(
-              this.props.playlist,
-              this.state.activeTrackIndex
-            )}
-          >
-            {this.props.controls.map((control, index) => {
-              const ControlComponent = getControlComponent(control);
-              return ControlComponent && (
-                <ControlComponent
-                  {...unknownProps}
-                  {...controlProps}
-                  key={this.controlKeys[index]}
-                />
-              );
-            })}
-          </ControlWrapper>
-        )}
+        <PlayerContext.Provider value={this.getControlProps()}>
+          {hasChildren && this.props.children}
+          {!hasChildren && (
+            <ControlWrapper
+              title={getDisplayText(
+                this.props.playlist,
+                this.state.activeTrackIndex
+              )}
+            >
+              <PlayerContext.Consumer>
+                {controlProps => this.props.controls.map((control, index) => {
+                  const ControlComponent = getControlComponent(control);
+                  return ControlComponent && (
+                    <ControlComponent
+                      {...unknownProps}
+                      {...controlProps}
+                      key={this.controlKeys[index]}
+                    />
+                  );
+                })}
+              </PlayerContext.Consumer>
+            </ControlWrapper>
+          )}
+        </PlayerContext.Provider>
       </div>
     );
   }
 
 }
-
-AudioPlayer.childContextTypes = {
-  audioPlayer: PropTypes.shape({
-    controlProps: PropTypes.object.isRequired
-  }).isRequired
-};
 
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({

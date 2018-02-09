@@ -126,39 +126,41 @@
       }, 5000);
       var muted = true;
       ReactDOM.render(
-        React.createElement(AudioPlayer, {
-          playlist: playlist,
-          style: { position: 'fixed', bottom: 0, width: '100%' },
-          autoplay: true,
-          controls: [
-            'spacer',
-            'backskip',
-            'playpause',
-            'forwardskip',
-            'volume',
-            'shuffle',
-            'repeat',
-            'spacer',
-            'progress'
-          ],
-          defaultMuted: muted,
-          defaultShuffle: false,
-          onActiveTrackUpdate: function (index) {
-            var track = playlist[index];
-            trackTitle.innerText = track.displayText;
-            webLink.href = track.archiveDotOrgUrl;
-          },
-          onMediaEvent: {
-            volumechange: function (e) {
-              if (muted !== e.target.muted) {
-                muted = e.target.muted;
-                console.log(muted ? 'muted!' : 'unmuted!');
+        React.createElement(React.StrictMode, {},
+          React.createElement(AudioPlayer, {
+            playlist: playlist,
+            style: { position: 'fixed', bottom: 0, width: '100%' },
+            autoplay: true,
+            controls: [
+              'spacer',
+              'backskip',
+              'playpause',
+              'forwardskip',
+              'volume',
+              'shuffle',
+              'repeat',
+              'spacer',
+              'progress'
+            ],
+            defaultMuted: muted,
+            defaultShuffle: false,
+            onActiveTrackUpdate: function (index) {
+              var track = playlist[index];
+              trackTitle.innerText = track.displayText;
+              webLink.href = track.archiveDotOrgUrl;
+            },
+            onMediaEvent: {
+              volumechange: function (e) {
+                if (muted !== e.target.muted) {
+                  muted = e.target.muted;
+                  console.log(muted ? 'muted!' : 'unmuted!');
+                }
+                clearTimeout(muteMessageTimeout);
+                muteMessage.classList.add('hidden');
               }
-              clearTimeout(muteMessageTimeout);
-              muteMessage.classList.add('hidden');
             }
-          }
-        }),
+          })
+        ),
         document.getElementById('audio_player_container')
       );
     </script>

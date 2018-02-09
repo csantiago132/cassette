@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import ResizeObserver from 'resize-observer-polyfill';
 
 import getStatusBarSizeClassName from '../../utils/getStatusBarSizeClassName';
 

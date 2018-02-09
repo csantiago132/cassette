@@ -147,7 +147,6 @@ class AudioPlayer extends Component {
     const audio = this.audio = createCustomAudioElement(this.audio);
 
     // initialize audio properties
-    audio.crossOrigin = this.props.crossOrigin;
     audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
@@ -155,7 +154,6 @@ class AudioPlayer extends Component {
     audio.defaultPlaybackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
-    audio.preload = 'metadata';
     audio.addEventListener('play', this.handleAudioPlay);
     audio.addEventListener('pause', this.handleAudioPause);
     audio.addEventListener('srcchange', this.handleAudioSrcchange);
@@ -186,10 +184,6 @@ class AudioPlayer extends Component {
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(this.props.onMediaEvent);
     this.addMediaEventListeners(nextProps.onMediaEvent);
-
-    if (this.props.crossOrigin !== nextProps.crossOrigin) {
-      this.audio.crossOrigin = nextProps.crossOrigin;
-    }
 
     const oldControls = [...this.props.controls];
     this.controlKeys = nextProps.controls.map(control => {
@@ -748,7 +742,11 @@ class AudioPlayer extends Component {
     const ControlWrapper = this.props.controlWrapper;
     return (
       <div style={this.props.style}>
-        <audio ref={this.setAudioElementRef} />
+        <audio
+          ref={this.setAudioElementRef}
+          crossOrigin={this.props.crossOrigin}
+          preload="metadata"
+        />
         <PlayerContext.Provider value={this.getControlProps()}>
           {hasChildren && this.props.children}
           {!hasChildren && (

@@ -61,11 +61,11 @@ function convertToTime (number) {
 
 // BEGIN PRIVATE CONTROL COMPONENTS
 
-const SkipButton = ({ hidden, back, audioPlayer }) => (
+const SkipButton = ({ hidden, back, onClick }) => (
   <div
     id="skip_button"
     className={classNames('skip_button audio_button', { hidden, back })}
-    onClick={audioPlayer.backSkip.bind(audioPlayer)}
+    onClick={onClick}
   >
     <div className="skip_button_inner">
       <div className="right_facing_triangle"></div>
@@ -79,6 +79,7 @@ const BackSkipButton = ({ audioPlayer }) => (
     audioPlayer={audioPlayer}
     hidden={audioPlayer.props.hideBackSkip}
     back={true}
+    onClick={audioPlayer.backSkip.bind(audioPlayer)}
   />
 );
 
@@ -87,6 +88,7 @@ const ForwardSkipButton = ({ audioPlayer }) => (
     audioPlayer={audioPlayer}
     hidden={audioPlayer.props.hideForwardSkip}
     back={false}
+    onClick={audioPlayer.skipToNextTrack.bind(audioPlayer)}
   />
 );
 

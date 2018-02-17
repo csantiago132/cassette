@@ -203,6 +203,7 @@ class AudioPlayer extends React.Component {
     this.audioProgressContainer = null;
 
     // event listeners to add on mount and remove on unmount
+    this.setAudioElementRef = this.setAudioElementRef.bind(this);
     this.adjustDisplayedTime = this.adjustDisplayedTime.bind(this);
     this.seekReleaseListener = e => this.seek(e);
     this.audioPlayListener = () => this.setState({ paused: false });
@@ -228,7 +229,7 @@ class AudioPlayer extends React.Component {
     window.addEventListener('mouseup', this.seekReleaseListener);
     document.addEventListener('touchend', this.seekReleaseListener);
 
-    const audio = this.audio = document.createElement('audio');
+    const audio = this.audio;
 
     // add event listeners on the audio element
     audio.preload = 'metadata';
@@ -247,10 +248,6 @@ class AudioPlayer extends React.Component {
         clearTimeout(this.delayTimeout);
         this.delayTimeout = setTimeout(() => this.togglePause(false), delay * 1000);
       }
-    }
-
-    if (this.props.audioElementRef) {
-      this.props.audioElementRef(audio);
     }
   }
 
@@ -274,10 +271,6 @@ class AudioPlayer extends React.Component {
 
     // pause the audio element before we unmount
     this.audio.pause();
-
-    if (this.props.audioElementRef) {
-      this.props.audioElementRef(this.audio);
-    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -352,6 +345,13 @@ class AudioPlayer extends React.Component {
      */
     if (this.audio && this.currentTrackIndex === -1) {
       this.skipToNextTrack(false);
+    }
+  }
+
+  setAudioElementRef (ref) {
+    this.audio = ref;
+    if (typeof this.props.audioElementRef === 'function') {
+      this.props.audioElementRef(this.audio);
     }
   }
 
@@ -503,6 +503,7 @@ class AudioPlayer extends React.Component {
         title={displayText}
         style={this.props.style}
       >
+        <audio ref={this.setAudioElementRef} />
         {this.props.controls.map((controlKeyword, index) => {
           const controlProps =
             controlKeyword === 'progress' || controlKeyword === 'progressdisplay'

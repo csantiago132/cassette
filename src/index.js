@@ -386,6 +386,7 @@ class AudioPlayer extends React.Component {
       if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
         return null;
       }
+      const seekLength = this.props.mediaSessionSeekLengthInSeconds;
       switch (action) {
         case 'play':
           return this.togglePause.bind(this, false);
@@ -396,9 +397,9 @@ class AudioPlayer extends React.Component {
         case 'nexttrack':
           return this.skipToNextTrack;
         case 'seekbackward':
-          return () => this.audio.currentTime -= 10;
+          return () => this.audio.currentTime -= seekLength;
         case 'seekforward':
-          return () => this.audio.currentTime += 10;
+          return () => this.audio.currentTime += seekLength;
         default:
           return undefined;
       }
@@ -599,6 +600,7 @@ AudioPlayer.propTypes = {
     'seekbackward',
     'seekforward'
   ]).isRequired).isRequired,
+  mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
   style: PropTypes.object,
   onMediaEvent: PropTypes.object,
   audioElementRef: PropTypes.func
@@ -619,7 +621,8 @@ AudioPlayer.defaultProps = {
     'pause',
     'previoustrack',
     'nexttrack'
-  ]
+  ],
+  mediaSessionSeekLengthInSeconds: 10
 };
 
 module.exports = AudioPlayer;

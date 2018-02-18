@@ -59,6 +59,16 @@ function convertToTime (number) {
   return `${ mins < 10 ? '0' : '' }${ mins }:${ secs < 10 ? '0' : '' }${ secs }`;
 }
 
+// Existing Media Session API implementations have default handlers
+// for play/pause, and may yield unexpected behavior if custom
+// play/pause handlers are defined - so let's leave them be.
+const supportableMediaSessionActions = [
+  'previoustrack',
+  'nexttrack',
+  'seekbackward',
+  'seekforward'
+];
+
 // BEGIN PRIVATE CONTROL COMPONENTS
 
 const SkipButton = ({ hidden, back, onClick }) => (
@@ -372,10 +382,32 @@ class AudioPlayer extends React.Component {
     navigator.mediaSession.metadata = new MediaMetadata(
       (this.props.playlist[this.currentTrackIndex] || {}).mediaMetadata
     );
-    navigator.mediaSession.setActionHandler('previoustrack', this.backSkip);
-    navigator.mediaSession.setActionHandler('nexttrack', this.skipToNextTrack);
-    navigator.mediaSession.setActionHandler('seekbackward', () => this.audio.currentTime -= 10);
-    navigator.mediaSession.setActionHandler('seekforward', () => this.audio.currentTime += 10);
+    supportableMediaSessionActions.map(action => {
+      if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
+        return null;
+      }
+      switch (action) {
+        case 'play':
+          return this.togglePause.bind(this, false);
+        case 'pause':
+          return this.togglePause.bind(this, true);
+        case 'previoustrack':
+          return this.backSkip;
+        case 'nexttrack':
+          return this.skipToNextTrack;
+        case 'seekbackward':
+          return () => this.audio.currentTime -= 10;
+        case 'seekforward':
+          return () => this.audio.currentTime += 10;
+        default:
+          return undefined;
+      }
+    }).forEach((handler, i) => {
+      navigator.mediaSession.setActionHandler(
+        supportableMediaSessionActions[i],
+        handler
+      );
+    });
   }
 
   togglePause (value) {
@@ -559,6 +591,14 @@ AudioPlayer.propTypes = {
   cycle: PropTypes.bool,
   disableSeek: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
+  supportedMediaSessionActions: PropTypes.arrayOf(PropTypes.oneOf([
+    'play',
+    'pause',
+    'previoustrack',
+    'nexttrack',
+    'seekbackward',
+    'seekforward'
+  ]).isRequired).isRequired,
   style: PropTypes.object,
   onMediaEvent: PropTypes.object,
   audioElementRef: PropTypes.func
@@ -573,6 +613,12 @@ AudioPlayer.defaultProps = {
     'forwardskip',
     'spacer',
     'progress'
+  ],
+  supportedMediaSessionActions: [
+    'play',
+    'pause',
+    'previoustrack',
+    'nexttrack'
   ]
 };
 

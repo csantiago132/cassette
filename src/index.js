@@ -380,7 +380,7 @@ class AudioPlayer extends React.Component {
       return;
     }
     navigator.mediaSession.metadata = new MediaMetadata(
-      (this.props.playlist[this.currentTrackIndex] || {}).mediaMetadata
+      this.props.playlist[this.currentTrackIndex]
     );
     supportableMediaSessionActions.map(action => {
       if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {

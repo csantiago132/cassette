@@ -79,7 +79,7 @@ const BackSkipButton = ({ audioPlayer }) => (
     audioPlayer={audioPlayer}
     hidden={audioPlayer.props.hideBackSkip}
     back={true}
-    onClick={audioPlayer.backSkip.bind(audioPlayer)}
+    onClick={audioPlayer.backSkip}
   />
 );
 
@@ -88,7 +88,7 @@ const ForwardSkipButton = ({ audioPlayer }) => (
     audioPlayer={audioPlayer}
     hidden={audioPlayer.props.hideForwardSkip}
     back={false}
-    onClick={audioPlayer.skipToNextTrack.bind(audioPlayer)}
+    onClick={audioPlayer.skipToNextTrack}
   />
 );
 
@@ -98,7 +98,7 @@ const PlayPauseButton = ({ audioPlayer }) => (
     className={classNames('play_pause_button audio_button', {
       paused: audioPlayer.state.paused
     })}
-    onClick={audioPlayer.togglePause.bind(audioPlayer)}
+    onClick={audioPlayer.togglePause}
   >
     <div className="play_pause_inner">
       <div className="left"></div>
@@ -204,9 +204,15 @@ class AudioPlayer extends React.Component {
 
     // event listeners to add on mount and remove on unmount
     this.setAudioElementRef = this.setAudioElementRef.bind(this);
+    this.backSkip = this.backSkip.bind(this);
+    this.skipToNextTrack = this.skipToNextTrack.bind(this);
+    this.togglePause = this.togglePause.bind(this);
     this.adjustDisplayedTime = this.adjustDisplayedTime.bind(this);
     this.seekReleaseListener = e => this.seek(e);
-    this.audioPlayListener = () => this.setState({ paused: false });
+    this.audioPlayListener = () => {
+      this.setState({ paused: false });
+      this.stealMediaSession();
+    };
     this.audioPauseListener = () => this.setState({ paused: true });
     this.audioEndListener = () => {
       const gapLengthInSeconds = this.props.gapLengthInSeconds || 0;
@@ -339,12 +345,16 @@ class AudioPlayer extends React.Component {
     });
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
     /* if we loaded a new playlist and reset the current track marker, we
      * should load up the first one.
      */
-    if (this.audio && this.currentTrackIndex === -1) {
+    if (this.currentTrackIndex === -1) {
       this.skipToNextTrack(false);
+    }
+    if (prevProps !== this.props && !this.audio.paused) {
+      // update running media session based on new props
+      this.stealMediaSession();
     }
   }
 
@@ -353,6 +363,19 @@ class AudioPlayer extends React.Component {
     if (typeof this.props.audioElementRef === 'function') {
       this.props.audioElementRef(this.audio);
     }
+  }
+
+  stealMediaSession () {
+    if (!(window.MediaSession && navigator.mediaSession instanceof MediaSession)) {
+      return;
+    }
+    navigator.mediaSession.metadata = new MediaMetadata(
+      (this.props.playlist[this.currentTrackIndex] || {}).mediaMetadata
+    );
+    navigator.mediaSession.setActionHandler('previoustrack', this.backSkip);
+    navigator.mediaSession.setActionHandler('nexttrack', this.skipToNextTrack);
+    navigator.mediaSession.setActionHandler('seekbackward', () => this.audio.currentTime -= 10);
+    navigator.mediaSession.setActionHandler('seekforward', () => this.audio.currentTime += 10);
   }
 
   togglePause (value) {

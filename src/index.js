@@ -662,7 +662,7 @@ AudioPlayer.defaultProps = {
       return track.displayText;
     }
     if (track.title && track.artist) {
-      return `${track.title} - ${track.artist}`;
+      return `${track.artist} - ${track.title}`;
     }
     return track.title || track.artist || track.album || '';
   }

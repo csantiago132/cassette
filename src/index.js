@@ -21,6 +21,12 @@ const deprecatedProps = [
     alternativeMessage:
       'Pass "progressdisplay" to `controls` (instead of "progress") ' +
         'for a non-seekable progress bar.'
+  },
+  {
+    name: 'playlist[?].displayText',
+    alternativeMessage:
+      'Use `title` and `artist` to provide track information, and override ' +
+        ' the `getDisplayText` function prop for custom display if needed.'
   }
 ];
 
@@ -28,21 +34,44 @@ const log = console.log.bind(console);
 const logError = console.error ? console.error.bind(console) : log;
 const logWarning = console.warn ? console.warn.bind(console) : log;
 
+function getTokensForPropName (name) {
+  // simple (imperfect) regex for splitting name into keys
+  return name.split(/\.|\[|\]/).filter(token => token);
+}
+
+function doTokensMatchObject (tokens, object) {
+  if (tokens.length === 0) {
+    // for our purposes we can assume if we've exhausted the list,
+    // then we were able to match the whole way down.
+    return true;
+  }
+  const t = tokens[0];
+  const nextTokens = tokens.slice(1);
+  if (t === '?') { // wildcard - search all keys for a match
+    return Object.keys(object).some(key => {
+      return doTokensMatchObject(nextTokens, object[key]);
+    });
+  }
+  return t in object && doTokensMatchObject(nextTokens, object[t]);
+}
+
+function findDeprecatedProps (props) {
+  return deprecatedProps.filter(deprecated => {
+    return doTokensMatchObject(getTokensForPropName(deprecated.name), props);
+  });
+}
+
 const loggedDeprecations = [];
 function logDeprecationWarnings (props) {
-  Object.keys(props).forEach(propName => {
-    const deprecatedIndex =
-      deprecatedProps.findIndex((d) => propName === d.name);
-    const deprecated = deprecatedProps[deprecatedIndex];
-    if (deprecated && loggedDeprecations.indexOf(propName) === -1) {
+  for (const deprecated of findDeprecatedProps(props)) {
+    if (loggedDeprecations.indexOf(deprecated.name) === -1) {
       logWarning(`
-        The \`${propName}\` prop is deprecated. It will be removed in
-        react-responsive-audio-player v2.0.0. Please use the \`controls\`
-        prop instead.
+        The \`${deprecated.name}\` prop is deprecated. It will be removed
+        in react-responsive-audio-player v2.0.0.
         ${deprecated.alternativeMessage}`);
-      loggedDeprecations.push(propName);
+      loggedDeprecations.push(deprecated.name);
     }
-  });
+  }
 }
 
 let nextControlKey = 0;
@@ -539,9 +568,9 @@ class AudioPlayer extends React.Component {
 
   render () {
     const activeIndex = this.state.activeTrackIndex;
-    const displayText = this.props.playlist ? (
-      activeIndex < 0 ? null : this.props.playlist[activeIndex].displayText
-    ) : 'Please load a playlist';
+    const displayText = this.props.getDisplayText(
+      this.props.playlist[activeIndex]
+    );
 
     const displayedTime = this.state.displayedTime;
     const duration = this.audio && this.audio.duration || 0;
@@ -601,6 +630,7 @@ AudioPlayer.propTypes = {
     'seekforward'
   ]).isRequired).isRequired,
   mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
+  getDisplayText: PropTypes.func.isRequired,
   style: PropTypes.object,
   onMediaEvent: PropTypes.object,
   audioElementRef: PropTypes.func
@@ -622,7 +652,20 @@ AudioPlayer.defaultProps = {
     'previoustrack',
     'nexttrack'
   ],
-  mediaSessionSeekLengthInSeconds: 10
+  mediaSessionSeekLengthInSeconds: 10,
+  getDisplayText: function getDisplayText (track) {
+    if (!track) {
+      return '';
+    }
+    if (track.displayText) {
+      // TODO: Remove this check when support for the displayText prop is gone.
+      return track.displayText;
+    }
+    if (track.title && track.artist) {
+      return `${track.title} - ${track.artist}`;
+    }
+    return track.title || track.artist || track.album || '';
+  }
 };
 
 module.exports = AudioPlayer;

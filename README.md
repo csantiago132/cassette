@@ -31,9 +31,9 @@ var AudioPlayer = require('react-responsive-audio-player');
 
 var playlist =
   [{ url: 'audio/track1.mp3',
-     displayText: 'Track 1 by Some Artist' },
+     title: 'Track 1 by Some Artist' },
    { url: 'audio/track2.mp3',
-     displayText: 'Some Other Artist - Track 2' }];
+     title: 'Some Other Artist - Track 2' }];
 ReactDOM.render(
   <AudioPlayer playlist={playlist} />,
   document.getElementById('audio_player_container')
@@ -71,8 +71,8 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-responsive-audio-player@1.2.1/dist/audioplayer.js"></script>
     <script>
       var playlist =
-        [{ url: 'song1.mp3', displayText: 'Track 1 - a track to remember' },
-         { url: 'song2.ogg', displayText: 'Oggs Oggs Oggs' }];
+        [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
+         { url: 'song2.ogg', title: 'Oggs Oggs Oggs' }];
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,

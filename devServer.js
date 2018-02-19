@@ -7,6 +7,8 @@ var argv = require('minimist')(process.argv.slice(2));
 
 var config = require('./webpack.config.js');
 
+var broadcastOverNetwork = Boolean(argv.network);
+
 function getPort (callback) {
   if (argv.port) {
     return callback(void 0, argv.port);
@@ -29,11 +31,16 @@ function listen (callback) {
     var server = new WebpackDevServer(webpack(devConfig), {
       staticOptions: { index: 'example.html' },
       stats: { colors: true },
-      publicPath: config.output.publicPath
+      publicPath: config.output.publicPath,
+      disableHostCheck: broadcastOverNetwork
     });
-    server.listen(port, 'localhost', function (err) {
-      callback(err, url);
-    });
+    server.listen(
+      port,
+      broadcastOverNetwork ? '0.0.0.0' : 'localhost',
+      function (err) {
+        callback(err, url);
+      }
+    );
   });
 }
 

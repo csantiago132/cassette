@@ -10,6 +10,7 @@
     "build:minify": "npm run build:minify:js && npm run build:minify:css",
     "build": "npm run build:webpack && npm run build:minify",
     "dev": "node devServer.js",
+    "dev:network": "node devServer.js --network",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

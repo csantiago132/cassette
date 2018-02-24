@@ -484,10 +484,13 @@ class AudioPlayer extends React.Component {
       activeTrackIndex: -1,
       displayedTime: 0
     }, () => {
-      this.updateSource();
-      if (!shouldPause) {
-        this.togglePause(false);
-      }
+      setTimeout(() => {
+        // run asynchronously so "pause" event has time to process
+        this.updateSource();
+        if (!shouldPause) {
+          this.togglePause(false);
+        }
+      });
     });
   }
 

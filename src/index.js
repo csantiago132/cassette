@@ -467,7 +467,6 @@ class AudioPlayer extends React.Component {
     if (!this.audio) {
       return;
     }
-    this.audio.pause();
     if (!this.props.playlist || !this.props.playlist.length) {
       return;
     }
@@ -476,14 +475,19 @@ class AudioPlayer extends React.Component {
       i = 0;
     }
     this.currentTrackIndex = i;
+    const shouldPauseOnCycle = !this.props.cycle && this.currentTrackIndex === 0;
+    const shouldPause = shouldPauseOnCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
+    if (shouldPause) {
+      this.togglePause(true);
+    }
     this.setState({
       activeTrackIndex: -1,
       displayedTime: 0
     }, () => {
       this.updateSource();
-      const shouldPauseOnCycle = (!this.props.cycle && i === 0);
-      const shouldPause = shouldPauseOnCycle || (typeof shouldPlay === 'boolean' ? !shouldPlay : false);
-      this.togglePause(shouldPause);
+      if (!shouldPause) {
+        this.togglePause(false);
+      }
     });
   }
 

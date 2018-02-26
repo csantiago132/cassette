@@ -1,10 +1,17 @@
 import isPlaylistValid from './isPlaylistValid';
 
-function getDisplayText (playlist, activeTrackIndex) {
-  if (!isPlaylistValid(playlist)) {
-    return 'Please load a playlist';
+function getDisplayText (track) {
+  if (!track) {
+    return '';
   }
-  return activeTrackIndex < 0 ? null : playlist[activeTrackIndex].displayText;
+  if (track.displayText) {
+    // TODO: Remove this check when support for the displayText prop is gone.
+    return track.displayText;
+  }
+  if (track.title && track.artist) {
+    return `${track.artist} - ${track.title}`;
+  }
+  return track.title || track.artist || track.album || '';
 }
 
 export default getDisplayText;

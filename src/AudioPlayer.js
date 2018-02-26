@@ -26,6 +26,16 @@ function getNextControlKey () {
   return (nextControlKey++).toString();
 }
 
+// Existing Media Session API implementations have default handlers
+// for play/pause, and may yield unexpected behavior if custom
+// play/pause handlers are defined - so let's leave them be.
+const supportableMediaSessionActions = [
+  'previoustrack',
+  'nexttrack',
+  'seekbackward',
+  'seekforward'
+];
+
 class AudioPlayer extends Component {
 
   constructor (props) {
@@ -226,6 +236,13 @@ class AudioPlayer extends Component {
     }
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps !== this.props && !this.audio.paused) {
+      // update running media session based on new props
+      this.stealMediaSession();
+    }
+  }
+
   componentWillUnmount () {
     const { audio } = this;
     // remove event listeners on the audio element
@@ -281,8 +298,45 @@ class AudioPlayer extends Component {
     });
   }
 
+  stealMediaSession () {
+    if (!(window.MediaSession && navigator.mediaSession instanceof MediaSession)) {
+      return;
+    }
+    navigator.mediaSession.metadata = new MediaMetadata(
+      this.props.playlist[this.currentTrackIndex]
+    );
+    supportableMediaSessionActions.map(action => {
+      if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
+        return null;
+      }
+      const seekLength = this.props.mediaSessionSeekLengthInSeconds;
+      switch (action) {
+        case 'play':
+          return this.togglePause.bind(this, false);
+        case 'pause':
+          return this.togglePause.bind(this, true);
+        case 'previoustrack':
+          return this.backSkip;
+        case 'nexttrack':
+          return this.skipToNextTrack;
+        case 'seekbackward':
+          return () => this.audio.currentTime -= seekLength;
+        case 'seekforward':
+          return () => this.audio.currentTime += seekLength;
+        default:
+          return undefined;
+      }
+    }).forEach((handler, i) => {
+      navigator.mediaSession.setActionHandler(
+        supportableMediaSessionActions[i],
+        handler
+      );
+    });
+  }
+
   handleAudioPlay () {
     this.setState({ paused: false });
+    this.stealMediaSession();
   }
 
   handleAudioPause () {
@@ -686,9 +740,8 @@ class AudioPlayer extends Component {
           {hasChildren && this.props.children}
           {!hasChildren && (
             <ControlWrapper
-              title={getDisplayText(
-                this.props.playlist,
-                this.state.activeTrackIndex
+              title={this.props.getDisplayText(
+                this.props.playlist[this.state.activeTrackIndex]
               )}
             >
               <PlayerContext.Consumer>
@@ -712,7 +765,15 @@ class AudioPlayer extends Component {
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
     url: PropTypes.string.isRequired,
-    displayText: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    artist: PropTypes.string,
+    album: PropTypes.string,
+    artwork: PropTypes.arrayOf(PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      sizes: PropTypes.string,
+      type: PropTypes.string
+    })),
+    meta: PropTypes.object
   }).isRequired),
   controls: PropTypes.arrayOf(PropTypes.oneOfType([
     PropTypes.func,
@@ -744,6 +805,16 @@ AudioPlayer.propTypes = {
   pauseOnSeekPreview: PropTypes.bool,
   allowBackShuffle: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number,
+  supportedMediaSessionActions: PropTypes.arrayOf(PropTypes.oneOf([
+    'play',
+    'pause',
+    'previoustrack',
+    'nexttrack',
+    'seekbackward',
+    'seekforward'
+  ]).isRequired).isRequired,
+  mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
+  getDisplayText: PropTypes.func.isRequired,
   style: PropTypes.object,
   onActiveTrackUpdate: PropTypes.func,
   onRepeatStrategyUpdate: PropTypes.func,
@@ -776,7 +847,15 @@ AudioPlayer.defaultProps = {
   pauseOnSeekPreview: false,
   maintainPlaybackRate: false,
   allowBackShuffle: false,
-  stayOnBackSkipThreshold: 5
+  stayOnBackSkipThreshold: 5,
+  supportedMediaSessionActions: [
+    'play',
+    'pause',
+    'previoustrack',
+    'nexttrack'
+  ],
+  mediaSessionSeekLengthInSeconds: 10,
+  getDisplayText: getDisplayText
 };
 
 export default AudioPlayer;

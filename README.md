@@ -33,9 +33,9 @@ var AudioPlayer = require('react-responsive-audio-player');
 
 var playlist =
   [{ url: 'audio/track1.mp3',
-     displayText: 'Track 1 by Some Artist' },
+     title: 'Track 1 by Some Artist' },
    { url: 'audio/track2.mp3',
-     displayText: 'Some Other Artist - Track 2' }];
+     title: 'Some Other Artist - Track 2' }];
 ReactDOM.render(
   <AudioPlayer playlist={playlist} />,
   document.getElementById('audio_player_container')
@@ -64,7 +64,7 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.2.0/dist/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.3.0/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
@@ -73,11 +73,11 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
     <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-audio-player@1.2.0/dist/audioplayer.js"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.3.0/dist/audioplayer.js"></script>
     <script>
       var playlist =
-        [{ url: 'song1.mp3', displayText: 'Track 1 - a track to remember' },
-         { url: 'song2.ogg', displayText: 'Oggs Oggs Oggs' }];
+        [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
+         { url: 'song2.ogg', title: 'Oggs Oggs Oggs' }];
       ReactDOM.render(
         React.createElement(AudioPlayer, {
           playlist: playlist,
@@ -109,7 +109,13 @@ If you prefer not to use a package bundler, you can find built releases to downl
 ## Options
 Options can be passed to the AudioPlayer element as props. Currently supported props are:
 
-* `playlist`: an array containing urls and display text for each of the tracks you wish to play (see above example for format). **undefined** by default.
+* `playlist` (*required*): an array containing data about the tracks which will be played. **undefined** by default. Each track object can contain the following properties:
+  - `url` (*required*): A string containing the address of the audio file to play
+  - `title`: The title of the track - corresponds to the [`MediaMetadata.title` property](https://wicg.github.io/mediasession/#examples)
+  - `artist`: The track's artist - corresponds to the [`MediaMetadata.artist` property](https://wicg.github.io/mediasession/#examples)
+  - `album`: The album the track belongs to - corresponds to the [`MediaMetadata.album` property](https://wicg.github.io/mediasession/#examples)
+  - `artwork`: The artwork for the track - corresponds to the [`MediaMetadata.artwork` property](https://wicg.github.io/mediasession/#examples)
+  - `meta`: An object containing any other track-specific information you want to store
 
 * `controls`: an array of keyword strings which correspond to available audio control components. The order of keywords translates to the order of rendered controls. The default array is: `['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress']`. The possible keyword values are:
   - `'playpause'` (play/pause toggle button)
@@ -137,6 +143,18 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 * `maintainPlaybackRate`: stops playback rate from changing on `src` update. **false** by default.
 
 * `stayOnBackSkipThreshold`: a number value that represents the number of seconds of progress after which pressing the back button will simply restart the current track. **5** by default.
+
+* `supportedMediaSessionActions`: an array of [Media Session API action names](https://wicg.github.io/mediasession/#actions-model). This determines which system audio controls should be available on platforms supporting the Media Session API. It is *not* the same as the `controls` array. The default array is: `['play', 'pause', 'previoustrack', 'nexttrack']`. The possible values are:
+  - `'play'` (ignored at present since systems should provide a default implementation regardless)
+  - `'pause'` (ignored at present, for same reason as `'play'`)
+  - `'seekbackward'`
+  - `'seekforward'`
+  - `'previoustrack'`
+  - `'nexttrack'`
+
+* `mediaSessionSeekLengthInSeconds`: a number value representing the number of seconds forward or backward to seek when handling the Media Session API `seekbackward` and `seekforward` actions. **10** by default.
+
+* `getDisplayText`: a function which takes a track object and returns a string used to represent that track in the UI. By default, the track will be displayed as "[artist] - [title]".
 
 * `style`: a React style object which is applied to the outermost div in the component. **undefined** by default.
 

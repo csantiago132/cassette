@@ -28,7 +28,7 @@ class AudioProgressDisplay extends Component {
         />
         <AudioStatusBar
           style={audioStatusBarStyle}
-          displayText={getDisplayText(playlist, activeTrackIndex) || ''}
+          displayText={getDisplayText(playlist[activeTrackIndex]) || ''}
           displayTime={`${convertToTime(currentTime)} / ${convertToTime(duration)}`}
         />
       </div>
@@ -39,7 +39,15 @@ class AudioProgressDisplay extends Component {
 AudioProgressDisplay.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
     url: PropTypes.string.isRequired,
-    displayText: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    artist: PropTypes.string,
+    album: PropTypes.string,
+    artwork: PropTypes.arrayOf(PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      sizes: PropTypes.string,
+      type: PropTypes.string
+    })),
+    meta: PropTypes.object
   }).isRequired),
   activeTrackIndex: PropTypes.number.isRequired,
   currentTime: PropTypes.number.isRequired,

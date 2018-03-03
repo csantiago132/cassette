@@ -318,7 +318,7 @@ class AudioPlayer extends Component {
         case 'previoustrack':
           return this.backSkip;
         case 'nexttrack':
-          return this.skipToNextTrack;
+          return this.forwardSkip;
         case 'seekbackward':
           return () => this.audio.currentTime -= seekLength;
         case 'seekforward':

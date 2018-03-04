@@ -42,13 +42,9 @@ class AudioPlayer extends Component {
     super(props);
 
     this.defaultState = {
-      /* activeTrackIndex will change to match
-       * this.currentTrackIndex once metadata has loaded
-       */
-      activeTrackIndex: -1,
       // indicates whether audio player should be paused
       paused: true,
-      // elapsed time for current track, in seconds
+      // elapsed time for active track, in seconds
       currentTime: 0,
       // The most recent targeted time, in seconds, for seek preview
       seekPreviewTime: 0,
@@ -75,12 +71,20 @@ class AudioPlayer extends Component {
 
     this.state = {
       ...this.defaultState,
+      // index matching requested track (whether track has loaded or not)
+      activeTrackIndex: convertToNumberWithinIntervalBounds(
+        props.startingTrackIndex,
+        0
+      ),
+      // whether we're waiting on loading metadata for the active track
+      trackLoading: isPlaylistValid(props.playlist),
+      // the current timestamp on the active track in seconds
       currentTime: convertToNumberWithinIntervalBounds(props.startingTime, 0),
       // the latest volume of the audio, between 0 and 1.
       volume: convertToNumberWithinIntervalBounds(props.defaultVolume, 0, 1),
       // true if the audio has been muted
       muted: props.defaultMuted,
-      // whether to loop the current track
+      // whether to loop the active track
       loop: props.defaultRepeatStrategy === 'track',
       // true if playlist should continue at start after completion
       cycle: props.defaultRepeatStrategy === 'playlist',
@@ -91,12 +95,6 @@ class AudioPlayer extends Component {
       // true if user is currently dragging mouse to change the volume
       setVolumeInProgress: false
     };
-
-    // index matching requested track (whether track has loaded or not)
-    this.currentTrackIndex = convertToNumberWithinIntervalBounds(
-      props.startingTrackIndex,
-      0
-    );
 
     // volume at last time we were unmuted and not actively setting volume
     this.lastStableVolume = this.state.volume;
@@ -208,26 +206,29 @@ class AudioPlayer extends Component {
 
     if (!isPlaylistValid(newPlaylist)) {
       this.audio.src = '';
-      this.currentTrackIndex = 0;
-      return this.setState(this.defaultState);
+      this.setState({
+        ...this.defaultState,
+        activeTrackIndex: 0,
+        trackLoading: false
+      });
+      return;
     }
 
-    const oldPlaylist = this.props.playlist;
-
-    const currentTrackUrl = ((oldPlaylist || [])[this.currentTrackIndex] || {}).url;
+    const activeTrackUrl =
+      ((this.props.playlist || [])[this.state.activeTrackIndex] || {}).url;
     if (
-      currentTrackUrl !== (
-        newPlaylist[this.currentTrackIndex] &&
-        newPlaylist[this.currentTrackIndex].url
+      activeTrackUrl !== (
+        newPlaylist[this.state.activeTrackIndex] &&
+        newPlaylist[this.state.activeTrackIndex].url
       )
     ) {
-      this.currentTrackIndex = findTrackIndexByUrl(newPlaylist, currentTrackUrl);
-      if (this.currentTrackIndex !== -1) {
+      const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
+      if (newTrackIndex !== -1) {
         /* if the track we're already playing is in the new playlist, update the
          * activeTrackIndex.
          */
         this.setState({
-          activeTrackIndex: this.currentTrackIndex
+          activeTrackIndex: newTrackIndex
         });
       } else {
         // if not, then load the first track in the new playlist, and pause.
@@ -303,7 +304,7 @@ class AudioPlayer extends Component {
       return;
     }
     navigator.mediaSession.metadata = new MediaMetadata(
-      this.props.playlist[this.currentTrackIndex]
+      this.props.playlist[this.state.activeTrackIndex]
     );
     supportableMediaSessionActions.map(action => {
       if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
@@ -345,13 +346,13 @@ class AudioPlayer extends Component {
 
   handleAudioSrcchange () {
     const { playlist, maintainPlaybackRate } = this.props;
-    const currentTrackUrl = (
+    const activeTrackUrl = (
       playlist &&
-      playlist[this.currentTrackIndex] &&
-      playlist[this.currentTrackIndex].url
+      playlist[this.state.activeTrackIndex] &&
+      playlist[this.state.activeTrackIndex].url
     );
     const newSrc = this.audio.src;
-    if (currentTrackUrl === newSrc) {
+    if (activeTrackUrl === newSrc) {
       // we're good! nothing to update.
       return;
     }
@@ -361,7 +362,7 @@ class AudioPlayer extends Component {
     if (newTrackIndex === -1) {
       // this isn't in our playlist - use our latest state
       // to try to preserve everything how it was.
-      this.audio.src = currentTrackUrl;
+      this.audio.src = activeTrackUrl;
       this.audio.currentTime = this.state.currentTime;
       this.audio.playbackRate = this.state.playbackRate;
       this.audio[this.state.paused ? 'pause' : 'play']();
@@ -380,12 +381,13 @@ class AudioPlayer extends Component {
 
   handleAudioEnded () {
     clearTimeout(this.gapLengthTimeout);
-    const { playlist } = this.props;
+    const { playlist, loadFirstTrackOnPlaylistComplete } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
     }
-    if (!this.state.cycle && this.currentTrackIndex + 1 >= playlist.length) {
-      if (this.props.loadFirstTrackOnPlaylistComplete) {
+    const { cycle, activeTrackIndex } = this.state;
+    if (!cycle && activeTrackIndex + 1 >= playlist.length) {
+      if (loadFirstTrackOnPlaylistComplete) {
         this.goToTrack(0, false);
       }
       return;
@@ -407,7 +409,7 @@ class AudioPlayer extends Component {
 
   handleAudioLoadedmetadata () {
     this.setState({
-      activeTrackIndex: this.currentTrackIndex
+      trackLoading: false
     });
   }
 
@@ -443,12 +445,12 @@ class AudioPlayer extends Component {
       return;
     }
     const previousPlaybackRate = this.audio.playbackRate;
-    this.audio.src = playlist[this.currentTrackIndex].url;
+    this.audio.src = playlist[this.state.activeTrackIndex].url;
     if (this.props.maintainPlaybackRate) {
       this.audio.playbackRate = previousPlaybackRate;
     }
     if (typeof onActiveTrackUpdate === 'function') {
-      onActiveTrackUpdate(this.currentTrackIndex);
+      onActiveTrackUpdate(this.state.activeTrackIndex);
     }
   }
 
@@ -476,10 +478,10 @@ class AudioPlayer extends Component {
   // assumes playlist is valid - don't call without checking
   // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
-    const isNewTrack = this.currentTrackIndex !== index;
-    this.currentTrackIndex = index;
+    const isNewTrack = this.state.activeTrackIndex !== index;
     this.setState({
-      activeTrackIndex: -1,
+      activeTrackIndex: index,
+      trackLoading: isNewTrack,
       currentTime: 0
     }, () => {
       this.updateSource();
@@ -503,7 +505,7 @@ class AudioPlayer extends Component {
       return;
     }
     if (this.state.shuffle) {
-      this.shuffler.pickNextItem(index, this.currentTrackIndex);
+      this.shuffler.pickNextItem(index, this.state.activeTrackIndex);
     }
     this.goToTrack(index);
   }
@@ -511,21 +513,18 @@ class AudioPlayer extends Component {
   backSkip () {
     const { playlist, stayOnBackSkipThreshold } = this.props;
     const { audio } = this;
-    if (!isPlaylistValid(playlist)) {
-      return;
-    }
+    const { cycle, activeTrackIndex, shuffle } = this.state;
     if (
+      !isPlaylistValid(playlist) ||
       audio.currentTime >= stayOnBackSkipThreshold ||
-      (!this.state.cycle && this.currentTrackIndex < 1)
+      (!cycle && activeTrackIndex < 1)
     ) {
       audio.currentTime = 0;
       return;
     }
     let index;
-    if (this.state.shuffle) {
-      const previousItem = this.shuffler.findPreviousItem(
-        this.currentTrackIndex
-      );
+    if (shuffle) {
+      const previousItem = this.shuffler.findPreviousItem(activeTrackIndex);
       if (previousItem === undefined) {
         // if we aren't allowing backShuffle then we'll hit a stopping point.
         audio.currentTime = 0;
@@ -533,7 +532,7 @@ class AudioPlayer extends Component {
       }
       index = findTrackIndexByUrl(playlist, previousItem);
     } else {
-      index = this.currentTrackIndex - 1;
+      index = activeTrackIndex - 1;
       if (index < 0) {
         index = playlist.length - 1;
       }
@@ -543,23 +542,21 @@ class AudioPlayer extends Component {
 
   forwardSkip () {
     const { playlist } = this.props;
+    const { cycle, activeTrackIndex, shuffle } = this.state;
     if (
       !isPlaylistValid(playlist) ||
-      (!this.state.cycle && (
-        this.currentTrackIndex < 0 ||
-        this.currentTrackIndex > playlist.length - 2
-      ))
+      (!cycle && activeTrackIndex + 1 >= playlist.length)
     ) {
       return;
     }
     let index;
-    if (this.state.shuffle) {
+    if (shuffle) {
       index = findTrackIndexByUrl(
         playlist,
-        this.shuffler.findNextItem(this.currentTrackIndex)
+        this.shuffler.findNextItem(activeTrackIndex)
       );
     } else {
-      index = this.currentTrackIndex + 1;
+      index = activeTrackIndex + 1;
       if (index >= playlist.length) {
         index = 0;
       }
@@ -568,7 +565,7 @@ class AudioPlayer extends Component {
   }
 
   seekPreview (targetTime) {
-    if (this.isSeekUnavailable(this.state)) {
+    if (this.state.trackLoading) {
       return;
     }
     const { paused, awaitingResumeOnSeekComplete } = this.state;
@@ -691,15 +688,12 @@ class AudioPlayer extends Component {
     this.audio.playbackRate = rate;
   }
 
-  isSeekUnavailable (state) {
-    return Boolean(state.activeTrackIndex < 0);
-  }
-
   getControlProps () {
     const { props, state } = this;
     return {
       playlist: props.playlist,
       activeTrackIndex: state.activeTrackIndex,
+      trackLoading: state.trackLoading,
       paused: state.paused,
       currentTime: state.currentTime,
       seekPreviewTime: state.seekPreviewTime,
@@ -713,7 +707,6 @@ class AudioPlayer extends Component {
       shuffle: state.shuffle,
       playbackRate: state.playbackRate,
       setVolumeInProgress: state.setVolumeInProgress,
-      seekUnavailable: this.isSeekUnavailable(state),
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),
       onTogglePause: this.togglePause,
       onSelectTrackIndex: this.selectTrackIndex,

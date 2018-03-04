@@ -35,7 +35,7 @@ class AudioProgress extends Component {
       currentTime,
       seekPreviewTime,
       seekInProgress,
-      seekUnavailable,
+      trackLoading,
       duration,
       onSeekComplete
     } = this.props;
@@ -49,7 +49,7 @@ class AudioProgress extends Component {
           progress={displayedProgress}
           progressDirection="right"
           adjusting={seekInProgress}
-          readonly={seekUnavailable}
+          readonly={trackLoading}
           onAdjustProgress={this.handleSeekPreview}
           onAdjustComplete={onSeekComplete}
         />
@@ -80,7 +80,7 @@ AudioProgress.propTypes = {
   currentTime: PropTypes.number.isRequired,
   seekPreviewTime: PropTypes.number.isRequired,
   seekInProgress: PropTypes.bool.isRequired,
-  seekUnavailable: PropTypes.bool.isRequired,
+  trackLoading: PropTypes.bool.isRequired,
   duration: PropTypes.number.isRequired,
   onSeekPreview: PropTypes.func.isRequired,
   onSeekComplete: PropTypes.func.isRequired
@@ -92,7 +92,7 @@ export const renderAudioProgress = createControlRenderProp(AudioProgress, [
   'currentTime',
   'seekPreviewTime',
   'seekInProgress',
-  'seekUnavailable',
+  'trackLoading',
   'duration',
   'onSeekPreview',
   'onSeekComplete'

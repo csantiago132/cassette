@@ -66,7 +66,9 @@ class AudioPlayer extends Component {
       /* the TimeRanges object representing the played sections of the
        * loaded track
        */
-      played: null
+      played: null,
+      // true if the audio is currently stalled pending data buffering
+      stalled: false
     };
 
     this.state = {
@@ -131,6 +133,7 @@ class AudioPlayer extends Component {
     this.handleAudioSrcchange = this.handleAudioSrcchange.bind(this);
     this.handleAudioEnded = this.handleAudioEnded.bind(this);
     this.handleAudioStalled = this.handleAudioStalled.bind(this);
+    this.handleAudioCanplaythrough = this.handleAudioCanplaythrough.bind(this);
     this.handleAudioTimeupdate = this.handleAudioTimeupdate.bind(this);
     this.handleAudioLoadedmetadata = this.handleAudioLoadedmetadata.bind(this);
     this.handleAudioVolumechange = this.handleAudioVolumechange.bind(this);
@@ -158,6 +161,7 @@ class AudioPlayer extends Component {
     audio.addEventListener('srcchange', this.handleAudioSrcchange);
     audio.addEventListener('ended', this.handleAudioEnded);
     audio.addEventListener('stalled', this.handleAudioStalled);
+    audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
     audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
     audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
     audio.addEventListener('volumechange', this.handleAudioVolumechange);
@@ -252,6 +256,7 @@ class AudioPlayer extends Component {
     audio.removeEventListener('srcchange', this.handleAudioSrcchange);
     audio.removeEventListener('ended', this.handleAudioEnded);
     audio.removeEventListener('stalled', this.handleAudioStalled);
+    audio.removeEventListener('canplaythrough', this.handleAudioCanplaythrough);
     audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
     audio.removeEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
     audio.removeEventListener('volumechange', this.handleAudioVolumechange);
@@ -399,7 +404,15 @@ class AudioPlayer extends Component {
   }
 
   handleAudioStalled () {
-    this.togglePause(true);
+    this.setState({
+      stalled: true
+    });
+  }
+
+  handleAudioCanplaythrough () {
+    this.setState({
+      stalled: false
+    });
   }
 
   handleAudioTimeupdate () {
@@ -705,6 +718,7 @@ class AudioPlayer extends Component {
       volume: state.volume,
       muted: state.muted,
       shuffle: state.shuffle,
+      stalled: state.stalled,
       playbackRate: state.playbackRate,
       setVolumeInProgress: state.setVolumeInProgress,
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),

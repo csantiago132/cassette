@@ -351,6 +351,12 @@ class AudioPlayer extends Component {
 
   handleAudioSrcchange () {
     const { playlist, maintainPlaybackRate } = this.props;
+    if (!isPlaylistValid(playlist)) {
+      if (this.audio.src.replace(location.href, '') !== '') {
+        this.audio.src = '';
+      }
+      return;
+    }
     const activeTrackUrl = (
       playlist &&
       playlist[this.state.activeTrackIndex] &&

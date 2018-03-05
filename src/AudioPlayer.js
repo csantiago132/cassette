@@ -578,7 +578,7 @@ class AudioPlayer extends Component {
   }
 
   seekPreview (targetTime) {
-    if (this.state.trackLoading) {
+    if (!isPlaylistValid(this.props.playlist)) {
       return;
     }
     const { paused, awaitingResumeOnSeekComplete } = this.state;

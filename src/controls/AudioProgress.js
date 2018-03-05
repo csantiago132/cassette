@@ -5,6 +5,7 @@ import ProgressBar from './common/ProgressBar';
 import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
+import isPlaylistValid from '../utils/isPlaylistValid';
 import createControlRenderProp from '../factories/createControlRenderProp';
 
 const audioStatusBarStyle = {
@@ -35,7 +36,6 @@ class AudioProgress extends Component {
       currentTime,
       seekPreviewTime,
       seekInProgress,
-      trackLoading,
       duration,
       onSeekComplete
     } = this.props;
@@ -49,7 +49,7 @@ class AudioProgress extends Component {
           progress={displayedProgress}
           progressDirection="right"
           adjusting={seekInProgress}
-          readonly={trackLoading}
+          readonly={!isPlaylistValid(playlist)}
           onAdjustProgress={this.handleSeekPreview}
           onAdjustComplete={onSeekComplete}
         />
@@ -80,7 +80,6 @@ AudioProgress.propTypes = {
   currentTime: PropTypes.number.isRequired,
   seekPreviewTime: PropTypes.number.isRequired,
   seekInProgress: PropTypes.bool.isRequired,
-  trackLoading: PropTypes.bool.isRequired,
   duration: PropTypes.number.isRequired,
   onSeekPreview: PropTypes.func.isRequired,
   onSeekComplete: PropTypes.func.isRequired
@@ -92,7 +91,6 @@ export const renderAudioProgress = createControlRenderProp(AudioProgress, [
   'currentTime',
   'seekPreviewTime',
   'seekInProgress',
-  'trackLoading',
   'duration',
   'onSeekPreview',
   'onSeekComplete'

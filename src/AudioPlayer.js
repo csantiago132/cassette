@@ -196,7 +196,7 @@ class AudioPlayer extends Component {
     if (!isPlaylistValid(newPlaylist)) {
       this.audio.src = '';
       this.setState({
-        ...this.defaultState,
+        ...defaultState,
         activeTrackIndex: 0,
         trackLoading: false
       });

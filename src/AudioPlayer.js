@@ -101,8 +101,9 @@ class AudioPlayer extends Component {
     // volume at last time we were unmuted and not actively setting volume
     this.lastStableVolume = this.state.volume;
 
-    // set of keys to use in controls render
-    this.controlKeys = props.controls.map(getNextControlKey);
+    // cache of keys to use in controls render
+    // (to maintain state in case order changes)
+    this.controlKeys = new Map();
 
     // used to keep track of play history when we are shuffling
     this.shuffler = new ShuffleManager(getSourceList(props.playlist), {
@@ -184,16 +185,6 @@ class AudioPlayer extends Component {
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(this.props.onMediaEvent);
     this.addMediaEventListeners(nextProps.onMediaEvent);
-
-    const oldControls = [...this.props.controls];
-    this.controlKeys = nextProps.controls.map(control => {
-      const matchingIndex = oldControls.indexOf(control);
-      if (matchingIndex !== -1 && oldControls[matchingIndex]) {
-        oldControls[matchingIndex] = null;
-        return this.controlKeys[matchingIndex];
-      }
-      return getNextControlKey();
-    });
 
     const newPlaylist = nextProps.playlist;
 
@@ -737,6 +728,32 @@ class AudioPlayer extends Component {
     };
   }
 
+  getKeyedChildren (elements) {
+    // counts of rendered elements by type
+    const elementsRendered = new Map();
+
+    return elements.map(element => {
+      // support React | Preact | Inferno
+      const type = element.type || element.nodeName || element.tag || '';
+
+      // index within list of keys by type
+      const keyIndex = elementsRendered.get(type) || 0;
+      elementsRendered.set(type, keyIndex + 1);
+
+      const keysForType = this.controlKeys.get(type) || [];
+
+      let key;
+      if (keysForType[keyIndex]) {
+        key = keysForType[keyIndex];
+      } else {
+        key = getNextControlKey();
+        this.controlKeys.set(type, keysForType.concat(key));
+      }
+
+      return element && React.cloneElement(element, { key });
+    });
+  }
+
   render () {
     const hasChildren = Boolean(React.Children.count(this.props.children));
     const ControlWrapper = this.props.controlWrapper;
@@ -756,13 +773,12 @@ class AudioPlayer extends Component {
               )}
             >
               <PlayerContext.Consumer>
-                {controlProps => this.props.controls.map((control, index) => {
-                  const renderControl = getControlRenderProp(control);
-                  return renderControl && React.cloneElement(
-                    renderControl(controlProps),
-                    { key: this.controlKeys[index] }
-                  );
-                })}
+                {controlProps => this.getKeyedChildren(
+                  this.props.controls.map((control, index) => {
+                    const renderControl = getControlRenderProp(control);
+                    return renderControl && renderControl(controlProps);
+                  })
+                )}
               </PlayerContext.Consumer>
             </ControlWrapper>
           )}

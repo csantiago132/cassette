@@ -36,43 +36,43 @@ const supportableMediaSessionActions = [
   'seekforward'
 ];
 
+const defaultState = {
+  // indicates whether audio player should be paused
+  paused: true,
+  // elapsed time for active track, in seconds
+  currentTime: 0,
+  // The most recent targeted time, in seconds, for seek preview
+  seekPreviewTime: 0,
+  /* true if the user is currently dragging the mouse
+   * to seek a new track position
+   */
+  seekInProgress: false,
+  /* true if audio was playing when seek previewing began,
+   * it was paused, and it should be resumed on seek
+   * complete
+   */
+  awaitingResumeOnSeekComplete: false,
+  // the duration in seconds of the loaded track
+  duration: 0,
+  /* the TimeRanges object representing the buffered sections of the
+   * loaded track
+   */
+  buffered: null,
+  /* the TimeRanges object representing the played sections of the
+   * loaded track
+   */
+  played: null,
+  // true if the audio is currently stalled pending data buffering
+  stalled: false
+};
+
 class AudioPlayer extends Component {
 
   constructor (props) {
     super(props);
 
-    this.defaultState = {
-      // indicates whether audio player should be paused
-      paused: true,
-      // elapsed time for active track, in seconds
-      currentTime: 0,
-      // The most recent targeted time, in seconds, for seek preview
-      seekPreviewTime: 0,
-      /* true if the user is currently dragging the mouse
-       * to seek a new track position
-       */
-      seekInProgress: false,
-      /* true if audio was playing when seek previewing began,
-       * it was paused, and it should be resumed on seek
-       * complete
-       */
-      awaitingResumeOnSeekComplete: false,
-      // the duration in seconds of the loaded track
-      duration: 0,
-      /* the TimeRanges object representing the buffered sections of the
-       * loaded track
-       */
-      buffered: null,
-      /* the TimeRanges object representing the played sections of the
-       * loaded track
-       */
-      played: null,
-      // true if the audio is currently stalled pending data buffering
-      stalled: false
-    };
-
     this.state = {
-      ...this.defaultState,
+      ...defaultState,
       // index matching requested track (whether track has loaded or not)
       activeTrackIndex: convertToNumberWithinIntervalBounds(
         props.startingTrackIndex,

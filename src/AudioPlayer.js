@@ -151,7 +151,6 @@ class AudioPlayer extends Component {
     audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
-    audio.loop = this.state.loop;
     audio.defaultPlaybackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
@@ -482,18 +481,19 @@ class AudioPlayer extends Component {
   // assumes playlist is valid - don't call without checking
   // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
+    // TODO: derive isNewTrack from state inside function when possible
     const isNewTrack = this.state.activeTrackIndex !== index;
-    this.setState({
-      activeTrackIndex: index,
-      trackLoading: isNewTrack,
-      currentTime: 0
+    this.setState(state => {
+      return {
+        activeTrackIndex: index,
+        trackLoading: isNewTrack,
+        currentTime: 0,
+        loop: isNewTrack ? false : state.loop
+      };
     }, () => {
       this.updateSource();
-      if (isNewTrack) {
-        this.audio.loop = false;
-        if (!this.state.shuffle) {
-          this.shuffler.clear();
-        }
+      if (isNewTrack && !this.state.shuffle) {
+        this.shuffler.clear();
       }
       this.togglePause(!shouldPlay);
     });
@@ -658,28 +658,26 @@ class AudioPlayer extends Component {
       this.state.loop,
       this.state.cycle
     );
-    switch (repeatStrategy) {
-      case 'track':
-        // let event listener take care of state change.
-        this.audio.loop = true;
-        break;
-      case 'playlist':
-        this.setState({
-          loop: false,
-          cycle: true
-        });
-        this.audio.loop = false;
-        break;
-      case 'none':
-        this.setState({
-          loop: false,
-          cycle: false
-        });
-        this.audio.loop = false;
-        break;
-      default:
-        break;
-    }
+    this.setState(() => {
+      switch (repeatStrategy) {
+        case 'track':
+          return {
+            loop: true
+          };
+        case 'playlist':
+          return {
+            loop: false,
+            cycle: true
+          };
+        case 'none':
+          return {
+            loop: false,
+            cycle: false
+          };
+        default:
+          return null;
+      }
+    });
     if (
       typeof this.props.onRepeatStrategyUpdate === 'function' &&
       prevRepeatStrategy !== repeatStrategy
@@ -763,6 +761,7 @@ class AudioPlayer extends Component {
           ref={this.setAudioElementRef}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"
+          loop={this.state.loop}
         />
         <PlayerContext.Provider value={this.getControlProps()}>
           {hasChildren && this.props.children}

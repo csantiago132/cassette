@@ -252,18 +252,6 @@ class AudioPlayer extends Component {
       allowBackShuffle: this.props.allowBackShuffle
     });
 
-    if (prevProps !== this.props && !this.audio.paused) {
-      // update running media session based on new props
-      this.stealMediaSession();
-    }
-
-    if (
-      this.state.activeTrackIndex !== prevState.activeTrackIndex &&
-      typeof onActiveTrackUpdate === 'function'
-    ) {
-      onActiveTrackUpdate(this.state.activeTrackIndex);
-    }
-
     if (
       !this.state.shuffle &&
       (
@@ -275,6 +263,18 @@ class AudioPlayer extends Component {
       // history until we actually change tracks - if the user quickly toggles
       // shuffle off then back on again, we don't want to have lost our history.
       this.shuffler.clear();
+    }
+
+    if (prevProps !== this.props && !this.audio.paused) {
+      // update running media session based on new props
+      this.stealMediaSession();
+    }
+
+    if (
+      this.state.activeTrackIndex !== prevState.activeTrackIndex &&
+      typeof this.props.onActiveTrackUpdate === 'function'
+    ) {
+      this.props.onActiveTrackUpdate(this.state.activeTrackIndex);
     }
 
     if (this.state.awaitingPlay) {

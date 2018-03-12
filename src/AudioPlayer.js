@@ -377,12 +377,12 @@ class AudioPlayer extends Component {
   }
 
   handleAudioPlay () {
-    this.setState({ paused: false });
+    this.setState(state => state.paused === false ? null : ({ paused: false }));
     this.stealMediaSession();
   }
 
   handleAudioPause () {
-    this.setState({ paused: true });
+    this.setState(state => state.paused === true ? null : ({ paused: true }));
   }
 
   handleAudioSrcchange () {
@@ -442,15 +442,15 @@ class AudioPlayer extends Component {
   }
 
   handleAudioStalled () {
-    this.setState({
-      stalled: true
-    });
+    this.setState(state => state.stalled === true ? null : ({ stalled: true }));
   }
 
   handleAudioCanplaythrough () {
-    this.setState({
-      stalled: false
-    });
+    this.setState(state =>
+      state.stalled === false
+        ? null
+        : ({ stalled: false })
+    );
   }
 
   handleAudioTimeupdate () {
@@ -459,9 +459,11 @@ class AudioPlayer extends Component {
   }
 
   handleAudioLoadedmetadata () {
-    this.setState({
-      trackLoading: false
-    });
+    this.setState(state =>
+      state.trackLoading === false
+        ? null
+        : ({ trackLoading: false })
+    );
   }
 
   handleAudioVolumechange () {
@@ -481,12 +483,16 @@ class AudioPlayer extends Component {
 
   handleAudioLoopchange () {
     const { loop } = this.audio;
-    this.setState({ loop });
+    this.setState(state => state.loop === loop ? null : ({ loop }));
   }
 
   handleAudioRatechange () {
     const { playbackRate } = this.audio;
-    this.setState({ playbackRate });
+    this.setState(state =>
+      state.playbackRate === playbackRate
+        ? null
+        : ({ playbackRate })
+    );
   }
 
   togglePause (value) {

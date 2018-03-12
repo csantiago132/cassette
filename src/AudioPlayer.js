@@ -7,6 +7,7 @@ import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import getSourceList from './utils/getSourceList';
+import getTrackSrc from './utils/getTrackSrc';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
@@ -152,6 +153,7 @@ class AudioPlayer extends Component {
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.defaultPlaybackRate = this.state.playbackRate;
+    audio.playbackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
     audio.addEventListener('play', this.handleAudioPlay);
@@ -169,14 +171,11 @@ class AudioPlayer extends Component {
     audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
-    if (isPlaylistValid(this.props.playlist)) {
-      this.updateSource();
-      if (this.props.autoplay) {
-        clearTimeout(this.delayTimeout);
-        this.delayTimeout = setTimeout(() => {
-          this.togglePause(false);
-        }, this.props.autoplayDelayInSeconds * 1000);
-      }
+    if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
+      clearTimeout(this.delayTimeout);
+      this.delayTimeout = setTimeout(() => {
+        this.togglePause(false);
+      }, this.props.autoplayDelayInSeconds * 1000);
     }
   }
 
@@ -203,12 +202,9 @@ class AudioPlayer extends Component {
     }
 
     const activeTrackUrl =
-      ((this.props.playlist || [])[this.state.activeTrackIndex] || {}).url;
+      getTrackSrc(this.props.playlist, this.state.activeTrackIndex);
     if (
-      activeTrackUrl !== (
-        newPlaylist[this.state.activeTrackIndex] &&
-        newPlaylist[this.state.activeTrackIndex].url
-      )
+      activeTrackUrl !== getTrackSrc(newPlaylist, this.state.activeTrackIndex)
     ) {
       const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
       if (newTrackIndex !== -1) {
@@ -225,10 +221,17 @@ class AudioPlayer extends Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps, prevState) {
     if (prevProps !== this.props && !this.audio.paused) {
       // update running media session based on new props
       this.stealMediaSession();
+    }
+
+    if (
+      this.state.activeTrackIndex !== prevState.activeTrackIndex &&
+      typeof onActiveTrackUpdate === 'function'
+    ) {
+      onActiveTrackUpdate(this.state.activeTrackIndex);
     }
   }
 
@@ -334,18 +337,17 @@ class AudioPlayer extends Component {
   }
 
   handleAudioSrcchange () {
-    const { playlist, maintainPlaybackRate } = this.props;
+    const { maintainPlaybackRate, playlist } = this.props;
+    if (maintainPlaybackRate) {
+      this.audio.playbackRate = this.state.playbackRate;
+    }
     if (!isPlaylistValid(playlist)) {
       if (this.audio.src.replace(location.href, '') !== '') {
         this.audio.src = '';
       }
       return;
     }
-    const activeTrackUrl = (
-      playlist &&
-      playlist[this.state.activeTrackIndex] &&
-      playlist[this.state.activeTrackIndex].url
-    );
+    const activeTrackUrl = getTrackSrc(playlist, this.state.activeTrackIndex);
     const newSrc = this.audio.src;
     if (activeTrackUrl === newSrc) {
       // we're good! nothing to update.
@@ -441,22 +443,6 @@ class AudioPlayer extends Component {
     this.setState({ playbackRate });
   }
 
-  updateSource () {
-    const { playlist, onActiveTrackUpdate } = this.props;
-    if (!isPlaylistValid(playlist)) {
-      this.audio.src = '';
-      return;
-    }
-    const previousPlaybackRate = this.audio.playbackRate;
-    this.audio.src = playlist[this.state.activeTrackIndex].url;
-    if (this.props.maintainPlaybackRate) {
-      this.audio.playbackRate = previousPlaybackRate;
-    }
-    if (typeof onActiveTrackUpdate === 'function') {
-      onActiveTrackUpdate(this.state.activeTrackIndex);
-    }
-  }
-
   togglePause (value) {
     const pause = typeof value === 'boolean' ? value : !this.state.paused;
     if (pause) {
@@ -491,7 +477,6 @@ class AudioPlayer extends Component {
         loop: isNewTrack ? false : state.loop
       };
     }, () => {
-      this.updateSource();
       if (isNewTrack && !this.state.shuffle) {
         this.shuffler.clear();
       }
@@ -759,6 +744,7 @@ class AudioPlayer extends Component {
       <div style={this.props.style}>
         <audio
           ref={this.setAudioElementRef}
+          src={getTrackSrc(this.props.playlist, this.state.activeTrackIndex)}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"
           loop={this.state.loop}

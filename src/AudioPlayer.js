@@ -419,9 +419,6 @@ class AudioPlayer extends Component {
       );
       return;
     }
-    if (maintainPlaybackRate) {
-      this.audio.playbackRate = this.state.playbackRate;
-    }
     this.selectTrackIndex(newTrackIndex);
   }
 

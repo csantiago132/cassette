@@ -233,6 +233,19 @@ class AudioPlayer extends Component {
     ) {
       onActiveTrackUpdate(this.state.activeTrackIndex);
     }
+
+    if (
+      !this.state.shuffle &&
+      (
+        getTrackSrc(this.props.playlist, this.state.activeTrackIndex) !==
+        getTrackSrc(prevProps.playlist, prevState.activeTrackIndex)
+      )
+    ) {
+      // after toggling off shuffle, we defer clearing the shuffle
+      // history until we actually change tracks - if the user quickly toggles
+      // shuffle off then back on again, we don't want to have lost our history.
+      this.shuffler.clear();
+    }
   }
 
   componentWillUnmount () {
@@ -477,9 +490,6 @@ class AudioPlayer extends Component {
         loop: isNewTrack ? false : state.loop
       };
     }, () => {
-      if (isNewTrack && !this.state.shuffle) {
-        this.shuffler.clear();
-      }
       this.togglePause(!shouldPlay);
     });
   }

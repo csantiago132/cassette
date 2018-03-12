@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import lifecyclesPolyfill from 'react-lifecycles-compat';
 
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
@@ -232,5 +233,7 @@ export const renderVolumeControl = createControlRenderProp(VolumeControl, [
   'onSetVolumeComplete',
   'onToggleMuted'
 ]);
+
+lifecyclesPolyfill(VolumeControl);
 
 export default VolumeControl;

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import lifecyclesPolyfill from 'react-lifecycles-compat';
 
 import PlayerContext from './PlayerContext';
 import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import getSourceList from './utils/getSourceList';
+import getTrackSrc from './utils/getTrackSrc';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
@@ -36,43 +38,58 @@ const supportableMediaSessionActions = [
   'seekforward'
 ];
 
+const defaultState = {
+  // indicates whether audio player should be paused
+  paused: true,
+  // elapsed time for active track, in seconds
+  currentTime: 0,
+  // The most recent targeted time, in seconds, for seek preview
+  seekPreviewTime: 0,
+  /* true if the user is currently dragging the mouse
+   * to seek a new track position
+   */
+  seekInProgress: false,
+  /* true if audio was playing when seek previewing began,
+   * it was paused, and it should be resumed on seek
+   * complete
+   */
+  awaitingResumeOnSeekComplete: false,
+  // the duration in seconds of the loaded track
+  duration: 0,
+  /* the TimeRanges object representing the buffered sections of the
+   * loaded track
+   */
+  buffered: null,
+  /* the TimeRanges object representing the played sections of the
+   * loaded track
+   */
+  played: null,
+  // true if the audio is currently stalled pending data buffering
+  stalled: false,
+  // true if the active track should play on the next componentDidUpdate
+  awaitingPlay: false
+};
+
+// assumes playlist is valid
+function getGoToTrackState (prevState, index, shouldPlay = true) {
+  const isNewTrack = prevState.activeTrackIndex !== index;
+  return {
+    activeTrackIndex: index,
+    trackLoading: isNewTrack,
+    currentTime: 0,
+    loop: isNewTrack ? false : prevState.loop,
+    awaitingPlay: Boolean(shouldPlay),
+    paused: !shouldPlay
+  };
+}
+
 class AudioPlayer extends Component {
 
   constructor (props) {
     super(props);
 
-    this.defaultState = {
-      // indicates whether audio player should be paused
-      paused: true,
-      // elapsed time for active track, in seconds
-      currentTime: 0,
-      // The most recent targeted time, in seconds, for seek preview
-      seekPreviewTime: 0,
-      /* true if the user is currently dragging the mouse
-       * to seek a new track position
-       */
-      seekInProgress: false,
-      /* true if audio was playing when seek previewing began,
-       * it was paused, and it should be resumed on seek
-       * complete
-       */
-      awaitingResumeOnSeekComplete: false,
-      // the duration in seconds of the loaded track
-      duration: 0,
-      /* the TimeRanges object representing the buffered sections of the
-       * loaded track
-       */
-      buffered: null,
-      /* the TimeRanges object representing the played sections of the
-       * loaded track
-       */
-      played: null,
-      // true if the audio is currently stalled pending data buffering
-      stalled: false
-    };
-
     this.state = {
-      ...this.defaultState,
+      ...defaultState,
       // index matching requested track (whether track has loaded or not)
       activeTrackIndex: convertToNumberWithinIntervalBounds(
         props.startingTrackIndex,
@@ -95,14 +112,17 @@ class AudioPlayer extends Component {
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
-      setVolumeInProgress: false
+      setVolumeInProgress: false,
+      // playlist prop copied to state (for getDerivedStateFromProps)
+      __playlist__: props.playlist
     };
 
     // volume at last time we were unmuted and not actively setting volume
     this.lastStableVolume = this.state.volume;
 
-    // set of keys to use in controls render
-    this.controlKeys = props.controls.map(getNextControlKey);
+    // cache of keys to use in controls render
+    // (to maintain state in case order changes)
+    this.controlKeys = new Map();
 
     // used to keep track of play history when we are shuffling
     this.shuffler = new ShuffleManager(getSourceList(props.playlist), {
@@ -147,15 +167,13 @@ class AudioPlayer extends Component {
     const audio = this.audio = createCustomAudioElement(this.audio);
 
     // initialize audio properties
-    audio.crossOrigin = this.props.crossOrigin;
     audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
-    audio.loop = this.state.loop;
     audio.defaultPlaybackRate = this.state.playbackRate;
+    audio.playbackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
-    audio.preload = 'metadata';
     audio.addEventListener('play', this.handleAudioPlay);
     audio.addEventListener('pause', this.handleAudioPause);
     audio.addEventListener('srcchange', this.handleAudioSrcchange);
@@ -171,80 +189,99 @@ class AudioPlayer extends Component {
     audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
-    if (isPlaylistValid(this.props.playlist)) {
-      this.updateSource();
-      if (this.props.autoplay) {
-        clearTimeout(this.delayTimeout);
-        this.delayTimeout = setTimeout(() => {
-          this.togglePause(false);
-        }, this.props.autoplayDelayInSeconds * 1000);
-      }
+    if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
+      clearTimeout(this.delayTimeout);
+      this.delayTimeout = setTimeout(() => {
+        this.togglePause(false);
+      }, this.props.autoplayDelayInSeconds * 1000);
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    // Update media event listeners that may have changed
-    this.removeMediaEventListeners(this.props.onMediaEvent);
-    this.addMediaEventListeners(nextProps.onMediaEvent);
-
-    if (this.props.crossOrigin !== nextProps.crossOrigin) {
-      this.audio.crossOrigin = nextProps.crossOrigin;
-    }
-
-    const oldControls = [...this.props.controls];
-    this.controlKeys = nextProps.controls.map(control => {
-      const matchingIndex = oldControls.indexOf(control);
-      if (matchingIndex !== -1 && oldControls[matchingIndex]) {
-        oldControls[matchingIndex] = null;
-        return this.controlKeys[matchingIndex];
-      }
-      return getNextControlKey();
-    });
-
+  static getDerivedStateFromProps (nextProps, prevState) {
     const newPlaylist = nextProps.playlist;
 
-    this.shuffler.setList(getSourceList(newPlaylist));
-    this.shuffler.setOptions({
-      allowBackShuffle: nextProps.allowBackShuffle
-    });
+    const baseNewState = {
+      __playlist__: newPlaylist
+    };
 
+    // check if the new playlist is invalid
     if (!isPlaylistValid(newPlaylist)) {
-      this.audio.src = '';
-      this.setState({
-        ...this.defaultState,
+      return {
+        ...defaultState,
+        ...baseNewState,
         activeTrackIndex: 0,
         trackLoading: false
-      });
-      return;
+      };
     }
 
+    // check if the activeTrackIndex doesn't need to be updated
     const activeTrackUrl =
-      ((this.props.playlist || [])[this.state.activeTrackIndex] || {}).url;
+      getTrackSrc(prevState.__playlist__, prevState.activeTrackIndex);
     if (
-      activeTrackUrl !== (
-        newPlaylist[this.state.activeTrackIndex] &&
-        newPlaylist[this.state.activeTrackIndex].url
-      )
+      activeTrackUrl === getTrackSrc(newPlaylist, prevState.activeTrackIndex)
     ) {
-      const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
-      if (newTrackIndex !== -1) {
-        /* if the track we're already playing is in the new playlist, update the
-         * activeTrackIndex.
-         */
-        this.setState({
-          activeTrackIndex: newTrackIndex
-        });
-      } else {
-        // if not, then load the first track in the new playlist, and pause.
-        this.goToTrack(0, false);
-      }
+      // our active track index already matches
+      return baseNewState;
     }
+
+    /* if the track we're already playing is in the new playlist, update the
+     * activeTrackIndex.
+     */
+    const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
+    if (newTrackIndex !== -1) {
+      return {
+        ...baseNewState,
+        activeTrackIndex: newTrackIndex
+      };
+    }
+
+    // if not, then load the first track in the new playlist, and pause.
+    return {
+      ...baseNewState,
+      ...getGoToTrackState(prevState, 0, false)
+    };
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps, prevState) {
+    // Update media event listeners that may have changed
+    this.removeMediaEventListeners(prevProps.onMediaEvent);
+    this.addMediaEventListeners(this.props.onMediaEvent);
+
+    this.shuffler.setList(getSourceList(this.props.playlist));
+    this.shuffler.setOptions({
+      allowBackShuffle: this.props.allowBackShuffle
+    });
+
+    if (
+      !this.state.shuffle &&
+      (
+        getTrackSrc(this.props.playlist, this.state.activeTrackIndex) !==
+        getTrackSrc(prevProps.playlist, prevState.activeTrackIndex)
+      )
+    ) {
+      // after toggling off shuffle, we defer clearing the shuffle
+      // history until we actually change tracks - if the user quickly toggles
+      // shuffle off then back on again, we don't want to have lost our history.
+      this.shuffler.clear();
+    }
+
     if (prevProps !== this.props && !this.audio.paused) {
       // update running media session based on new props
       this.stealMediaSession();
+    }
+
+    if (
+      this.state.activeTrackIndex !== prevState.activeTrackIndex &&
+      typeof this.props.onActiveTrackUpdate === 'function'
+    ) {
+      this.props.onActiveTrackUpdate(this.state.activeTrackIndex);
+    }
+
+    if (this.state.awaitingPlay) {
+      this.setState({
+        awaitingPlay: false
+      });
+      this.togglePause(false);
     }
   }
 
@@ -341,27 +378,26 @@ class AudioPlayer extends Component {
   }
 
   handleAudioPlay () {
-    this.setState({ paused: false });
+    this.setState(state => state.paused === false ? null : ({ paused: false }));
     this.stealMediaSession();
   }
 
   handleAudioPause () {
-    this.setState({ paused: true });
+    this.setState(state => state.paused === true ? null : ({ paused: true }));
   }
 
   handleAudioSrcchange () {
-    const { playlist, maintainPlaybackRate } = this.props;
+    const { maintainPlaybackRate, playlist } = this.props;
+    if (maintainPlaybackRate) {
+      this.audio.playbackRate = this.state.playbackRate;
+    }
     if (!isPlaylistValid(playlist)) {
       if (this.audio.src.replace(location.href, '') !== '') {
         this.audio.src = '';
       }
       return;
     }
-    const activeTrackUrl = (
-      playlist &&
-      playlist[this.state.activeTrackIndex] &&
-      playlist[this.state.activeTrackIndex].url
-    );
+    const activeTrackUrl = getTrackSrc(playlist, this.state.activeTrackIndex);
     const newSrc = this.audio.src;
     if (activeTrackUrl === newSrc) {
       // we're good! nothing to update.
@@ -383,9 +419,6 @@ class AudioPlayer extends Component {
         `before you select this track!`
       );
       return;
-    }
-    if (maintainPlaybackRate) {
-      this.audio.playbackRate = this.state.playbackRate;
     }
     this.selectTrackIndex(newTrackIndex);
   }
@@ -410,15 +443,15 @@ class AudioPlayer extends Component {
   }
 
   handleAudioStalled () {
-    this.setState({
-      stalled: true
-    });
+    this.setState(state => state.stalled === true ? null : ({ stalled: true }));
   }
 
   handleAudioCanplaythrough () {
-    this.setState({
-      stalled: false
-    });
+    this.setState(state =>
+      state.stalled === false
+        ? null
+        : ({ stalled: false })
+    );
   }
 
   handleAudioTimeupdate () {
@@ -427,9 +460,11 @@ class AudioPlayer extends Component {
   }
 
   handleAudioLoadedmetadata () {
-    this.setState({
-      trackLoading: false
-    });
+    this.setState(state =>
+      state.trackLoading === false
+        ? null
+        : ({ trackLoading: false })
+    );
   }
 
   handleAudioVolumechange () {
@@ -449,28 +484,16 @@ class AudioPlayer extends Component {
 
   handleAudioLoopchange () {
     const { loop } = this.audio;
-    this.setState({ loop });
+    this.setState(state => state.loop === loop ? null : ({ loop }));
   }
 
   handleAudioRatechange () {
     const { playbackRate } = this.audio;
-    this.setState({ playbackRate });
-  }
-
-  updateSource () {
-    const { playlist, onActiveTrackUpdate } = this.props;
-    if (!isPlaylistValid(playlist)) {
-      this.audio.src = '';
-      return;
-    }
-    const previousPlaybackRate = this.audio.playbackRate;
-    this.audio.src = playlist[this.state.activeTrackIndex].url;
-    if (this.props.maintainPlaybackRate) {
-      this.audio.playbackRate = previousPlaybackRate;
-    }
-    if (typeof onActiveTrackUpdate === 'function') {
-      onActiveTrackUpdate(this.state.activeTrackIndex);
-    }
+    this.setState(state =>
+      state.playbackRate === playbackRate
+        ? null
+        : ({ playbackRate })
+    );
   }
 
   togglePause (value) {
@@ -495,23 +518,8 @@ class AudioPlayer extends Component {
   }
 
   // assumes playlist is valid - don't call without checking
-  // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
-    const isNewTrack = this.state.activeTrackIndex !== index;
-    this.setState({
-      activeTrackIndex: index,
-      trackLoading: isNewTrack,
-      currentTime: 0
-    }, () => {
-      this.updateSource();
-      if (isNewTrack) {
-        this.audio.loop = false;
-        if (!this.state.shuffle) {
-          this.shuffler.clear();
-        }
-      }
-      this.togglePause(!shouldPlay);
-    });
+    this.setState(state => getGoToTrackState(state, index, shouldPlay));
   }
 
   selectTrackIndex (index) {
@@ -673,28 +681,26 @@ class AudioPlayer extends Component {
       this.state.loop,
       this.state.cycle
     );
-    switch (repeatStrategy) {
-      case 'track':
-        // let event listener take care of state change.
-        this.audio.loop = true;
-        break;
-      case 'playlist':
-        this.setState({
-          loop: false,
-          cycle: true
-        });
-        this.audio.loop = false;
-        break;
-      case 'none':
-        this.setState({
-          loop: false,
-          cycle: false
-        });
-        this.audio.loop = false;
-        break;
-      default:
-        break;
-    }
+    this.setState(() => {
+      switch (repeatStrategy) {
+        case 'track':
+          return {
+            loop: true
+          };
+        case 'playlist':
+          return {
+            loop: false,
+            cycle: true
+          };
+        case 'none':
+          return {
+            loop: false,
+            cycle: false
+          };
+        default:
+          return null;
+      }
+    });
     if (
       typeof this.props.onRepeatStrategyUpdate === 'function' &&
       prevRepeatStrategy !== repeatStrategy
@@ -743,12 +749,44 @@ class AudioPlayer extends Component {
     };
   }
 
+  getKeyedChildren (elements) {
+    // counts of rendered elements by type
+    const elementsRendered = new Map();
+
+    return elements.map(element => {
+      // support React | Preact | Inferno
+      const type = element.type || element.nodeName || element.tag || '';
+
+      // index within list of keys by type
+      const keyIndex = elementsRendered.get(type) || 0;
+      elementsRendered.set(type, keyIndex + 1);
+
+      const keysForType = this.controlKeys.get(type) || [];
+
+      let key;
+      if (keysForType[keyIndex]) {
+        key = keysForType[keyIndex];
+      } else {
+        key = getNextControlKey();
+        this.controlKeys.set(type, keysForType.concat(key));
+      }
+
+      return element && React.cloneElement(element, { key });
+    });
+  }
+
   render () {
     const hasChildren = Boolean(React.Children.count(this.props.children));
     const ControlWrapper = this.props.controlWrapper;
     return (
       <div style={this.props.style}>
-        <audio ref={this.setAudioElementRef} />
+        <audio
+          ref={this.setAudioElementRef}
+          src={getTrackSrc(this.props.playlist, this.state.activeTrackIndex)}
+          crossOrigin={this.props.crossOrigin}
+          preload="metadata"
+          loop={this.state.loop}
+        />
         <PlayerContext.Provider value={this.getControlProps()}>
           {hasChildren && this.props.children}
           {!hasChildren && (
@@ -758,13 +796,12 @@ class AudioPlayer extends Component {
               )}
             >
               <PlayerContext.Consumer>
-                {controlProps => this.props.controls.map((control, index) => {
-                  const renderControl = getControlRenderProp(control);
-                  return renderControl && React.cloneElement(
-                    renderControl(controlProps),
-                    { key: this.controlKeys[index] }
-                  );
-                })}
+                {controlProps => this.getKeyedChildren(
+                  this.props.controls.map((control, index) => {
+                    const renderControl = getControlRenderProp(control);
+                    return renderControl && renderControl(controlProps);
+                  })
+                )}
               </PlayerContext.Consumer>
             </ControlWrapper>
           )}
@@ -870,5 +907,7 @@ AudioPlayer.defaultProps = {
   mediaSessionSeekLengthInSeconds: 10,
   getDisplayText: getDisplayText
 };
+
+lifecyclesPolyfill(AudioPlayer);
 
 export default AudioPlayer;

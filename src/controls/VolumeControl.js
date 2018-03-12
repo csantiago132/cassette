@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import lifecyclesPolyfill from 'react-lifecycles-compat';
 
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
@@ -13,6 +14,16 @@ const volumeControlStyle = {
 };
 
 class VolumeControl extends PureComponent {
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const { hover, volumeBarPosition } = prevState;
+    if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {
+      return {
+        volumeBarPosition: null
+      };
+    }
+    return null;
+  }
+
   constructor (props) {
     super(props);
 
@@ -50,15 +61,6 @@ class VolumeControl extends PureComponent {
      * we need to manually trigger mouseleave for touch devices
      */
     document.addEventListener('touchstart', this.handleMouseLeave);
-  }
-
-  componentWillReceiveProps (nextProps) {
-    const { hover, volumeBarPosition } = this.state;
-    if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {
-      this.setState({
-        volumeBarPosition: null
-      });
-    }
   }
 
   componentDidUpdate () {
@@ -231,5 +233,7 @@ export const renderVolumeControl = createControlRenderProp(VolumeControl, [
   'onSetVolumeComplete',
   'onToggleMuted'
 ]);
+
+lifecyclesPolyfill(VolumeControl);
 
 export default VolumeControl;

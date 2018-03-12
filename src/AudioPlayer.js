@@ -64,7 +64,9 @@ const defaultState = {
    */
   played: null,
   // true if the audio is currently stalled pending data buffering
-  stalled: false
+  stalled: false,
+  // true if the active track should play on the next componentDidUpdate
+  awaitingPlay: false
 };
 
 class AudioPlayer extends Component {
@@ -245,6 +247,13 @@ class AudioPlayer extends Component {
       // history until we actually change tracks - if the user quickly toggles
       // shuffle off then back on again, we don't want to have lost our history.
       this.shuffler.clear();
+    }
+
+    if (this.state.awaitingPlay) {
+      this.setState({
+        awaitingPlay: false
+      });
+      this.togglePause(false);
     }
   }
 
@@ -480,17 +489,15 @@ class AudioPlayer extends Component {
   // assumes playlist is valid - don't call without checking
   // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
-    // TODO: derive isNewTrack from state inside function when possible
-    const isNewTrack = this.state.activeTrackIndex !== index;
     this.setState(state => {
+      const isNewTrack = state.activeTrackIndex !== index;
       return {
         activeTrackIndex: index,
         trackLoading: isNewTrack,
         currentTime: 0,
-        loop: isNewTrack ? false : state.loop
+        loop: isNewTrack ? false : state.loop,
+        awaitingPlay: shouldPlay
       };
-    }, () => {
-      this.togglePause(!shouldPlay);
     });
   }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import lifecyclesPolyfill from 'react-lifecycles-compat';
 
 import PlayerContext from './PlayerContext';
 import AudioControlBar from './controls/AudioControlBar';
@@ -69,6 +70,18 @@ const defaultState = {
   awaitingPlay: false
 };
 
+// assumes playlist is valid
+function getGoToTrackState (prevState, index, shouldPlay = true) {
+  const isNewTrack = prevState.activeTrackIndex !== index;
+  return {
+    activeTrackIndex: index,
+    trackLoading: isNewTrack,
+    currentTime: 0,
+    loop: isNewTrack ? false : prevState.loop,
+    awaitingPlay: Boolean(shouldPlay)
+  };
+}
+
 class AudioPlayer extends Component {
 
   constructor (props) {
@@ -98,7 +111,9 @@ class AudioPlayer extends Component {
       // Rate at which audio should be played. 1.0 is normal speed.
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
-      setVolumeInProgress: false
+      setVolumeInProgress: false,
+      // playlist prop copied to state (for getDerivedStateFromProps)
+      __playlist__: props.playlist
     };
 
     // volume at last time we were unmuted and not actively setting volume
@@ -181,49 +196,61 @@ class AudioPlayer extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    // Update media event listeners that may have changed
-    this.removeMediaEventListeners(this.props.onMediaEvent);
-    this.addMediaEventListeners(nextProps.onMediaEvent);
-
+  static getDerivedStateFromProps (nextProps, prevState) {
     const newPlaylist = nextProps.playlist;
 
-    this.shuffler.setList(getSourceList(newPlaylist));
-    this.shuffler.setOptions({
-      allowBackShuffle: nextProps.allowBackShuffle
-    });
+    const baseNewState = {
+      __playlist__: newPlaylist
+    };
 
+    // check if the new playlist is invalid
     if (!isPlaylistValid(newPlaylist)) {
-      this.audio.src = '';
-      this.setState({
+      return {
         ...defaultState,
+        ...baseNewState,
         activeTrackIndex: 0,
         trackLoading: false
-      });
-      return;
+      };
     }
 
+    // check if the activeTrackIndex doesn't need to be updated
     const activeTrackUrl =
-      getTrackSrc(this.props.playlist, this.state.activeTrackIndex);
+      getTrackSrc(prevState.__playlist__, prevState.activeTrackIndex);
     if (
-      activeTrackUrl !== getTrackSrc(newPlaylist, this.state.activeTrackIndex)
+      activeTrackUrl === getTrackSrc(newPlaylist, prevState.activeTrackIndex)
     ) {
-      const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
-      if (newTrackIndex !== -1) {
-        /* if the track we're already playing is in the new playlist, update the
-         * activeTrackIndex.
-         */
-        this.setState({
-          activeTrackIndex: newTrackIndex
-        });
-      } else {
-        // if not, then load the first track in the new playlist, and pause.
-        this.goToTrack(0, false);
-      }
+      // our active track index already matches
+      return baseNewState;
     }
+
+    /* if the track we're already playing is in the new playlist, update the
+     * activeTrackIndex.
+     */
+    const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
+    if (newTrackIndex !== -1) {
+      return {
+        ...baseNewState,
+        activeTrackIndex: newTrackIndex
+      };
+    }
+
+    // if not, then load the first track in the new playlist, and pause.
+    return {
+      ...baseNewState,
+      ...getGoToTrackState(prevState, 0, false)
+    };
   }
 
   componentDidUpdate (prevProps, prevState) {
+    // Update media event listeners that may have changed
+    this.removeMediaEventListeners(prevProps.onMediaEvent);
+    this.addMediaEventListeners(this.props.onMediaEvent);
+
+    this.shuffler.setList(getSourceList(this.props.playlist));
+    this.shuffler.setOptions({
+      allowBackShuffle: this.props.allowBackShuffle
+    });
+
     if (prevProps !== this.props && !this.audio.paused) {
       // update running media session based on new props
       this.stealMediaSession();
@@ -487,18 +514,8 @@ class AudioPlayer extends Component {
   }
 
   // assumes playlist is valid - don't call without checking
-  // (allows method to be called during componentWillReceiveProps)
   goToTrack (index, shouldPlay = true) {
-    this.setState(state => {
-      const isNewTrack = state.activeTrackIndex !== index;
-      return {
-        activeTrackIndex: index,
-        trackLoading: isNewTrack,
-        currentTime: 0,
-        loop: isNewTrack ? false : state.loop,
-        awaitingPlay: shouldPlay
-      };
-    });
+    this.setState(state => getGoToTrackState(state, index, shouldPlay));
   }
 
   selectTrackIndex (index) {
@@ -886,5 +903,7 @@ AudioPlayer.defaultProps = {
   mediaSessionSeekLengthInSeconds: 10,
   getDisplayText: getDisplayText
 };
+
+lifecyclesPolyfill(AudioPlayer);
 
 export default AudioPlayer;

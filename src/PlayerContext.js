@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import createContext from 'create-react-context';
 
 const PlayerContext = createContext(null);
 PlayerContext.Provider.displayName = 'PlayerContext.Provider';

@@ -78,7 +78,8 @@ function getGoToTrackState (prevState, index, shouldPlay = true) {
     trackLoading: isNewTrack,
     currentTime: 0,
     loop: isNewTrack ? false : prevState.loop,
-    awaitingPlay: Boolean(shouldPlay)
+    awaitingPlay: Boolean(shouldPlay),
+    paused: !shouldPlay
   };
 }
 

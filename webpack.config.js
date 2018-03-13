@@ -44,7 +44,20 @@ var webpackConfig = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              'transform-object-rest-spread',
+              ...(minimize
+                ? [[
+                  'transform-react-remove-prop-types',
+                  { mode: 'remove', removeImport: true }
+                ]]
+                : [])
+            ]
+          }
+        }
       }
     ]
   },

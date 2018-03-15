@@ -29,6 +29,7 @@ function babelConfig (esmodules) {
 
 function webpackConfig (esmodules) {
   return {
+    mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     entry: {
       [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js',
     },

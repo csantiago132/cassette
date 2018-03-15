@@ -4,6 +4,19 @@ var CompressionPlugin = require('compression-webpack-plugin');
 
 const minimize = process.env.BUILD_MODE === 'minimize';
 
+var babelConfig = {
+  presets: [['es2015', { modules: false }], 'react'],
+  plugins: [
+    'transform-object-rest-spread',
+    ...(minimize
+      ? [[
+        'transform-react-remove-prop-types',
+        { mode: 'remove', removeImport: true }
+      ]]
+      : [])
+  ]
+};
+
 var webpackConfig = {
   entry: {
     [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js'
@@ -46,17 +59,7 @@ var webpackConfig = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            plugins: [
-              'transform-object-rest-spread',
-              ...(minimize
-                ? [[
-                  'transform-react-remove-prop-types',
-                  { mode: 'remove', removeImport: true }
-                ]]
-                : [])
-            ]
-          }
+          options: babelConfig
         }
       }
     ]

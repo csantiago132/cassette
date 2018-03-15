@@ -9,11 +9,9 @@
     "build:minimized": "BUILD_MODE=minimize webpack --progress --mode=production",
     "build:webpack": "npm run build:unminimized && npm run build:minimized",
     "build:component_css": "gulp styles",
-    "build:nomodules": "npm run build:webpack && npm run build:component_css",
-    "build:esmodules": "BABEL_ENV=esmodules npm run build:webpack",
-    "build": "npm run build:clean && npm run build:nomodules && npm run build:modules",
-    "dev": "webpack-dev-server --mode=development --open",
-    "dev:network": "webpack-dev-server --host 0.0.0.0 --disable-host-check --mode=development --open",
+    "build": "npm run build:clean && npm run build:webpack && npm run build:component_css",
+    "dev": "webpack-serve --mode=development --open --open-path example.html",
+    "dev:network": "webpack-serve --host 0.0.0.0 --mode=development --open --open-path example.html",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -73,7 +71,7 @@
     "svg-react-loader": "^0.4.0-beta.2",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11",
-    "webpack-dev-server": "^3.1.1"
+    "webpack-serve": "^0.2.0"
   },
   "dependencies": {
     "prop-types": "^15.5.10",

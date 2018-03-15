@@ -2,19 +2,32 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var CompressionPlugin = require('compression-webpack-plugin');
 
-const minimize = process.env.BUILD_MODE === 'minimize';
+// TODO: We're running this 4 times with two variables! Figure
+// out how to do less repeat work.
+
+var minimize = process.env.BUILD_MODE === 'minimize';
+
+var esmodules = process.env.BABEL_ENV === 'esmodules';
 
 var babelConfig = {
-  presets: [['es2015', { modules: false }], 'react'],
-  plugins: [
-    'transform-object-rest-spread',
-    ...(minimize
-      ? [[
-        'transform-react-remove-prop-types',
-        { mode: 'remove', removeImport: true }
-      ]]
-      : [])
-  ]
+  presets: [
+    ['@babel/preset-env', {
+      modules: false,
+      loose: true,
+      targets: esmodules ? { esmodules: true } : undefined
+    }],
+    '@babel/react'
+  ],
+  plugins:
+    minimize
+      ? [
+        '@babel/plugin-proposal-object-rest-spread',
+        [
+          'transform-react-remove-prop-types',
+          { mode: 'remove', removeImport: true }
+        ]
+      ]
+      : ['@babel/plugin-proposal-object-rest-spread']
 };
 
 var webpackConfig = {
@@ -30,7 +43,7 @@ var webpackConfig = {
     libraryTarget: 'umd',
     libraryExport: 'default',
     library: 'AudioPlayer',
-    filename: '[name].js'
+    filename: `[name]${esmodules ? '.esm' : ''}.js`
   },
   devServer: {
     inline: true,

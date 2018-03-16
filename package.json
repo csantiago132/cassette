@@ -5,13 +5,11 @@
   "main": "dist/audioplayer.js",
   "scripts": {
     "build:clean": "rimraf dist",
-    "build:unminimized": "webpack --progress --mode=production",
-    "build:minimized": "BUILD_MODE=minimize webpack --progress --mode=production",
-    "build:webpack": "npm run build:unminimized && npm run build:minimized",
+    "build:webpack": "BUILD_MODE=all webpack --progress",
     "build:component_css": "gulp styles",
     "build": "npm run build:clean && npm run build:webpack && npm run build:component_css",
-    "dev": "webpack-dev-server --mode=development --open",
-    "dev:network": "webpack-dev-server --host 0.0.0.0 --disable-host-check --mode=development --open",
+    "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path example.html",
+    "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path example.html",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -42,13 +40,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.41",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.41",
+    "@babel/preset-env": "^7.0.0-beta.41",
+    "@babel/preset-react": "^7.0.0-beta.41",
     "array-find-index": "^1.0.2",
     "autoprefixer": "^7.1.1",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-loader": "^8.0.0-beta.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
     "classnames": "^2.2.5",
     "compression-webpack-plugin": "^1.1.11",
     "create-react-context": "^0.2.1",
@@ -71,7 +69,7 @@
     "svg-react-loader": "^0.4.0-beta.2",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11",
-    "webpack-dev-server": "^3.1.1"
+    "webpack-serve": "git+https://github.com/benwiley4000/webpack-serve.git#fix-open-flags"
   },
   "dependencies": {
     "prop-types": "^15.5.10",

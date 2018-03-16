@@ -2,9 +2,7 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var CompressionPlugin = require('compression-webpack-plugin');
 
-var minimize = process.env.BUILD_MODE === 'minimize';
-
-function babelConfig (esmodules) {
+function babelConfig (esmodules, minimize) {
   return {
     presets: [
       ['@babel/preset-env', {
@@ -27,7 +25,7 @@ function babelConfig (esmodules) {
   };
 }
 
-function webpackConfig (esmodules) {
+function webpackConfig (esmodules, minimize) {
   return {
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     entry: {
@@ -111,4 +109,21 @@ function webpackConfig (esmodules) {
   };
 }
 
-module.exports = [webpackConfig(true), webpackConfig(false)];
+var configResult = (function() {
+  switch (process.env.BUILD_MODE) {
+    case 'minimize':
+      return [webpackConfig(true, true), webpackConfig(false, true)];
+    case 'unminimized':
+      return [webpackConfig(true, false), webpackConfig(false, false)];
+    case 'all':
+    default:
+      return [
+        webpackConfig(true, true),
+        webpackConfig(false, true),
+        webpackConfig(true, false),
+        webpackConfig(false, false),
+      ];
+  }
+})();
+
+module.exports = configResult;

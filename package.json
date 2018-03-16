@@ -5,13 +5,11 @@
   "main": "dist/audioplayer.js",
   "scripts": {
     "build:clean": "rimraf dist",
-    "build:unminimized": "webpack --progress",
-    "build:minimized": "BUILD_MODE=minimize webpack --progress",
-    "build:webpack": "npm run build:unminimized && npm run build:minimized",
+    "build:webpack": "BUILD_MODE=all webpack --progress",
     "build:component_css": "gulp styles",
     "build": "npm run build:clean && npm run build:webpack && npm run build:component_css",
-    "dev": "webpack-serve --open --open-path example.html",
-    "dev:network": "webpack-serve --host 0.0.0.0 --mode=development --open --open-path example.html",
+    "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path example.html",
+    "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path example.html",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

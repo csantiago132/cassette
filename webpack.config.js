@@ -1,6 +1,9 @@
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var CompressionPlugin = require('compression-webpack-plugin');
+var path = require('path');
+
+var OUTPUT_DIR = './dist';
 
 function babelConfig (esmodules, minimize) {
   return {
@@ -35,12 +38,12 @@ function webpackConfig (esmodules, minimize) {
       extensions: ['.js', '.jsx']
     },
     output: {
-      path: __dirname + '/dist',
+      path: path.join(__dirname, OUTPUT_DIR),
       publicPath: '/dist',
       libraryTarget: 'umd',
       libraryExport: 'default',
       library: 'AudioPlayer',
-      filename: `[name]${esmodules ? '.esm' : ''}.js`
+      filename: `${esmodules ? 'esm/' : 'es5/'}[name].js`
     },
     devServer: {
       inline: true,
@@ -96,7 +99,10 @@ function webpackConfig (esmodules, minimize) {
     },
     devtool: 'source-map',
     plugins: [
-      new MiniCssExtractPlugin('[name].css'),
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css',
+        path: path.join(__dirname, OUTPUT_DIR, 'css')
+      }),
       new OptimizeCSSAssetsPlugin({
         assetNameRegExp: /\.min\.css$/
       }),

@@ -28,6 +28,18 @@ function getNextControlKey () {
   return (nextControlKey++).toString();
 }
 
+let testAudio;
+function getActiveTrackUrl (sources) {
+  testAudio = testAudio || new Audio();
+  let probableSource;
+  for (const confidence of ['probably', 'maybe']) {
+    probableSource = probableSource || sources.find(source => {
+      return testAudio.canPlayType(source.type) === confidence;
+    });
+  }
+  return probableSource ? probableSource.src : sources[0].src;
+}
+
 // Existing Media Session API implementations have default handlers
 // for play/pause, and may yield unexpected behavior if custom
 // play/pause handlers are defined - so let's leave them be.
@@ -215,11 +227,14 @@ class AudioPlayer extends Component {
     }
 
     // check if the activeTrackIndex doesn't need to be updated
-    const activeTrackUrl =
-      getTrackSrc(prevState.__playlist__, prevState.activeTrackIndex);
-    if (
-      activeTrackUrl === getTrackSrc(newPlaylist, prevState.activeTrackIndex)
-    ) {
+    const prevSources = getTrackSrc(
+      prevState.__playlist__,
+      prevState.activeTrackIndex
+    );
+    const newSources = getTrackSrc(newPlaylist, prevState.activeTrackIndex);
+    if (prevSources.some(prevSource => {
+      return newSources.some(newSource => prevSource.src === newSource.src)
+    })) {
       // our active track index already matches
       return baseNewState;
     }
@@ -227,7 +242,10 @@ class AudioPlayer extends Component {
     /* if the track we're already playing is in the new playlist, update the
      * activeTrackIndex.
      */
-    const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
+    const newTrackIndex = findTrackIndexByUrl(
+      newPlaylist,
+      getActiveTrackUrl(prevSources)
+    );
     if (newTrackIndex !== -1) {
       return {
         ...baseNewState,
@@ -397,9 +415,9 @@ class AudioPlayer extends Component {
       }
       return;
     }
-    const activeTrackUrl = getTrackSrc(playlist, this.state.activeTrackIndex);
+    const sources = getTrackSrc(playlist, this.state.activeTrackIndex);
     const newSrc = this.audio.src;
-    if (activeTrackUrl === newSrc) {
+    if (sources.findIndex(source => source.src === newSrc) !== -1) {
       // we're good! nothing to update.
       return;
     }
@@ -409,7 +427,7 @@ class AudioPlayer extends Component {
     if (newTrackIndex === -1) {
       // this isn't in our playlist - use our latest state
       // to try to preserve everything how it was.
-      this.audio.src = activeTrackUrl;
+      this.audio.src = getActiveTrackUrl(sources);
       this.audio.currentTime = this.state.currentTime;
       this.audio.playbackRate = this.state.playbackRate;
       this.audio[this.state.paused ? 'pause' : 'play']();
@@ -778,15 +796,30 @@ class AudioPlayer extends Component {
   render () {
     const hasChildren = Boolean(React.Children.count(this.props.children));
     const ControlWrapper = this.props.controlWrapper;
+
+    const sources = getTrackSrc(
+      this.props.playlist,
+      this.state.activeTrackIndex
+    );
+    // since <source> children of <audio> elements don't have any actual
+    // effect on playback when their `src` attributes are mutated, we need
+    // to also set the `src` attribute on <audio> explicitly (will only take
+    // effect on subsequent updates).
+    const src = getActiveTrackUrl(sources);
+
     return (
       <div style={this.props.style}>
         <audio
           ref={this.setAudioElementRef}
-          src={getTrackSrc(this.props.playlist, this.state.activeTrackIndex)}
+          src={src}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"
           loop={this.state.loop}
-        />
+        >
+          {sources.map(source =>
+            <source key={source.src} src={source.src} type={source.type} />
+          )}
+        </audio>
         <PlayerContext.Provider value={this.getControlProps()}>
           {hasChildren && this.props.children}
           {!hasChildren && (
@@ -814,7 +847,13 @@ class AudioPlayer extends Component {
 
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string.isRequired,
+    url: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.arrayOf(PropTypes.shape({
+        src: PropTypes.string.isRequired,
+        type: PropTypes.string
+      }).isRequired).isRequired
+    ]).isRequired,
     title: PropTypes.string.isRequired,
     artist: PropTypes.string,
     album: PropTypes.string,

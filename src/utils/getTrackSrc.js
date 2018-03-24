@@ -1,7 +1,8 @@
 import isPlaylistValid from './isPlaylistValid';
 
 function getTrackSrc (playlist, index) {
-  return isPlaylistValid(playlist) && (playlist[index] || {}).url || '';
+  const url = isPlaylistValid(playlist) && (playlist[index] || {}).url || '';
+  return url.constructor === Array && url.length ? url : [{ src: url }];
 }
 
 export default getTrackSrc;

@@ -79,6 +79,17 @@ function getNextControlKey () {
   return (nextControlKey++).toString();
 }
 
+function playErrorHandler (err) {
+  logError(err);
+  if (err.name === 'NotAllowedError') {
+    const warningMessage =
+      'Audio playback failed at ' +
+      new Date().toLocaleTimeString() +
+      '! (Perhaps autoplay is disabled in this browser.)';
+    logWarning(warningMessage);
+  }
+}
+
 /* converts given number of seconds to standard time display format
  * http://goo.gl/kEvnKn
  */
@@ -452,14 +463,19 @@ class AudioPlayer extends React.Component {
       return;
     }
     try {
-      this.audio.play();
-    } catch (error) {
-      logError(error);
-      const warningMessage =
-        'Audio playback failed at ' +
-        new Date().toLocaleTimeString() +
-        '! (Perhaps autoplay is disabled in this browser.)';
-      logWarning(warningMessage);
+      const playPromise = this.audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(err => {
+          // AbortError is pretty much always called because we're skipping
+          // tracks quickly or hitting pause before a track has a chance to
+          // play. It's pretty safe to just ignore these error messages.
+          if (err.name !== 'AbortError') {
+            return Promise.reject(err);
+          }
+        }).catch(playErrorHandler);
+      }
+    } catch (err) {
+      playErrorHandler(err);
     }
   }
 

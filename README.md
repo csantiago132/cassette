@@ -110,7 +110,11 @@ If you prefer not to use a package bundler, you can find built releases to downl
 Options can be passed to the AudioPlayer element as props. Currently supported props are:
 
 * `playlist` (*required*): an array containing data about the tracks which will be played. **undefined** by default. Each track object can contain the following properties:
-  - `url` (*required*): A string containing the address of the audio file to play
+  - `url` (*required*): Can be one of:
+    - A string containing the address of the audio file to play
+    - An array of objects, if you want to specify multiple files of different types for the same track. Each object requires the properties:
+      - `src` (*required*): A string containing the address of a file that can be played for this track
+      - `type` (*required*): A string which is the [audio file's MIME type](https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats)
   - `title`: The title of the track - corresponds to the [`MediaMetadata.title` property](https://wicg.github.io/mediasession/#examples)
   - `artist`: The track's artist - corresponds to the [`MediaMetadata.artist` property](https://wicg.github.io/mediasession/#examples)
   - `album`: The album the track belongs to - corresponds to the [`MediaMetadata.album` property](https://wicg.github.io/mediasession/#examples)

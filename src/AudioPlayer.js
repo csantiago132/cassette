@@ -182,7 +182,7 @@ class AudioPlayer extends Component {
     audio.currentTime = this.state.currentTime;
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
-    audio.defaultPlaybackRate = this.state.playbackRate;
+    audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
     audio.playbackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
@@ -261,6 +261,8 @@ class AudioPlayer extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    this.audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
+
     // Update media event listeners that may have changed
     this.removeMediaEventListeners(prevProps.onMediaEvent);
     this.addMediaEventListeners(this.props.onMediaEvent);

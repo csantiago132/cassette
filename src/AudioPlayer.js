@@ -270,18 +270,19 @@ class AudioPlayer extends Component {
       allowBackShuffle: this.props.allowBackShuffle
     });
 
-    if (!this.state.shuffle) {
-      const prevSources = getTrackSources(
-        prevProps.playlist,
-        prevState.activeTrackIndex
-      );
-      const newSources = getTrackSources(
-        this.props.playlist,
-        this.state.activeTrackIndex
-      );
-      if (prevSources[0].src !== newSources[0].src) {
-        // cancel playback and re-scan current sources
-        this.audio.load();
+    const prevSources = getTrackSources(
+      prevProps.playlist,
+      prevState.activeTrackIndex
+    );
+    const newSources = getTrackSources(
+      this.props.playlist,
+      this.state.activeTrackIndex
+    );
+    if (prevSources[0].src !== newSources[0].src) {
+      // cancel playback and re-scan current sources
+      this.audio.load();
+
+      if (!this.state.shuffle) {
         // after toggling off shuffle, we defer clearing the shuffle
         // history until we actually change tracks - if the user quickly
         // toggles  shuffle off then back on again, we don't want to have

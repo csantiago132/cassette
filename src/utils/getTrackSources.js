@@ -1,12 +1,16 @@
 import isPlaylistValid from './isPlaylistValid';
 
+const blankSources = [{ src: '' }];
+
 function getTrackSources (playlist, index) {
-  const url = isPlaylistValid(playlist) && (playlist[index] || {}).url || '';
-  return (
-    url.constructor === Array
-      ? (url.length ? url : '')
-      : [{ src: url }]
-  );
+  if (!isPlaylistValid(playlist)) {
+    return blankSources;
+  }
+  const { sources, url } = playlist[index];
+  if (sources) {
+    return sources.length ? sources : blankSources;
+  }
+  return [{ src: url }];
 }
 
 export default getTrackSources;

@@ -17,13 +17,10 @@ import getDisplayText from './utils/getDisplayText';
 import getRepeatStrategy from './utils/getRepeatStrategy';
 import getControlRenderProp from './utils/getControlRenderProp';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
+import { logError, logWarning } from './utils/console';
 import { repeatStrategyOptions } from './constants';
 
 import './styles/index.scss';
-
-const log = console.log.bind(console);
-const logError = console.error ? console.error.bind(console) : log;
-const logWarning = console.warn ? console.warn.bind(console) : log;
 
 let nextControlKey = 0;
 function getNextControlKey () {

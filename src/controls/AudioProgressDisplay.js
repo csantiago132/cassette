@@ -5,6 +5,7 @@ import ProgressBarDisplay from './common/ProgressBarDisplay';
 import AudioStatusBar from './common/AudioStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
+import * as PlayerPropTypes from '../PlayerPropTypes';
 import createControlRenderProp from '../factories/createControlRenderProp';
 
 const audioStatusBarStyle = {
@@ -37,24 +38,7 @@ class AudioProgressDisplay extends Component {
 }
 
 AudioProgressDisplay.propTypes = {
-  playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.oneOfType([
-      PropTypes.string.isRequired,
-      PropTypes.arrayOf(PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired
-      }).isRequired).isRequired
-    ]).isRequired,
-    title: PropTypes.string.isRequired,
-    artist: PropTypes.string,
-    album: PropTypes.string,
-    artwork: PropTypes.arrayOf(PropTypes.shape({
-      src: PropTypes.string.isRequired,
-      sizes: PropTypes.string,
-      type: PropTypes.string
-    })),
-    meta: PropTypes.object
-  }).isRequired),
+  playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
   activeTrackIndex: PropTypes.number.isRequired,
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired

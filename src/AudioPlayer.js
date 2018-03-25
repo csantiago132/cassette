@@ -5,6 +5,7 @@ import lifecyclesPolyfill from 'react-lifecycles-compat';
 import arrayFindIndex from 'array-find-index';
 
 import PlayerContext from './PlayerContext';
+import * as PlayerPropTypes from './PlayerPropTypes';
 import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
@@ -836,62 +837,27 @@ class AudioPlayer extends Component {
 }
 
 AudioPlayer.propTypes = {
-  playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.oneOfType([
-      PropTypes.string.isRequired,
-      PropTypes.arrayOf(PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired
-      }).isRequired).isRequired
-    ]).isRequired,
-    title: PropTypes.string.isRequired,
-    artist: PropTypes.string,
-    album: PropTypes.string,
-    artwork: PropTypes.arrayOf(PropTypes.shape({
-      src: PropTypes.string.isRequired,
-      sizes: PropTypes.string,
-      type: PropTypes.string
-    })),
-    meta: PropTypes.object
-  }).isRequired),
-  controls: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.oneOf([
-      'playpause',
-      'backskip',
-      'forwardskip',
-      'volume',
-      'repeat',
-      'shuffle',
-      'progress',
-      'progressdisplay',
-      'spacer'
-    ])
-  ]).isRequired),
-  controlWrapper: PropTypes.func,
+  playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
+  controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
+  controlWrapper: PropTypes.func.isRequired,
   autoplay: PropTypes.bool,
-  autoplayDelayInSeconds: PropTypes.number,
-  gapLengthInSeconds: PropTypes.number,
-  crossOrigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
-  defaultVolume: PropTypes.number,
+  autoplayDelayInSeconds: PropTypes.number.isRequired,
+  gapLengthInSeconds: PropTypes.number.isRequired,
+  crossOrigin: PlayerPropTypes.crossOriginAttribute,
+  defaultVolume: PropTypes.number.isRequired,
   defaultMuted: PropTypes.bool,
-  defaultRepeatStrategy: PropTypes.oneOf(repeatStrategyOptions),
+  defaultRepeatStrategy: PlayerPropTypes.repeatStrategy.isRequired,
   defaultShuffle: PropTypes.bool,
-  defaultPlaybackRate: PropTypes.number,
-  startingTime: PropTypes.number,
-  startingTrackIndex: PropTypes.number,
+  defaultPlaybackRate: PropTypes.number.isRequired,
+  startingTime: PropTypes.number.isRequired,
+  startingTrackIndex: PropTypes.number.isRequired,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   pauseOnSeekPreview: PropTypes.bool,
   allowBackShuffle: PropTypes.bool,
-  stayOnBackSkipThreshold: PropTypes.number,
-  supportedMediaSessionActions: PropTypes.arrayOf(PropTypes.oneOf([
-    'play',
-    'pause',
-    'previoustrack',
-    'nexttrack',
-    'seekbackward',
-    'seekforward'
-  ]).isRequired).isRequired,
+  stayOnBackSkipThreshold: PropTypes.number.isRequired,
+  supportedMediaSessionActions: PropTypes.arrayOf(
+    PlayerPropTypes.mediaSessionAction.isRequired
+  ).isRequired,
   mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
   getDisplayText: PropTypes.func.isRequired,
   style: PropTypes.object,

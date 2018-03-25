@@ -5,6 +5,7 @@ import RepeatIcon from 'svg-react-loader?name=RepeatIcon!material-design-icons/a
 import RepeatOneIcon from 'svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
 import { repeatStrategyOptions } from '../constants';
+import * as PlayerPropTypes from '../PlayerPropTypes';
 import createControlRenderProp from '../factories/createControlRenderProp';
 
 function getNextRepeatStrategy (repeatStrategy) {
@@ -49,7 +50,7 @@ class RepeatButton extends PureComponent {
 }
 
 RepeatButton.propTypes = {
-  repeatStrategy: PropTypes.oneOf(repeatStrategyOptions).isRequired,
+  repeatStrategy: PlayerPropTypes.repeatStrategy.isRequired,
   onSetRepeatStrategy: PropTypes.func.isRequired
 };
 

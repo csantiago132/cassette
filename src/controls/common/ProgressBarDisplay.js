@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import getProgressStyle from '../../utils/getProgressStyle';
 import getHandleStyle from '../../utils/getHandleStyle';
+import * as PlayerPropTypes from '../../PlayerPropTypes';
 
 class ProgressBarDisplay extends PureComponent {
   render () {
@@ -58,7 +59,7 @@ ProgressBarDisplay.propTypes = {
   style: PropTypes.object,
   progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
-  progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
+  progressDirection: PlayerPropTypes.progressDirection.isRequired,
   handle: PropTypes.element,
   onMouseDown: PropTypes.func,
   onTouchStart: PropTypes.func,

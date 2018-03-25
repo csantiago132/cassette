@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ProgressBarDisplay from './ProgressBarDisplay';
 import convertToNumberWithinIntervalBounds from '../../utils/convertToNumberWithinIntervalBounds';
+import * as PlayerPropTypes from '../../PlayerPropTypes';
 
 class ProgressBar extends PureComponent {
   constructor (props) {
@@ -134,7 +135,7 @@ ProgressBar.propTypes = {
   style: PropTypes.object,
   progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
-  progressDirection: PropTypes.oneOf(['left', 'right', 'up', 'down']).isRequired,
+  progressDirection: PlayerPropTypes.progressDirection.isRequired,
   handle: PropTypes.element,
   adjusting: PropTypes.bool.isRequired,
   readonly: PropTypes.bool.isRequired,

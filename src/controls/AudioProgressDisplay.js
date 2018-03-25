@@ -42,7 +42,7 @@ AudioProgressDisplay.propTypes = {
       PropTypes.string.isRequired,
       PropTypes.arrayOf(PropTypes.shape({
         src: PropTypes.string.isRequired,
-        type: PropTypes.string
+        type: PropTypes.string.isRequired
       }).isRequired).isRequired
     ]).isRequired,
     title: PropTypes.string.isRequired,

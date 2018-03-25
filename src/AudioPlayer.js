@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import lifecyclesPolyfill from 'react-lifecycles-compat';
+import arrayFindIndex from 'array-find-index';
 
 import PlayerContext from './PlayerContext';
 import AudioControlBar from './controls/AudioControlBar';
@@ -402,7 +403,7 @@ class AudioPlayer extends Component {
   handleAudioSrcrequest (e) {
     const { playlist } = this.props;
     const sources = getTrackSources(playlist, this.state.activeTrackIndex);
-    if (sources.findIndex(source => source.src === e.srcRequested) !== -1) {
+    if (arrayFindIndex(sources, s => s.src === e.srcRequested) !== -1) {
       // we're good! nothing to update.
       return;
     }

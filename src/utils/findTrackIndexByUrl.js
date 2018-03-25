@@ -2,11 +2,10 @@ import arrayFindIndex from 'array-find-index';
 
 function findTrackIndexByUrl (playlist, url) {
   return arrayFindIndex(playlist, track => {
-    return track.url && (
-      track.url.constructor === Array
-        ? track.url.findIndex(source => source.src === url) !== -1
-        : url === track.url
-    );
+    if (track.sources) {
+      return arrayFindIndex(track.sources, source => source.src === url) !== -1;
+    }
+    return track.url && url === track.url;
   });
 }
 

@@ -1,6 +1,28 @@
 import PropTypes from 'prop-types';
 
 import { repeatStrategyOptions } from './constants';
+import { logWarning } from './utils/console';
+
+function requiredOnlyUnlessHasProp (propType, altPropName) {
+  let warnedAboutDefiningBoth = false;
+  function validate (props, propName, componentName, ...rest) {
+    if (propName in props) {
+      if (!warnedAboutDefiningBoth && altPropName in props) {
+        logWarning(
+          `Do not define both the '${propName}' and '${altPropName}' props.`
+        );
+        warnedAboutDefiningBoth = true;
+      }
+      return propType.isRequired(props, propName, componentName, ...rest);
+    }
+    if (!(altPropName in props)) {
+      return new Error(
+        `If the '${altPropName}' prop is not defined, '${propName}' must be.`
+      );
+    }
+  }
+  return validate;
+}
 
 export const controlKeyword = PropTypes.oneOf([
   'playpause',
@@ -28,11 +50,6 @@ export const audioSource = PropTypes.shape({
   type: PropTypes.string.isRequired
 });
 
-export const trackUrl = PropTypes.oneOfType([
-  PropTypes.string,
-  PropTypes.arrayOf(audioSource.isRequired)
-]);
-
 export const mediaSessionAction = PropTypes.oneOf([
   'play',
   'pause',
@@ -49,7 +66,11 @@ export const mediaSessionArtwork = PropTypes.shape({
 });
 
 export const track = PropTypes.shape({
-  url: trackUrl.isRequired,
+  url: requiredOnlyUnlessHasProp(PropTypes.string, 'sources'),
+  sources: requiredOnlyUnlessHasProp(
+    PropTypes.arrayOf(audioSource.isRequired),
+    'url'
+  ),
   title: PropTypes.string.isRequired,
   artist: PropTypes.string,
   album: PropTypes.string,

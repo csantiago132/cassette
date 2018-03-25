@@ -38,7 +38,13 @@ class AudioProgressDisplay extends Component {
 
 AudioProgressDisplay.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string.isRequired,
+    url: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.arrayOf(PropTypes.shape({
+        src: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired
+      }).isRequired).isRequired
+    ]).isRequired,
     title: PropTypes.string.isRequired,
     artist: PropTypes.string,
     album: PropTypes.string,

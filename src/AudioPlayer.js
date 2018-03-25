@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import lifecyclesPolyfill from 'react-lifecycles-compat';
+import arrayFindIndex from 'array-find-index';
 
 import PlayerContext from './PlayerContext';
 import AudioControlBar from './controls/AudioControlBar';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import getSourceList from './utils/getSourceList';
-import getTrackSrc from './utils/getTrackSrc';
+import getTrackSources from './utils/getTrackSources';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getDisplayText from './utils/getDisplayText';
@@ -150,7 +151,7 @@ class AudioPlayer extends Component {
     // bind audio event listeners to add on mount and remove on unmount
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
     this.handleAudioPause = this.handleAudioPause.bind(this);
-    this.handleAudioSrcchange = this.handleAudioSrcchange.bind(this);
+    this.handleAudioSrcrequest = this.handleAudioSrcrequest.bind(this);
     this.handleAudioEnded = this.handleAudioEnded.bind(this);
     this.handleAudioStalled = this.handleAudioStalled.bind(this);
     this.handleAudioCanplaythrough = this.handleAudioCanplaythrough.bind(this);
@@ -176,7 +177,7 @@ class AudioPlayer extends Component {
     // add event listeners on the audio element
     audio.addEventListener('play', this.handleAudioPlay);
     audio.addEventListener('pause', this.handleAudioPause);
-    audio.addEventListener('srcchange', this.handleAudioSrcchange);
+    audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
     audio.addEventListener('ended', this.handleAudioEnded);
     audio.addEventListener('stalled', this.handleAudioStalled);
     audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
@@ -215,11 +216,17 @@ class AudioPlayer extends Component {
     }
 
     // check if the activeTrackIndex doesn't need to be updated
-    const activeTrackUrl =
-      getTrackSrc(prevState.__playlist__, prevState.activeTrackIndex);
-    if (
-      activeTrackUrl === getTrackSrc(newPlaylist, prevState.activeTrackIndex)
-    ) {
+    const prevSources = getTrackSources(
+      prevState.__playlist__,
+      prevState.activeTrackIndex
+    );
+    // the sources if we stay on the same track index
+    const currentSources = getTrackSources(
+      newPlaylist,
+      prevState.activeTrackIndex
+    );
+    // non-comprehensive but probably accurate check
+    if (prevSources[0].src === currentSources[0].src) {
       // our active track index already matches
       return baseNewState;
     }
@@ -227,7 +234,7 @@ class AudioPlayer extends Component {
     /* if the track we're already playing is in the new playlist, update the
      * activeTrackIndex.
      */
-    const newTrackIndex = findTrackIndexByUrl(newPlaylist, activeTrackUrl);
+    const newTrackIndex = findTrackIndexByUrl(newPlaylist, prevSources[0].src);
     if (newTrackIndex !== -1) {
       return {
         ...baseNewState,
@@ -252,17 +259,24 @@ class AudioPlayer extends Component {
       allowBackShuffle: this.props.allowBackShuffle
     });
 
-    if (
-      !this.state.shuffle &&
-      (
-        getTrackSrc(this.props.playlist, this.state.activeTrackIndex) !==
-        getTrackSrc(prevProps.playlist, prevState.activeTrackIndex)
-      )
-    ) {
-      // after toggling off shuffle, we defer clearing the shuffle
-      // history until we actually change tracks - if the user quickly toggles
-      // shuffle off then back on again, we don't want to have lost our history.
-      this.shuffler.clear();
+    if (!this.state.shuffle) {
+      const prevSources = getTrackSources(
+        prevProps.playlist,
+        prevState.activeTrackIndex
+      );
+      const newSources = getTrackSources(
+        this.props.playlist,
+        this.state.activeTrackIndex
+      );
+      if (prevSources[0].src !== newSources[0].src) {
+        // cancel playback and re-scan current sources
+        this.audio.load();
+        // after toggling off shuffle, we defer clearing the shuffle
+        // history until we actually change tracks - if the user quickly
+        // toggles  shuffle off then back on again, we don't want to have
+        // lost our history.
+        this.shuffler.clear();
+      }
     }
 
     if (prevProps !== this.props && !this.audio.paused) {
@@ -290,7 +304,7 @@ class AudioPlayer extends Component {
     // remove event listeners on the audio element
     audio.removeEventListener('play', this.handleAudioPlay);
     audio.removeEventListener('pause', this.handleAudioPause);
-    audio.removeEventListener('srcchange', this.handleAudioSrcchange);
+    audio.removeEventListener('srcrequest', this.handleAudioSrcrequest);
     audio.removeEventListener('ended', this.handleAudioEnded);
     audio.removeEventListener('stalled', this.handleAudioStalled);
     audio.removeEventListener('canplaythrough', this.handleAudioCanplaythrough);
@@ -386,33 +400,17 @@ class AudioPlayer extends Component {
     this.setState(state => state.paused === true ? null : ({ paused: true }));
   }
 
-  handleAudioSrcchange () {
-    const { maintainPlaybackRate, playlist } = this.props;
-    if (maintainPlaybackRate) {
-      this.audio.playbackRate = this.state.playbackRate;
-    }
-    if (!isPlaylistValid(playlist)) {
-      if (this.audio.src.replace(location.href, '') !== '') {
-        this.audio.src = '';
-      }
-      return;
-    }
-    const activeTrackUrl = getTrackSrc(playlist, this.state.activeTrackIndex);
-    const newSrc = this.audio.src;
-    if (activeTrackUrl === newSrc) {
+  handleAudioSrcrequest (e) {
+    const { playlist } = this.props;
+    const sources = getTrackSources(playlist, this.state.activeTrackIndex);
+    if (arrayFindIndex(sources, s => s.src === e.srcRequested) !== -1) {
       // we're good! nothing to update.
       return;
     }
-    // looks like 'src' was set from outside our component. let's
-    // see if we can use it or if we have to reset it.
-    const newTrackIndex = findTrackIndexByUrl(playlist, newSrc);
+    // looks like 'src' was set from outside our component.
+    // let's see if we can use it.
+    const newTrackIndex = findTrackIndexByUrl(playlist, e.srcRequested);
     if (newTrackIndex === -1) {
-      // this isn't in our playlist - use our latest state
-      // to try to preserve everything how it was.
-      this.audio.src = activeTrackUrl;
-      this.audio.currentTime = this.state.currentTime;
-      this.audio.playbackRate = this.state.playbackRate;
-      this.audio[this.state.paused ? 'pause' : 'play']();
       logError(
         `Source '${newSrc}' does not exist in the loaded playlist. ` +
         `Make sure you've updated the 'playlist' prop to AudioPlayer ` +
@@ -502,7 +500,7 @@ class AudioPlayer extends Component {
       this.audio.pause();
       return;
     }
-    if (!this.audio.src) {
+    if (!this.audio.currentSrc) {
       return;
     }
     try {
@@ -777,16 +775,23 @@ class AudioPlayer extends Component {
 
   render () {
     const hasChildren = Boolean(React.Children.count(this.props.children));
+    const sources = getTrackSources(
+      this.props.playlist,
+      this.state.activeTrackIndex
+    );
     const ControlWrapper = this.props.controlWrapper;
     return (
       <div style={this.props.style}>
         <audio
           ref={this.setAudioElementRef}
-          src={getTrackSrc(this.props.playlist, this.state.activeTrackIndex)}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"
           loop={this.state.loop}
-        />
+        >
+          {sources.map(source =>
+            <source key={source.src} src={source.src} type={source.type} />
+          )}
+        </audio>
         <PlayerContext.Provider value={this.getControlProps()}>
           {hasChildren && this.props.children}
           {!hasChildren && (
@@ -814,7 +819,13 @@ class AudioPlayer extends Component {
 
 AudioPlayer.propTypes = {
   playlist: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string.isRequired,
+    url: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.arrayOf(PropTypes.shape({
+        src: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired
+      }).isRequired).isRequired
+    ]).isRequired,
     title: PropTypes.string.isRequired,
     artist: PropTypes.string,
     album: PropTypes.string,

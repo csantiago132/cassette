@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import lifecyclesPolyfill from 'react-lifecycles-compat';
 import arrayFindIndex from 'array-find-index';
+import Fragment from 'react-dot-fragment';
 
 import PlayerContext from './PlayerContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
@@ -810,23 +811,29 @@ class AudioPlayer extends Component {
           )}
         </audio>
         <PlayerContext.Provider value={this.getControlProps()}>
-          {hasChildren && this.props.children}
-          {!hasChildren && (
-            <ControlWrapper
-              title={this.props.getDisplayText(
-                this.props.playlist[this.state.activeTrackIndex]
-              )}
-            >
-              <PlayerContext.Consumer>
-                {controlProps => this.getKeyedChildren(
-                  this.props.controls.map((control, index) => {
-                    const renderControl = getControlRenderProp(control);
-                    return renderControl && renderControl(controlProps);
-                  })
+          <Fragment>
+            {hasChildren && this.props.children}
+            {!hasChildren && (
+              <ControlWrapper
+                title={this.props.getDisplayText(
+                  this.props.playlist[this.state.activeTrackIndex]
                 )}
-              </PlayerContext.Consumer>
-            </ControlWrapper>
-          )}
+              >
+                <PlayerContext.Consumer>
+                  {controlProps =>
+                    <Fragment>
+                      {this.getKeyedChildren(
+                        this.props.controls.map((control, index) => {
+                          const renderControl = getControlRenderProp(control);
+                          return renderControl && renderControl(controlProps);
+                        })
+                      )}
+                    </Fragment>
+                  }
+                </PlayerContext.Consumer>
+              </ControlWrapper>
+            )}
+          </Fragment>
         </PlayerContext.Provider>
       </div>
     );

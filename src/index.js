@@ -691,4 +691,4 @@ AudioPlayer.defaultProps = {
   }
 };
 
-module.exports = AudioPlayer;
+export default AudioPlayer;

@@ -1,38 +1,48 @@
 var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+var CompressionPlugin = require('compression-webpack-plugin');
 
-var webpackConfig = {
-  entry: './src/index.js',
+const webpackConfig = minimize => ({
+  mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
+  entry: {
+    [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js'
+  },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   output: {
     path: __dirname + '/dist',
     publicPath: '/dist',
     libraryTarget: 'umd',
+    libraryExport: 'default',
     library: 'AudioPlayer',
-    filename: 'audioplayer.js'
+    filename: '[name].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css!postcss!sass')
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'babel-loader'
       }
     ]
-  },
-  postcss: function () {
-    return [autoprefixer({ browsers: ['> 2%'] })];
   },
   externals: {
     'prop-types': {
@@ -48,12 +58,30 @@ var webpackConfig = {
       amd: 'react'
     }
   },
+  devtool: 'source-map',
   plugins: [
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('audioplayer.css', {
-      allChunks: true
-    })
-  ]
-};
+    new MiniCssExtractPlugin('[name].css'),
+    new OptimizeCSSAssetsPlugin({
+      assetNameRegExp: /\.min\.css$/
+    }),
+    new CompressionPlugin()
+  ],
+  optimization: {
+    noEmitOnErrors: true,
+    minimize
+  }
+});
 
-module.exports = webpackConfig;
+const configResult = (function() {
+  switch (process.env.BUILD_MODE) {
+    case 'minimize':
+      return webpackConfig(true);
+    case 'unminimized':
+      return webpackConfig(false);
+    case 'all':
+    default:
+      return [webpackConfig(true), webpackConfig(false)];
+  }
+})();
+
+module.exports = configResult;

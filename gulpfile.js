@@ -45,7 +45,7 @@ gulp.task('compilecss', function () {
     .pipe(gulp.dest('./dist/component_css'));
 });
 
-gulp.task('uglifycss', ['compilecss'], function () {
+gulp.task('uglifycss', gulp.series(['compilecss']), function () {
   return gulp.src('./dist/component_css/*.css')
     .pipe(uglifycss())
     .pipe(rename(function (path) {
@@ -54,10 +54,10 @@ gulp.task('uglifycss', ['compilecss'], function () {
     .pipe(gulp.dest('./dist/component_css'));
 });
 
-gulp.task('styles', ['compilecss', 'uglifycss']);
+gulp.task('styles', gulp.series(['compilecss', 'uglifycss']));
 
 gulp.task('watch', function () {
-  gulp.watch('./src/styles/*.scss', ['styles']);
+  gulp.watch('./src/styles/*.scss', gulp.series(['styles']));
 });
 
-gulp.task('default', ['styles']);
+gulp.task('default', gulp.series(['styles']));

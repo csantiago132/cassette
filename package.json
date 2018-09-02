@@ -67,7 +67,7 @@
     "react-lifecycles-compat": "^1.0.2",
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.5",
-    "svg-react-loader": "^0.4.0-beta.2",
+    "@benwiley4000/svg-react-loader": "^0.4.5-fix-vulnerabilities",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-serve": "^2.0.2"

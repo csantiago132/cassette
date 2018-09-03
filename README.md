@@ -166,7 +166,7 @@ These will be removed in v2.0!  Please migrate away.
 
 ## Does this work with the Web Audio API?
 
-We don't expose a React API for manipulating the Web Audio API.
+We don't expose any special props for manipulating the Web Audio API with React.
 
 However, you *can* use the `audioElementRef` prop and [`createMediaElementSource`](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource) to process your audio before it gets sent to the speaker.
 
@@ -194,6 +194,8 @@ For example, you could use this code to add a low pass to high pass filter trans
   autoplay
 />
 ```
+
+You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
 
 ## Styling
 

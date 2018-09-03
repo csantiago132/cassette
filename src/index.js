@@ -289,6 +289,7 @@ class AudioPlayer extends React.Component {
 
     // add event listeners on the audio element
     audio.preload = 'metadata';
+    audio.crossOrigin = this.props.crossOrigin;
     audio.addEventListener('play', this.audioPlayListener);
     audio.addEventListener('pause', this.audioPauseListener);
     audio.addEventListener('ended', this.audioEndListener);
@@ -345,6 +346,8 @@ class AudioPlayer extends React.Component {
       }
       return getNextControlKey();
     });
+
+    this.audio.crossOrigin = nextProps.crossOrigin;
 
     const newPlaylist = nextProps.playlist;
     if (!newPlaylist || !newPlaylist.length) {
@@ -636,6 +639,10 @@ AudioPlayer.propTypes = {
     'progressdisplay',
     'spacer'
   ])),
+  crossOrigin: PropTypes.oneOf([
+    'anonymous',
+    'use-credentials'
+  ]),
   autoplay: PropTypes.bool,
   autoplayDelayInSeconds: PropTypes.number,
   gapLengthInSeconds: PropTypes.number,

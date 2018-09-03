@@ -308,7 +308,11 @@ class AudioPlayer extends Component {
       this.setState({
         awaitingPlay: false
       });
-      this.togglePause(false);
+      // audio.currentSrc is updated asynchronously so we should
+      // play async to avoid weird intermediate state issues
+      setTimeout(() => {
+        this.togglePause(false);
+      });
     }
   }
 

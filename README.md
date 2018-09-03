@@ -64,7 +64,7 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.3.1/dist/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.4.0/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
@@ -73,7 +73,7 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
     <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-audio-player@1.3.1/dist/audioplayer.js"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.4.0/dist/audioplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
@@ -165,7 +165,42 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `audioElementRef`: A callback function called after the component mounts and before it unmounts. Similar to [React ref callback prop](https://facebook.github.io/react/docs/refs-and-the-dom.html#the-ref-callback-attribute) but its only parameter is the internally-referenced HTML audio element, not the component itself. **undefined** by default. *NOTE:* This ref should not be used for audio element event listeners; use `onMediaEvent`.
 
+* `crossOrigin`: A string value corresponding to the [`crossOrigin`](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) media element attribute for adjusting CORS settings.
+
 None of these options are required, though the player will be functionally disabled if no `playlist` prop is provided.
+
+## Does this work with the Web Audio API?
+
+We don't expose any special props for manipulating the Web Audio API with React.
+
+However, you *can* use the `audioElementRef` prop and [`createMediaElementSource`](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource) to process your audio before it gets sent to the speaker.
+
+For example, you could use this code to add a low pass to high pass filter transition during the first 10 seconds your audio player is mounted:
+
+```jsx
+<AudioPlayer
+  playlist={playlist}
+  audioElementRef={audio => {
+    const ctx = new AudioContext();
+
+    let source = ctx.createMediaElementSource(audio);
+
+    for (const filterType of ['lowpass', 'highpass']) {
+      const filter = ctx.createBiquadFilter();
+      filter.type = filterType;
+      filter.frequency.value = 100;
+      filter.frequency.exponentialRampToValueAtTime(3000, 10);
+      source = source.connect(filter);
+    }
+
+    source.connect(ctx.destination);
+  }},
+  crossOrigin="anonymous"
+  autoplay
+/>
+```
+
+You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
 
 ## Styling
 

@@ -164,6 +164,39 @@ These will be removed in v2.0!  Please migrate away.
 
 * `displayText` on the track object for `playlist`: a string value that determines the UI display name for a track. Instead, use `title` and `artist` to provide information on a track object, and use the `getDisplayText` function prop for custom display if needed.
 
+## Does this work with the Web Audio API?
+
+We don't expose any special props for manipulating the Web Audio API with React.
+
+However, you *can* use the `audioElementRef` prop and [`createMediaElementSource`](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource) to process your audio before it gets sent to the speaker.
+
+For example, you could use this code to add a low pass to high pass filter transition during the first 10 seconds your audio player is mounted:
+
+```jsx
+<AudioPlayer
+  playlist={playlist}
+  audioElementRef={audio => {
+    const ctx = new AudioContext();
+
+    let source = ctx.createMediaElementSource(audio);
+
+    for (const filterType of ['lowpass', 'highpass']) {
+      const filter = ctx.createBiquadFilter();
+      filter.type = filterType;
+      filter.frequency.value = 100;
+      filter.frequency.exponentialRampToValueAtTime(3000, 10);
+      source = source.connect(filter);
+    }
+
+    source.connect(ctx.destination);
+  }},
+  crossOrigin="anonymous"
+  autoplay
+/>
+```
+
+You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
+
 ## Styling
 
 In order to use the default stylings you'll need to grab the compiled `audioplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/react-responsive-audio-player/releases).

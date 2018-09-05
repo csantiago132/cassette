@@ -22,8 +22,6 @@ class VideoDisplay extends Component {
   render () {
     const {
       stream,
-      getPoster,
-      poster,
       playlist,
       activeTrackIndex,
       crossOrigin,
@@ -34,7 +32,10 @@ class VideoDisplay extends Component {
         {...videoAttributes}
         ref={elem => this.video = elem}
         hidden={!stream}
-        poster={getPoster ? getPoster(playlist[activeTrackIndex]) : poster}
+        poster={playlist[activeTrackIndex]
+          && playlist[activeTrackIndex].artwork
+          && playlist[activeTrackIndex].artwork.length
+          && playlist[activeTrackIndex].artwork[0].src}
         crossOrigin={crossOrigin}
         autoPlay
         muted
@@ -49,8 +50,6 @@ VideoDisplay.propTypes = {
       Object :
       MediaStream
   ),
-  getPoster: PropTypes.func,
-  poster: PropTypes.string,
   playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
   activeTrackIndex: PropTypes.number.isRequired,
   crossOrigin: PropTypes.string
@@ -58,8 +57,6 @@ VideoDisplay.propTypes = {
 
 export const renderVideoDisplay = createControlRenderProp(VideoDisplay, [
   'stream',
-  'getPoster',
-  'poster',
   'playlist',
   'activeTrackIndex',
   'crossOrigin'

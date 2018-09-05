@@ -133,7 +133,8 @@ class AudioPlayer extends Component {
 
     // cache of keys to use in controls render
     // (to maintain state in case order changes)
-    this.controlKeys = new Map();
+    // (will be lazy-initialized as a Map)
+    this.controlKeys = null;
 
     // used to keep track of play history when we are shuffling
     this.shuffler = new ShuffleManager(getSourceList(props.playlist), {
@@ -773,6 +774,16 @@ class AudioPlayer extends Component {
   }
 
   getKeyedChildren (elements) {
+    if (typeof Map === 'undefined') {
+      // If we don't have a map, then we'll just let components get
+      // re-mounted on re-order, which should be okay most of the time
+      return elements.map((element, i) => {
+        return element && React.cloneElement(element, { key: i });
+      });
+    }
+
+    this.controlKeys = this.controlKeys || new Map();
+
     // counts of rendered elements by type
     const elementsRendered = new Map();
 

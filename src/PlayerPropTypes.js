@@ -84,3 +84,9 @@ export const progressDirection = PropTypes.oneOf([
   'up',
   'down'
 ]);
+
+export const seekMode = PropTypes.oneOf([
+  'paused',
+  'immediate',
+  'onrelease'
+]);

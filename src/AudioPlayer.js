@@ -615,41 +615,44 @@ class AudioPlayer extends Component {
     if (!isPlaylistValid(this.props.playlist)) {
       return;
     }
-    const { paused, awaitingResumeOnSeekComplete } = this.state;
-    if (!paused && this.props.pauseOnSeekPreview && !awaitingResumeOnSeekComplete) {
-      this.setState({
-        awaitingResumeOnSeekComplete: true
-      });
-      this.togglePause(true);
-    }
-    this.setState({
+    const baseStateUpdate = {
       seekPreviewTime: targetTime,
       seekInProgress: true
-    });
+    };
+    switch (this.props.seekMode) {
+      case 'paused':
+        this.setState(({ paused, awaitingResumeOnSeekComplete }) => ({
+          ...baseStateUpdate,
+          awaitingResumeOnSeekComplete: paused
+            ? awaitingResumeOnSeekComplete
+            : true
+        }));
+        this.audio.currentTime = targetTime;
+        if (!this.state.paused) {
+          this.togglePause(true);
+        }
+        break;
+      case 'immediate':
+        this.setState(baseStateUpdate);
+        this.audio.currentTime = targetTime;
+      case 'onrelease':
+        this.setState(baseStateUpdate);
+        break;
+    }
   }
 
   seekComplete () {
     const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
     this.setState({
       seekInProgress: false,
+      awaitingResumeOnSeekComplete: false
     });
     if (isNaN(seekPreviewTime)) {
       return;
     }
-    this.setState({
-      /* we'll update currentTime on the audio listener hook anyway,
-       * but the optimistic update helps avoid a visual glitch in
-       * the progress bar, if seekInProgress changes before currentTime.
-       */
-      currentTime: seekPreviewTime
-    });
-    const { audio } = this;
-    audio.currentTime = seekPreviewTime;
+    this.audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
       this.togglePause(false);
-      this.setState({
-        awaitingResumeOnSeekComplete: false
-      });
     }
   }
 
@@ -861,7 +864,7 @@ AudioPlayer.propTypes = {
   startingTime: PropTypes.number.isRequired,
   startingTrackIndex: PropTypes.number.isRequired,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
-  pauseOnSeekPreview: PropTypes.bool,
+  seekMode: PlayerPropTypes.seekMode.isRequired,
   allowBackShuffle: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number.isRequired,
   supportedMediaSessionActions: PropTypes.arrayOf(
@@ -898,7 +901,7 @@ AudioPlayer.defaultProps = {
   startingTime: 0,
   startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
-  pauseOnSeekPreview: false,
+  seekMode: 'immediate',
   maintainPlaybackRate: false,
   allowBackShuffle: false,
   stayOnBackSkipThreshold: 5,

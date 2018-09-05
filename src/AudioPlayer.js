@@ -616,7 +616,7 @@ class AudioPlayer extends Component {
       return;
     }
     const { paused, awaitingResumeOnSeekComplete } = this.state;
-    if (!paused && this.props.pauseOnSeekPreview && !awaitingResumeOnSeekComplete) {
+    if (!paused && this.props.seekMode === 'paused' && !awaitingResumeOnSeekComplete) {
       this.setState({
         awaitingResumeOnSeekComplete: true
       });
@@ -861,7 +861,7 @@ AudioPlayer.propTypes = {
   startingTime: PropTypes.number.isRequired,
   startingTrackIndex: PropTypes.number.isRequired,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
-  pauseOnSeekPreview: PropTypes.bool,
+  seekMode: PlayerPropTypes.seekMode.isRequired,
   allowBackShuffle: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number.isRequired,
   supportedMediaSessionActions: PropTypes.arrayOf(
@@ -898,7 +898,7 @@ AudioPlayer.defaultProps = {
   startingTime: 0,
   startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
-  pauseOnSeekPreview: false,
+  seekMode: 'onrelease',
   maintainPlaybackRate: false,
   allowBackShuffle: false,
   stayOnBackSkipThreshold: 5,

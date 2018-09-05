@@ -6,6 +6,7 @@ import { renderRepeatButton } from '../controls/RepeatButton';
 import { renderShuffleButton } from '../controls/ShuffleButton';
 import { renderAudioProgress } from '../controls/AudioProgress';
 import { renderAudioProgressDisplay } from '../controls/AudioProgressDisplay';
+import { renderVideoDisplay } from '../controls/VideoDisplay';
 import { renderSpacer } from '../controls/Spacer';
 
 function getControlRenderProp (control) {
@@ -30,6 +31,8 @@ function getControlRenderProp (control) {
         return renderAudioProgress;
       case 'progressdisplay':
         return renderAudioProgressDisplay;
+      case 'video':
+        return renderVideoDisplay;
       case 'spacer':
         return renderSpacer;
       default:

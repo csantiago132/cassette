@@ -7,6 +7,7 @@ import { renderVolumeControl } from './controls/VolumeControl';
 import { renderRepeatButton } from './controls/RepeatButton';
 import { renderShuffleButton } from './controls/ShuffleButton';
 import { renderAudioProgress } from './controls/AudioProgress';
+import { renderVideoDisplay } from './controls/VideoDisplay';
 import ProgressBar from './controls/common/ProgressBar';
 import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
 
@@ -21,6 +22,7 @@ export { renderVolumeControl };
 export { renderRepeatButton };
 export { renderShuffleButton };
 export { renderAudioProgress };
+export { renderVideoDisplay };
 export { ProgressBar };
 export { ProgressBarDisplay };
 
@@ -34,5 +36,6 @@ AudioPlayer.renderVolumeControl = renderVolumeControl;
 AudioPlayer.renderRepeatButton = renderRepeatButton;
 AudioPlayer.renderShuffleButton = renderShuffleButton;
 AudioPlayer.renderAudioProgress = renderAudioProgress;
+AudioPlayer.renderVideoDisplay = renderVideoDisplay;
 AudioPlayer.ProgressBar = ProgressBar;
 AudioPlayer.ProgressBarDisplay = ProgressBarDisplay;

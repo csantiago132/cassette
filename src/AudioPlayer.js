@@ -625,13 +625,16 @@ class AudioPlayer extends Component {
           ...baseStateUpdate,
           awaitingResumeOnSeekComplete: paused
             ? awaitingResumeOnSeekComplete
-            : true,
-          currentTime: targetTime
+            : true
         }));
+        this.audio.currentTime = targetTime;
         if (!this.state.paused) {
           this.togglePause(true);
         }
         break;
+      case 'immediate':
+        this.setState(baseStateUpdate);
+        this.audio.currentTime = targetTime;
       case 'onrelease':
         this.setState(baseStateUpdate);
         break;
@@ -642,24 +645,14 @@ class AudioPlayer extends Component {
     const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
     this.setState({
       seekInProgress: false,
+      awaitingResumeOnSeekComplete: false
     });
     if (isNaN(seekPreviewTime)) {
       return;
     }
-    this.setState({
-      /* we'll update currentTime on the audio listener hook anyway,
-       * but the optimistic update helps avoid a visual glitch in
-       * the progress bar, if seekInProgress changes before currentTime.
-       */
-      currentTime: seekPreviewTime
-    });
-    const { audio } = this;
-    audio.currentTime = seekPreviewTime;
+    this.audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
       this.togglePause(false);
-      this.setState({
-        awaitingResumeOnSeekComplete: false
-      });
     }
   }
 

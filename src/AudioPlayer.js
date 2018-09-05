@@ -615,17 +615,27 @@ class AudioPlayer extends Component {
     if (!isPlaylistValid(this.props.playlist)) {
       return;
     }
-    const { paused, awaitingResumeOnSeekComplete } = this.state;
-    if (!paused && this.props.seekMode === 'paused' && !awaitingResumeOnSeekComplete) {
-      this.setState({
-        awaitingResumeOnSeekComplete: true
-      });
-      this.togglePause(true);
-    }
-    this.setState({
+    const baseStateUpdate = {
       seekPreviewTime: targetTime,
       seekInProgress: true
-    });
+    };
+    switch (this.props.seekMode) {
+      case 'paused':
+        this.setState(({ paused, awaitingResumeOnSeekComplete }) => ({
+          ...baseStateUpdate,
+          awaitingResumeOnSeekComplete: paused
+            ? awaitingResumeOnSeekComplete
+            : true,
+          currentTime: targetTime
+        }));
+        if (!this.state.paused) {
+          this.togglePause(true);
+        }
+        break;
+      case 'onrelease':
+        this.setState(baseStateUpdate);
+        break;
+    }
   }
 
   seekComplete () {

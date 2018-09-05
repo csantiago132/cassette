@@ -901,7 +901,7 @@ AudioPlayer.defaultProps = {
   startingTime: 0,
   startingTrackIndex: 0,
   loadFirstTrackOnPlaylistComplete: true,
-  seekMode: 'onrelease',
+  seekMode: 'immediate',
   maintainPlaybackRate: false,
   allowBackShuffle: false,
   stayOnBackSkipThreshold: 5,

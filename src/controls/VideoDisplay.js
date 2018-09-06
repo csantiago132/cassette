@@ -25,6 +25,7 @@ class VideoDisplay extends Component {
       playlist,
       activeTrackIndex,
       crossOrigin,
+      poster,
       ...videoAttributes
     } = this.props;
     return (
@@ -32,10 +33,10 @@ class VideoDisplay extends Component {
         {...videoAttributes}
         ref={elem => this.video = elem}
         hidden={!stream}
-        poster={playlist[activeTrackIndex]
+        poster={poster || (playlist[activeTrackIndex]
           && playlist[activeTrackIndex].artwork
           && playlist[activeTrackIndex].artwork.length
-          && playlist[activeTrackIndex].artwork[0].src}
+          && playlist[activeTrackIndex].artwork[0].src)}
         crossOrigin={crossOrigin}
         controls={false}
         autoPlay
@@ -53,7 +54,8 @@ VideoDisplay.propTypes = {
   ),
   playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
   activeTrackIndex: PropTypes.number.isRequired,
-  crossOrigin: PropTypes.string
+  crossOrigin: PropTypes.string,
+  poster: PropTypes.string
 };
 
 export default playerContextFilter(VideoDisplay, [

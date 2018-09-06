@@ -37,6 +37,7 @@ class VideoDisplay extends Component {
           && playlist[activeTrackIndex].artwork.length
           && playlist[activeTrackIndex].artwork[0].src}
         crossOrigin={crossOrigin}
+        controls={false}
         autoPlay
         muted
       />

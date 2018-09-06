@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import SkipButton from './common/SkipButton';
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 class ForwardSkipButton extends PureComponent {
   render () {
@@ -14,8 +14,4 @@ ForwardSkipButton.propTypes = {
   onForwardSkip: PropTypes.func.isRequired
 };
 
-export const renderForwardSkipButton = createControlRenderProp(ForwardSkipButton, [
-  'onForwardSkip'
-]);
-
-export default ForwardSkipButton;
+export default playerContextFilter(ForwardSkipButton, ['onForwardSkip']);

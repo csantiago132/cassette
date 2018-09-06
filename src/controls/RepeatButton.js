@@ -6,7 +6,7 @@ import RepeatOneIcon from '@benwiley4000/svg-react-loader?name=RepeatOneIcon!mat
 
 import { repeatStrategyOptions } from '../constants';
 import * as PlayerPropTypes from '../PlayerPropTypes';
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 function getNextRepeatStrategy (repeatStrategy) {
   let nextIndex = repeatStrategyOptions.indexOf(repeatStrategy) + 1;
@@ -54,9 +54,7 @@ RepeatButton.propTypes = {
   onSetRepeatStrategy: PropTypes.func.isRequired
 };
 
-export const renderRepeatButton = createControlRenderProp(RepeatButton, [
+export default playerContextFilter(RepeatButton, [
   'repeatStrategy',
   'onSetRepeatStrategy'
 ]);
-
-export default RepeatButton;

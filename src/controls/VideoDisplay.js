@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 import * as PlayerPropTypes from '../PlayerPropTypes';
 
 class VideoDisplay extends Component {
@@ -55,11 +55,9 @@ VideoDisplay.propTypes = {
   crossOrigin: PropTypes.string
 };
 
-export const renderVideoDisplay = createControlRenderProp(VideoDisplay, [
+export default playerContextFilter(VideoDisplay, [
   'stream',
   'playlist',
   'activeTrackIndex',
   'crossOrigin'
 ]);
-
-export default VideoDisplay;

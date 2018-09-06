@@ -1,42 +1,43 @@
-import { renderPlayPauseButton } from '../controls/PlayPauseButton';
-import { renderBackSkipButton } from '../controls/BackSkipButton';
-import { renderForwardSkipButton } from '../controls/ForwardSkipButton';
-import { renderVolumeControl } from '../controls/VolumeControl';
-import { renderRepeatButton } from '../controls/RepeatButton';
-import { renderShuffleButton } from '../controls/ShuffleButton';
-import { renderAudioProgress } from '../controls/AudioProgress';
-import { renderAudioProgressDisplay } from '../controls/AudioProgressDisplay';
-import { renderVideoDisplay } from '../controls/VideoDisplay';
-import { renderSpacer } from '../controls/Spacer';
+import { createElement } from 'react';
 
+import PlayPauseButton from '../controls/PlayPauseButton';
+import BackSkipButton from '../controls/BackSkipButton';
+import ForwardSkipButton from '../controls/ForwardSkipButton';
+import VolumeControl from '../controls/VolumeControl';
+import RepeatButton from '../controls/RepeatButton';
+import ShuffleButton from '../controls/ShuffleButton';
+import AudioProgress from '../controls/AudioProgress';
+import AudioProgressDisplay from '../controls/AudioProgressDisplay';
+import VideoDisplay from '../controls/VideoDisplay';
+import Spacer from '../controls/Spacer';
+
+const controlComponents = {
+  playpause: PlayPauseButton,
+  backskip: BackSkipButton,
+  forwardskip: ForwardSkipButton,
+  volume: VolumeControl,
+  repeat: RepeatButton,
+  shuffle: ShuffleButton,
+  progress: AudioProgress,
+  progressdisplay: AudioProgressDisplay,
+  video: VideoDisplay,
+  spacer: Spacer
+};
+
+const cache = {};
 function getControlRenderProp (control) {
   if (typeof control === 'function') {
     return control;
   }
   if (typeof control === 'string') {
-    switch (control) {
-      case 'playpause':
-        return renderPlayPauseButton;
-      case 'backskip':
-        return renderBackSkipButton;
-      case 'forwardskip':
-        return renderForwardSkipButton;
-      case 'volume':
-        return renderVolumeControl;
-      case 'repeat':
-        return renderRepeatButton;
-      case 'shuffle':
-        return renderShuffleButton;
-      case 'progress':
-        return renderAudioProgress;
-      case 'progressdisplay':
-        return renderAudioProgressDisplay;
-      case 'video':
-        return renderVideoDisplay;
-      case 'spacer':
-        return renderSpacer;
-      default:
-        return null;
+    if (cache[control]) {
+      return cache[control];
+    }
+    const component = controlComponents[control];
+    if (component) {
+      const fn = playerContext => createElement(component, { playerContext });
+      cache[control] = fn;
+      return fn;
     }
   }
   return null;

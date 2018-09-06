@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import SkipButton from './common/SkipButton';
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 class BackSkipButton extends PureComponent {
   render () {
@@ -14,8 +14,4 @@ BackSkipButton.propTypes = {
   onBackSkip: PropTypes.func.isRequired
 };
 
-export const renderBackSkipButton = createControlRenderProp(BackSkipButton, [
-  'onBackSkip'
-]);
-
-export default BackSkipButton;
+export default playerContextFilter(BackSkipButton, ['onBackSkip']);

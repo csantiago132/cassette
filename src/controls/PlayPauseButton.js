@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 class PlayPauseButton extends PureComponent {
   render () {
@@ -32,10 +32,8 @@ PlayPauseButton.propTypes = {
   onTogglePause: PropTypes.func.isRequired
 };
 
-export const renderPlayPauseButton = createControlRenderProp(PlayPauseButton, [
+export default playerContextFilter(PlayPauseButton, [
   'paused',
   'awaitingResumeOnSeekComplete',
   'onTogglePause'
 ]);
-
-export default PlayPauseButton;

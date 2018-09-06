@@ -7,7 +7,7 @@ import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
 import isPlaylistValid from '../utils/isPlaylistValid';
 import * as PlayerPropTypes from '../PlayerPropTypes';
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 const audioStatusBarStyle = {
   pointerEvents: 'none',
@@ -75,7 +75,7 @@ AudioProgress.propTypes = {
   onSeekComplete: PropTypes.func.isRequired
 };
 
-export const renderAudioProgress = createControlRenderProp(AudioProgress, [
+export default playerContextFilter(AudioProgress, [
   'playlist',
   'activeTrackIndex',
   'currentTime',
@@ -85,5 +85,3 @@ export const renderAudioProgress = createControlRenderProp(AudioProgress, [
   'onSeekPreview',
   'onSeekComplete'
 ]);
-
-export default AudioProgress;

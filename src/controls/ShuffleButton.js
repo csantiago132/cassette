@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ShuffleIcon from '@benwiley4000/svg-react-loader?name=ShuffleIcon!material-design-icons/av/svg/design/ic_shuffle_48px.svg?';
 
-import createControlRenderProp from '../factories/createControlRenderProp';
+import playerContextFilter from '../factories/playerContextFilter';
 
 class ShuffleButton extends PureComponent {
   render () {
@@ -29,9 +29,7 @@ ShuffleButton.propTypes = {
   onToggleShuffle: PropTypes.func.isRequired
 };
 
-export const renderShuffleButton = createControlRenderProp(ShuffleButton, [
+export default playerContextFilter(ShuffleButton, [
   'shuffle',
   'onToggleShuffle'
 ]);
-
-export default ShuffleButton;

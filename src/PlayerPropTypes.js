@@ -33,7 +33,6 @@ export const controlKeyword = PropTypes.oneOf([
   'shuffle',
   'progress',
   'progressdisplay',
-  'video',
   'spacer'
 ]);
 

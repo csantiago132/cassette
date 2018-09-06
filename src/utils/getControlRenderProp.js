@@ -8,7 +8,6 @@ import RepeatButton from '../controls/RepeatButton';
 import ShuffleButton from '../controls/ShuffleButton';
 import AudioProgress from '../controls/AudioProgress';
 import AudioProgressDisplay from '../controls/AudioProgressDisplay';
-import VideoDisplay from '../controls/VideoDisplay';
 import Spacer from '../controls/Spacer';
 
 const controlComponents = {
@@ -20,7 +19,6 @@ const controlComponents = {
   shuffle: ShuffleButton,
   progress: AudioProgress,
   progressdisplay: AudioProgressDisplay,
-  video: VideoDisplay,
   spacer: Spacer
 };
 

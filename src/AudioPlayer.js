@@ -657,13 +657,23 @@ class AudioPlayer extends Component {
 
   seekComplete () {
     const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
-    this.setState({
+    const baseStateUpdate = {
       seekInProgress: false,
       awaitingResumeOnSeekComplete: false
-    });
+    };
     if (isNaN(seekPreviewTime)) {
+      this.setState(baseStateUpdate);
       return;
     }
+    this.setState({
+      ...baseStateUpdate,
+      /* we'll update currentTime on the audio listener hook anyway,
+       * but that might not happen for a bit... so the optimistic update
+       * helps us avoid the progress bar jumping around and confusing the user.
+       * https://github.com/benwiley4000/react-responsive-audio-player/issues/209
+       */
+      currentTime: seekPreviewTime
+    });
     this.audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
       this.togglePause(false);

@@ -61,6 +61,7 @@ class AudioPlayer extends Component {
       getDisplayText,
       controls,
       controlWrapper: ControlWrapper,
+      playerContext: ancestorPlayerContext,
       ...rest
     } = this.props;
 
@@ -79,21 +80,15 @@ class AudioPlayer extends Component {
       </div>
     );
 
+    if (ancestorPlayerContext) {
+      return audioPlayer(ancestorPlayerContext);
+    }
     return (
-      <PlayerContext.Consumer>
-        {ancestorPlayerContext => {
-          if (ancestorPlayerContext) {
-            return audioPlayer(ancestorPlayerContext);
-          }
-          return (
-            <PlayerContextProvider {...rest}>
-              <PlayerContext.Consumer>
-                {playerContext => audioPlayer(playerContext)}
-              </PlayerContext.Consumer>
-            </PlayerContextProvider>
-          );
-        }}
-      </PlayerContext.Consumer>
+      <PlayerContextProvider {...rest}>
+        <PlayerContext.Consumer>
+          {playerContext => audioPlayer(playerContext)}
+        </PlayerContext.Consumer>
+      </PlayerContextProvider>
     );
   }
 }
@@ -103,6 +98,7 @@ AudioPlayer.propTypes = {
   controlWrapper: PropTypes.func.isRequired,
   getDisplayText: PropTypes.func.isRequired,
   style: PropTypes.object,
+  playerContext: PropTypes.object
 };
 
 AudioPlayer.defaultProps = {

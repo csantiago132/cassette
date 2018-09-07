@@ -1,5 +1,7 @@
 # react-responsive-audio-player
 
+![https://commons.wikimedia.org/wiki/File:WWVNBSRadioStation_001.jpg](old_photo.jpg)
+
 ![react-responsive-audio-player in action](demo.gif)
 
 ### [see a live demo here](https://benwiley4000.github.io/react-responsive-audio-player/)

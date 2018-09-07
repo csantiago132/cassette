@@ -7,6 +7,7 @@ import VolumeControl from './controls/VolumeControl';
 import RepeatButton from './controls/RepeatButton';
 import ShuffleButton from './controls/ShuffleButton';
 import AudioProgress from './controls/AudioProgress';
+import VideoDisplay from './controls/VideoDisplay';
 import ProgressBar from './controls/common/ProgressBar';
 import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
 
@@ -21,6 +22,7 @@ export { VolumeControl };
 export { RepeatButton };
 export { ShuffleButton };
 export { AudioProgress };
+export { VideoDisplay };
 export { ProgressBar };
 export { ProgressBarDisplay };
 
@@ -34,5 +36,6 @@ AudioPlayer.VolumeControl = VolumeControl;
 AudioPlayer.RepeatButton = RepeatButton;
 AudioPlayer.ShuffleButton = ShuffleButton;
 AudioPlayer.AudioProgress = AudioProgress;
+AudioPlayer.VideoDisplay = VideoDisplay;
 AudioPlayer.ProgressBar = ProgressBar;
 AudioPlayer.ProgressBarDisplay = ProgressBarDisplay;

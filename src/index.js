@@ -1,4 +1,5 @@
 import AudioPlayer from './AudioPlayer';
+import PlayerContextProvider from './PlayerContextProvider';
 import PlayerContext from './PlayerContext';
 import PlayPauseButton from './controls/PlayPauseButton';
 import BackSkipButton from './controls/BackSkipButton';
@@ -10,10 +11,11 @@ import AudioProgress from './controls/AudioProgress';
 import VideoDisplay from './controls/VideoDisplay';
 import ProgressBar from './controls/common/ProgressBar';
 import ProgressBarDisplay from './controls/common/ProgressBarDisplay';
+import playerContextFilter from './factories/playerContextFilter';
 
 export default AudioPlayer;
 export { AudioPlayer };
-export const PlayerContextProvider = AudioPlayer;
+export { PlayerContextProvider };
 export const PlayerContextConsumer = PlayerContext.Consumer;
 export { PlayPauseButton };
 export { BackSkipButton };
@@ -25,9 +27,10 @@ export { AudioProgress };
 export { VideoDisplay };
 export { ProgressBar };
 export { ProgressBarDisplay };
+export { playerContextFilter };
 
 // for browser script tag (global var) usage
-AudioPlayer.PlayerContextProvider = AudioPlayer;
+AudioPlayer.PlayerContextProvider = PlayerContextProvider;
 AudioPlayer.PlayerContextConsumer = PlayerContext.Consumer;
 AudioPlayer.PlayPauseButton = PlayPauseButton;
 AudioPlayer.BackSkipButton = BackSkipButton;
@@ -39,3 +42,4 @@ AudioPlayer.AudioProgress = AudioProgress;
 AudioPlayer.VideoDisplay = VideoDisplay;
 AudioPlayer.ProgressBar = ProgressBar;
 AudioPlayer.ProgressBarDisplay = ProgressBarDisplay;
+AudioPlayer.playerContextFilter = playerContextFilter;

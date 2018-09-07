@@ -33,6 +33,11 @@
       .mute_message.hidden {
         display: none;
       }
+      .video_display {
+        height: 250px;
+        border: 1px solid #333;
+        margin-left: 2rem;
+      }
       @media (max-width: 330px) {
         .rrap__shuffle_btn {
           display: none;
@@ -80,6 +85,11 @@
             meta: {
               archiveDotOrgUrl: 'https://archive.org/details/BillyWilliams_288/ATaleOfParis1910.mp3'
             }
+          },
+          {
+            url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            title: 'Big Buck Bunny',
+            artist: 'Peach Open Movie Project'
           },
           {
             url: 'https://ia800800.us.archive.org/24/items/78_blue-skies_benny-goodman-and-his-orchestra-art-lund-berlin_gbia0019543b/Blue%20Skies%20-%20Benny%20Goodman%20and%20his%20Orchestra.mp3',
@@ -186,27 +196,15 @@
         var muted = true;
         ReactDOM.render(
           React.createElement(React.StrictMode, {},
-            React.createElement(AudioPlayer, {
+            React.createElement(AudioPlayer.PlayerContextProvider, {
               playlist: playlist,
-              style: { position: 'fixed', bottom: 0, width: '100%' },
               autoplay: true,
-              controls: [
-                'spacer',
-                'backskip',
-                'playpause',
-                'forwardskip',
-                'volume',
-                'shuffle',
-                'repeat',
-                'spacer',
-                'progress'
-              ],
               defaultMuted: muted,
               defaultShuffle: false,
               onActiveTrackUpdate: function (index) {
                 var track = playlist[index];
                 trackTitle.innerText = track.title;
-                webLink.href = track.meta.archiveDotOrgUrl;
+                webLink.href = track.meta && track.meta.archiveDotOrgUrl;
               },
               onMediaEvent: {
                 volumechange: function (e) {
@@ -217,9 +215,32 @@
                   clearTimeout(muteMessageTimeout);
                   muteMessage.classList.add('hidden');
                 }
-              }
+              },
+              crossOrigin: 'anonymous'
+            }, React.createElement(AudioPlayer.PlayerContextConsumer, {}, function (playerContext) {
+              return React.createElement(React.Fragment, {},
+                React.createElement(AudioPlayer.VideoDisplay, {
+                  playerContext: playerContext,
+                  className: 'video_display'
+                }),
+                React.createElement(AudioPlayer, {
+                  playerContext: playerContext,
+                  style: { position: 'fixed', bottom: 0, width: '100%' },
+                  controls: [
+                    'spacer',
+                    'backskip',
+                    'playpause',
+                    'forwardskip',
+                    'volume',
+                    'shuffle',
+                    'repeat',
+                    'spacer',
+                    'progress'
+                  ],
+                })
+              )
             })
-          ),
+          )),
           document.getElementById('audio_player_container')
         );
       }

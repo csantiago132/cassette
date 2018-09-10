@@ -73,6 +73,7 @@ class VideoDisplay extends Component {
 }
 
 VideoDisplay.propTypes = {
+  pipeVideoStreamToCanvas: PropTypes.func.isRequired,
   /* TODO: for documentation
   We might want to use this grayscale function in an example
     processFrame: function (frameData) {
@@ -81,16 +82,15 @@ VideoDisplay.propTypes = {
         const g = frameData.data[i + 1];
         const b = frameData.data[i + 2];
 
-        // convert to grayscale (average)
-        const avg = (((r + g) >> 1) + b) >> 1;
-        frameData.data[i + 0] = avg;
-        frameData.data[i + 1] = avg;
-        frameData.data[i + 2] = avg;
+        // convert to simple grayscale
+        const average = (r + g + b) / 3;
+        frameData.data[i + 0] = average;
+        frameData.data[i + 1] = average;
+        frameData.data[i + 2] = average;
       }
       return frameData;
     }
   */
-  pipeVideoStreamToCanvas: PropTypes.func.isRequired,
   processFrame: PropTypes.func,
   displayWidth: PropTypes.number,
   displayHeight: PropTypes.number

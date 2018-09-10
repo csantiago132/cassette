@@ -68,9 +68,7 @@ const defaultState = {
   // true if the audio is currently stalled pending data buffering
   stalled: false,
   // true if the active track should play on the next componentDidUpdate
-  awaitingPlay: false,
-  // the MediaStream of data coming from the media element
-  stream: null
+  awaitingPlay: false
 };
 
 // assumes playlist is valid
@@ -156,7 +154,6 @@ class PlayerContextProvider extends Component {
     this.handleAudioCanplaythrough = this.handleAudioCanplaythrough.bind(this);
     this.handleAudioTimeupdate = this.handleAudioTimeupdate.bind(this);
     this.handleAudioLoadedmetadata = this.handleAudioLoadedmetadata.bind(this);
-    this.handleAudioLoadeddata = this.handleAudioLoadeddata.bind(this);
     this.handleAudioVolumechange = this.handleAudioVolumechange.bind(this);
     this.handleAudioDurationchange = this.handleAudioDurationchange.bind(this);
     this.handleAudioProgress = this.handleAudioProgress.bind(this);
@@ -183,7 +180,6 @@ class PlayerContextProvider extends Component {
     audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
     audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
     audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-    audio.addEventListener('loadeddata', this.handleAudioLoadeddata);
     audio.addEventListener('volumechange', this.handleAudioVolumechange);
     audio.addEventListener('durationchange', this.handleAudioDurationchange);
     audio.addEventListener('progress', this.handleAudioProgress);
@@ -318,7 +314,6 @@ class PlayerContextProvider extends Component {
     audio.removeEventListener('canplaythrough', this.handleAudioCanplaythrough);
     audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
     audio.removeEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-    audio.removeEventListener('loadeddata', this.handleAudioLoadeddata);
     audio.removeEventListener('volumechange', this.handleAudioVolumechange);
     audio.removeEventListener('durationchange', this.handleAudioDurationchange);
     audio.removeEventListener('progress', this.handleAudioProgress);
@@ -476,14 +471,6 @@ class PlayerContextProvider extends Component {
         ? null
         : ({ trackLoading: false })
     );
-  }
-
-  handleAudioLoadeddata () {
-    if (this.audio.captureStream) {
-      this.setState({
-        stream: this.audio.captureStream()
-      });
-    }
   }
 
   handleAudioVolumechange () {
@@ -754,7 +741,6 @@ class PlayerContextProvider extends Component {
     const { props, state } = this;
     return {
       playlist: props.playlist,
-      crossOrigin: props.crossOrigin,
       activeTrackIndex: state.activeTrackIndex,
       trackLoading: state.trackLoading,
       paused: state.paused,
@@ -771,7 +757,6 @@ class PlayerContextProvider extends Component {
       stalled: state.stalled,
       playbackRate: state.playbackRate,
       setVolumeInProgress: state.setVolumeInProgress,
-      stream: state.stream,
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),
       pipeVideoStreamToCanvas: this.pipeVideoStreamToCanvas,
       onTogglePause: this.togglePause,
@@ -796,10 +781,8 @@ class PlayerContextProvider extends Component {
     );
     return (
       <Fragment>
-        {/* Hide video unless streaming to another element is unsupported */}
         <video
-          hidden={Boolean(typeof window === 'undefined' ||
-            HTMLVideoElement.prototype.captureStream)}
+          hidden
           ref={this.setAudioElementRef}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"

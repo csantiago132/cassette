@@ -14,6 +14,7 @@ import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getRepeatStrategy from './utils/getRepeatStrategy';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
+import streamVideoElementToCanvas from './utils/streamVideoElementToCanvas';
 import { logError, logWarning } from './utils/console';
 import { repeatStrategyOptions } from './constants';
 
@@ -400,44 +401,7 @@ class PlayerContextProvider extends Component {
   }
 
   pipeVideoStreamToCanvas (canvas, callback) {
-    const ctx = canvas.getContext('2d');
-    let requestId = null;
-    let widthSet = null;
-    let heightSet = null;
-    const streamToCanvas = () => {
-      const { videoWidth, videoHeight } = this.audio;
-      let targetWidth = videoWidth;
-      let targetHeight = videoHeight;
-      if (widthSet && heightSet) {
-        targetWidth = widthSet;
-        targetHeight = heightSet;
-      } else if (widthSet) {
-        targetWidth = widthSet;
-        targetHeight = (widthSet / videoWidth) * videoHeight;
-      } else if (heightSet) {
-        targetHeight = heightSet;
-        targetWidth = (heightSet / videoHeight) * videoWidth;
-      }
-      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-      }
-      ctx.drawImage(this.audio, 0, 0, targetWidth, targetHeight);
-      if (callback) {
-        callback(ctx);
-      }
-      requestId = requestAnimationFrame(streamToCanvas);
-    }
-    requestId = requestAnimationFrame(streamToCanvas);
-    return {
-      endStream () {
-        cancelAnimationFrame(requestId);
-      },
-      setCanvasSize (width, height) {
-        widthSet = width || null;
-        heightSet = height || null;
-      }
-    };
+    return streamVideoElementToCanvas(this.audio, canvas, callback);
   }
 
   handleAudioPlay () {

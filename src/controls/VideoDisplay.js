@@ -8,29 +8,12 @@ import { logWarning } from '../utils/console';
 class VideoDisplay extends Component {
   componentDidMount () {
     this.checkForBadStuff();
-    const { pipeVideoStreamToCanvas, displayWidth, displayHeight } = this.props;
-    let warnedAboutNoImageData = false;
+    const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
     const {
       endStream,
       setCanvasSize
-    } = pipeVideoStreamToCanvas(this.canvas, ctx => {
-      const { width, height } = this.canvas;
-      if (this.props.processFrame && width && height) {
-        const frameData = ctx.getImageData(0, 0, width, height);
-        const newFrameData = this.props.processFrame(frameData);
-        if (!(newFrameData instanceof ImageData)) {
-          if (!warnedAboutNoImageData) {
-            logWarning(
-              'The processFrame function should return an ImageData object. ' +
-              'Normally you\'ll just mutate the provided ImageData and ' +
-              'return it.'
-            );
-            warnedAboutNoImageData = true;
-          }
-        } else {
-          ctx.putImageData(newFrameData, 0, 0);
-        }
-      }
+    } = this.props.pipeVideoStreamToCanvas(this.canvas, ctx => {
+      this.handleFrameUpdate(ctx);
     });
     setCanvasSize(displayWidth, displayHeight);
     this.endStream = endStream;
@@ -39,7 +22,8 @@ class VideoDisplay extends Component {
 
   componentDidUpdate () {
     this.checkForBadStuff();
-    this.setCanvasSize(this.props.displayWidth, this.props.displayHeight);
+    const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
+    this.setCanvasSize(displayWidth, displayHeight);
   }
 
   componentWillUnmount () {
@@ -62,12 +46,43 @@ class VideoDisplay extends Component {
     }
   }
 
+  getDeviceDisplayDimensions () {
+    const { displayWidth, displayHeight, scaleForDevicePixelRatio } = this.props;
+    const scale = scaleForDevicePixelRatio && window.devicePixelRatio || 1;
+    return {
+      displayWidth: displayWidth && (scale * displayWidth),
+      displayHeight: displayHeight && (scale * displayHeight)
+    };
+  }
+
+  handleFrameUpdate (canvasContext) {
+    const { width, height } = this.canvas;
+    if (!(this.props.processFrame && width && height)) {
+      return;
+    }
+    const frameData = canvasContext.getImageData(0, 0, width, height);
+    const newFrameData = this.props.processFrame(frameData);
+    if (newFrameData instanceof ImageData) {
+      canvasContext.putImageData(newFrameData, 0, 0);
+      return;
+    }
+    if (!this.warnedAboutNoImageData) {
+      logWarning(
+        'The processFrame function should return an ImageData object. ' +
+        'Normally you\'ll just mutate the provided ImageData and ' +
+        'return it.'
+      );
+      this.warnedAboutNoImageData = true;
+    }
+  }
+
   render () {
     const canvasAttributes = { ...this.props };
     delete canvasAttributes.pipeVideoStreamToCanvas;
     delete canvasAttributes.processFrame;
     delete canvasAttributes.displayWidth;
     delete canvasAttributes.displayHeight;
+    delete canvasAttributes.scaleForDevicePixelRatio;
     return <canvas {...canvasAttributes} ref={elem => this.canvas = elem} />;
   }
 }
@@ -93,7 +108,12 @@ VideoDisplay.propTypes = {
   */
   processFrame: PropTypes.func,
   displayWidth: PropTypes.number,
-  displayHeight: PropTypes.number
+  displayHeight: PropTypes.number,
+  scaleForDevicePixelRatio: PropTypes.bool
+};
+
+VideoDisplay.defaultProps = {
+  scaleForDevicePixelRatio: true
 };
 
 export default playerContextFilter(VideoDisplay, ['pipeVideoStreamToCanvas']);

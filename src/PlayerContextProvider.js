@@ -5,8 +5,8 @@ import arrayFindIndex from 'array-find-index';
 import Fragment from 'react-dot-fragment';
 
 import PlayerContext from './PlayerContext';
-import PlayerContextMediaElement from './PlayerContextMediaElement';
 import * as PlayerPropTypes from './PlayerPropTypes';
+import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
 import getSourceList from './utils/getSourceList';
 import getTrackSources from './utils/getTrackSources';
@@ -163,28 +163,30 @@ class PlayerContextProvider extends Component {
   }
 
   componentDidMount () {
+    const audio = this.audio = createCustomAudioElement(this.audio);
+
     // initialize audio properties
-    this.audio.currentTime = this.state.currentTime;
-    this.audio.volume = this.state.volume;
-    this.audio.muted = this.state.muted;
-    this.audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
-    this.audio.playbackRate = this.state.playbackRate;
+    audio.currentTime = this.state.currentTime;
+    audio.volume = this.state.volume;
+    audio.muted = this.state.muted;
+    audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
+    audio.playbackRate = this.state.playbackRate;
 
     // add event listeners on the audio element
-    this.audio.addEventListener('play', this.handleAudioPlay);
-    this.audio.addEventListener('pause', this.handleAudioPause);
-    this.audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
-    this.audio.addEventListener('ended', this.handleAudioEnded);
-    this.audio.addEventListener('stalled', this.handleAudioStalled);
-    this.audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
-    this.audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
-    this.audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-    this.audio.addEventListener('loadeddata', this.handleAudioLoadeddata);
-    this.audio.addEventListener('volumechange', this.handleAudioVolumechange);
-    this.audio.addEventListener('durationchange', this.handleAudioDurationchange);
-    this.audio.addEventListener('progress', this.handleAudioProgress);
-    this.audio.addEventListener('loopchange', this.handleAudioLoopchange);
-    this.audio.addEventListener('ratechange', this.handleAudioRatechange);
+    audio.addEventListener('play', this.handleAudioPlay);
+    audio.addEventListener('pause', this.handleAudioPause);
+    audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
+    audio.addEventListener('ended', this.handleAudioEnded);
+    audio.addEventListener('stalled', this.handleAudioStalled);
+    audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
+    audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
+    audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
+    audio.addEventListener('loadeddata', this.handleAudioLoadeddata);
+    audio.addEventListener('volumechange', this.handleAudioVolumechange);
+    audio.addEventListener('durationchange', this.handleAudioDurationchange);
+    audio.addEventListener('progress', this.handleAudioProgress);
+    audio.addEventListener('loopchange', this.handleAudioLoopchange);
+    audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
     if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
@@ -787,15 +789,19 @@ class PlayerContextProvider extends Component {
     );
     return (
       <Fragment>
-        <PlayerContextMediaElement
-          elementRef={this.setAudioElementRef}
+        {/* Hide video unless streaming to another element is unsupported */}
+        <video
+          hidden={Boolean(typeof window === 'undefined' ||
+            HTMLVideoElement.prototype.captureStream)}
+          ref={this.setAudioElementRef}
           crossOrigin={this.props.crossOrigin}
+          preload="metadata"
           loop={this.state.loop}
         >
           {sources.map(source =>
             <source key={source.src} src={source.src} type={source.type} />
           )}
-        </PlayerContextMediaElement>
+        </video>
         <PlayerContext.Provider value={this.getControlProps()}>
           {this.props.children}
         </PlayerContext.Provider>

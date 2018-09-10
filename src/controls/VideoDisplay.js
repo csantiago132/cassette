@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 
 import playerContextFilter from '../factories/playerContextFilter';
 import * as PlayerPropTypes from '../PlayerPropTypes';
+import { logWarning } from '../utils/console';
 
 class VideoDisplay extends Component {
   componentDidMount () {
+    this.checkForBadStuff();
     const { pipeVideoStreamToCanvas, displayWidth, displayHeight } = this.props;
     let warnedAboutNoImageData = false;
     const {
@@ -18,9 +20,10 @@ class VideoDisplay extends Component {
         const newFrameData = this.props.processFrame(frameData);
         if (!(newFrameData instanceof ImageData)) {
           if (!warnedAboutNoImageData) {
-            console.warn(
-              'The processFrame function should return an ImageData instance. ' +
-              'Normally you\'ll just mutate the provided ImageData and return it.'
+            logWarning(
+              'The processFrame function should return an ImageData object. ' +
+              'Normally you\'ll just mutate the provided ImageData and ' +
+              'return it.'
             );
             warnedAboutNoImageData = true;
           }
@@ -35,11 +38,28 @@ class VideoDisplay extends Component {
   }
 
   componentDidUpdate () {
+    this.checkForBadStuff();
     this.setCanvasSize(this.props.displayWidth, this.props.displayHeight);
   }
 
   componentWillUnmount () {
     this.endStream();
+  }
+
+  checkForBadStuff () {
+    if (
+      !this.warnedAboutBadStuff &&
+      this.props.processFrame &&
+      !this.props.displayWidth &&
+      !this.props.displayHeight
+    ) {
+      logWarning(
+        'VideoDisplay: Supplying a processFrame function without also ' +
+        'giving a displayWidth or displayHeight means the video will be ' +
+        'processed at the full resolution. This may lead to a poor framerate.'
+      );
+      this.warnedAboutBadStuff = true;
+    }
   }
 
   render () {

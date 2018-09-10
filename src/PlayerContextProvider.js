@@ -144,6 +144,7 @@ class PlayerContextProvider extends Component {
     this.toggleShuffle = this.toggleShuffle.bind(this);
     this.setRepeatStrategy = this.setRepeatStrategy.bind(this);
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
+    this.pipeVideoStreamToCanvas = this.pipeVideoStreamToCanvas.bind(this);
 
     // bind audio event listeners to add on mount and remove on unmount
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
@@ -396,6 +397,22 @@ class PlayerContextProvider extends Component {
         handler
       );
     });
+  }
+
+  pipeVideoStreamToCanvas (canvas) {
+    const ctx = canvas.getContext('2d');
+    let requestId = null;
+    const streamToCanvas = () => {
+      const { videoWidth, videoHeight } = this.audio;
+      if (canvas.width !== videoWidth || canvas.height !== videoHeight) {
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+      }
+      ctx.drawImage(this.audio, 0, 0);
+      requestId = requestAnimationFrame(streamToCanvas);
+    }
+    requestId = requestAnimationFrame(streamToCanvas);
+    return () => cancelAnimationFrame(requestId);
   }
 
   handleAudioPlay () {
@@ -767,6 +784,7 @@ class PlayerContextProvider extends Component {
       setVolumeInProgress: state.setVolumeInProgress,
       stream: state.stream,
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),
+      pipeVideoStreamToCanvas: this.pipeVideoStreamToCanvas,
       onTogglePause: this.togglePause,
       onSelectTrackIndex: this.selectTrackIndex,
       onBackSkip: this.backSkip,

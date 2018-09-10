@@ -14,6 +14,7 @@ import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getRepeatStrategy from './utils/getRepeatStrategy';
 import convertToNumberWithinIntervalBounds from './utils/convertToNumberWithinIntervalBounds';
+import streamVideoElementToCanvas from './utils/streamVideoElementToCanvas';
 import { logError, logWarning } from './utils/console';
 import { repeatStrategyOptions } from './constants';
 
@@ -144,6 +145,7 @@ class PlayerContextProvider extends Component {
     this.toggleShuffle = this.toggleShuffle.bind(this);
     this.setRepeatStrategy = this.setRepeatStrategy.bind(this);
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
+    this.pipeVideoStreamToCanvas = this.pipeVideoStreamToCanvas.bind(this);
 
     // bind audio event listeners to add on mount and remove on unmount
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
@@ -396,6 +398,10 @@ class PlayerContextProvider extends Component {
         handler
       );
     });
+  }
+
+  pipeVideoStreamToCanvas (canvas, callback) {
+    return streamVideoElementToCanvas(this.audio, canvas, callback);
   }
 
   handleAudioPlay () {
@@ -767,6 +773,7 @@ class PlayerContextProvider extends Component {
       setVolumeInProgress: state.setVolumeInProgress,
       stream: state.stream,
       repeatStrategy: getRepeatStrategy(state.loop, state.cycle),
+      pipeVideoStreamToCanvas: this.pipeVideoStreamToCanvas,
       onTogglePause: this.togglePause,
       onSelectTrackIndex: this.selectTrackIndex,
       onBackSkip: this.backSkip,

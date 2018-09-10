@@ -399,7 +399,7 @@ class PlayerContextProvider extends Component {
     });
   }
 
-  pipeVideoStreamToCanvas (canvas) {
+  pipeVideoStreamToCanvas (canvas, callback) {
     const ctx = canvas.getContext('2d');
     let requestId = null;
     const streamToCanvas = () => {
@@ -409,6 +409,9 @@ class PlayerContextProvider extends Component {
         canvas.height = videoHeight;
       }
       ctx.drawImage(this.audio, 0, 0);
+      if (callback) {
+        callback(ctx);
+      }
       requestId = requestAnimationFrame(streamToCanvas);
     }
     requestId = requestAnimationFrame(streamToCanvas);

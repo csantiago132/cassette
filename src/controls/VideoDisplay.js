@@ -6,8 +6,12 @@ import * as PlayerPropTypes from '../PlayerPropTypes';
 
 class VideoDisplay extends Component {
   componentDidMount () {
+    const { pipeVideoStreamToCanvas, displayWidth, displayHeight } = this.props;
     let warnedAboutNoImageData = false;
-    this.endStream = this.props.pipeVideoStreamToCanvas(this.canvas, ctx => {
+    const {
+      endStream,
+      setCanvasSize
+    } = pipeVideoStreamToCanvas(this.canvas, ctx => {
       const { width, height } = this.canvas;
       if (this.props.processFrame && width && height) {
         const frameData = ctx.getImageData(0, 0, width, height);
@@ -25,6 +29,13 @@ class VideoDisplay extends Component {
         }
       }
     });
+    setCanvasSize(displayWidth, displayHeight);
+    this.endStream = endStream;
+    this.setCanvasSize = setCanvasSize;
+  }
+
+  componentDidUpdate () {
+    this.setCanvasSize(this.props.displayWidth, this.props.displayHeight);
   }
 
   componentWillUnmount () {
@@ -35,6 +46,8 @@ class VideoDisplay extends Component {
     const canvasAttributes = { ...this.props };
     delete canvasAttributes.pipeVideoStreamToCanvas;
     delete canvasAttributes.processFrame;
+    delete canvasAttributes.displayWidth;
+    delete canvasAttributes.displayHeight;
     return <canvas {...canvasAttributes} ref={elem => this.canvas = elem} />;
   }
 }
@@ -58,7 +71,9 @@ VideoDisplay.propTypes = {
     }
   */
   pipeVideoStreamToCanvas: PropTypes.func.isRequired,
-  processFrame: PropTypes.func
+  processFrame: PropTypes.func,
+  displayWidth: PropTypes.number,
+  displayHeight: PropTypes.number
 };
 
 export default playerContextFilter(VideoDisplay, ['pipeVideoStreamToCanvas']);

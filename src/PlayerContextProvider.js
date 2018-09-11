@@ -826,7 +826,8 @@ PlayerContextProvider.propTypes = {
   onRepeatStrategyUpdate: PropTypes.func,
   onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
-  audioElementRef: PropTypes.func
+  audioElementRef: PropTypes.func,
+  children: PropTypes.node.isRequired,
 };
 
 PlayerContextProvider.defaultProps = {

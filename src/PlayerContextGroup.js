@@ -31,7 +31,7 @@ class PlayerContextGroup extends Component {
       return;
     }
     for (const element of this.mediaElements) {
-      if (element !== mediaElement) {
+      if (element !== mediaElement && !element.muted) {
         element.pause();
       }
     }

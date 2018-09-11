@@ -39,15 +39,25 @@ class PlayerContextGroup extends Component {
 
   render () {
     return (
-      <GroupContext.Provider
-        value={{
-          groupProps: this.props,
-          registerMediaElement: this.registerMediaElement,
-          unregisterMediaElement: this.unregisterMediaElement
+      <GroupContext.Consumer>
+        {groupContext => {
+          const value = groupContext
+            ? {
+              ...groupContext,
+              groupProps: { ...groupContext.groupProps, ...this.props },
+            }
+            : {
+              groupProps: this.props,
+              registerMediaElement: this.registerMediaElement,
+              unregisterMediaElement: this.unregisterMediaElement
+            };
+          return (
+            <GroupContext.Provider value={value}>
+              {this.props.children}
+            </GroupContext.Provider>
+          );
         }}
-      >
-        {this.props.children}
-      </GroupContext.Provider>
+      </GroupContext.Consumer>
     );
   }
 }

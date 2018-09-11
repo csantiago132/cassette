@@ -5,6 +5,7 @@ import arrayFindIndex from 'array-find-index';
 import Fragment from 'react-dot-fragment';
 
 import PlayerContext from './PlayerContext';
+import GroupContext from './GroupContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
@@ -857,4 +858,15 @@ PlayerContextProvider.defaultProps = {
 
 lifecyclesPolyfill(PlayerContextProvider);
 
-export default PlayerContextProvider;
+function PlayerContextGroupConsumer (props) {
+  return (
+    <GroupContext.Consumer>
+      {groupProps => <PlayerContextProvider {...groupProps} {...props} />}
+    </GroupContext.Consumer>
+  );
+}
+
+PlayerContextGroupConsumer.displayName =
+  `GroupContextConsumer(PlayerContextProvider)`;
+
+export default PlayerContextGroupConsumer;

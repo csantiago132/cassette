@@ -1,6 +1,7 @@
 import AudioPlayer from './AudioPlayer';
 import PlayerContextProvider from './PlayerContextProvider';
 import PlayerContext from './PlayerContext';
+import PlayerContextGroup from './PlayerContextGroup';
 import PlayPauseButton from './controls/PlayPauseButton';
 import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
@@ -17,6 +18,7 @@ export default AudioPlayer;
 export { AudioPlayer };
 export { PlayerContextProvider };
 export const PlayerContextConsumer = PlayerContext.Consumer;
+export { PlayerContextGroup };
 export { PlayPauseButton };
 export { BackSkipButton };
 export { ForwardSkipButton };
@@ -32,6 +34,7 @@ export { playerContextFilter };
 // for browser script tag (global var) usage
 AudioPlayer.PlayerContextProvider = PlayerContextProvider;
 AudioPlayer.PlayerContextConsumer = PlayerContext.Consumer;
+AudioPlayer.PlayerContextGroup = PlayerContextGroup;
 AudioPlayer.PlayPauseButton = PlayPauseButton;
 AudioPlayer.BackSkipButton = BackSkipButton;
 AudioPlayer.ForwardSkipButton = ForwardSkipButton;

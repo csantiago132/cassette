@@ -130,8 +130,9 @@ class PlayerContextProvider extends Component {
     // html audio element used for playback
     this.audio = null;
 
-    // bind callback methods to pass to descendant elements
     this.setAudioElementRef = this.setAudioElementRef.bind(this);
+
+    // bind callback methods to pass to descendant elements
     this.togglePause = this.togglePause.bind(this);
     this.selectTrackIndex = this.selectTrackIndex.bind(this);
     this.forwardSkip = this.forwardSkip.bind(this);
@@ -146,7 +147,7 @@ class PlayerContextProvider extends Component {
     this.setPlaybackRate = this.setPlaybackRate.bind(this);
     this.pipeVideoStreamToCanvas = this.pipeVideoStreamToCanvas.bind(this);
 
-    // bind audio event listeners to add on mount and remove on unmount
+    // bind audio event handlers
     this.handleAudioPlay = this.handleAudioPlay.bind(this);
     this.handleAudioPause = this.handleAudioPause.bind(this);
     this.handleAudioSrcrequest = this.handleAudioSrcrequest.bind(this);
@@ -172,20 +173,9 @@ class PlayerContextProvider extends Component {
     audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
     audio.playbackRate = this.state.playbackRate;
 
-    // add event listeners on the audio element
-    audio.addEventListener('play', this.handleAudioPlay);
-    audio.addEventListener('pause', this.handleAudioPause);
+    // add special event listeners on the audio element
     audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
-    audio.addEventListener('ended', this.handleAudioEnded);
-    audio.addEventListener('stalled', this.handleAudioStalled);
-    audio.addEventListener('canplaythrough', this.handleAudioCanplaythrough);
-    audio.addEventListener('timeupdate', this.handleAudioTimeupdate);
-    audio.addEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-    audio.addEventListener('volumechange', this.handleAudioVolumechange);
-    audio.addEventListener('durationchange', this.handleAudioDurationchange);
-    audio.addEventListener('progress', this.handleAudioProgress);
     audio.addEventListener('loopchange', this.handleAudioLoopchange);
-    audio.addEventListener('ratechange', this.handleAudioRatechange);
     this.addMediaEventListeners(this.props.onMediaEvent);
 
     if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
@@ -306,20 +296,9 @@ class PlayerContextProvider extends Component {
 
   componentWillUnmount () {
     const { audio } = this;
-    // remove event listeners on the audio element
-    audio.removeEventListener('play', this.handleAudioPlay);
-    audio.removeEventListener('pause', this.handleAudioPause);
+    // remove special event listeners on the audio element
     audio.removeEventListener('srcrequest', this.handleAudioSrcrequest);
-    audio.removeEventListener('ended', this.handleAudioEnded);
-    audio.removeEventListener('stalled', this.handleAudioStalled);
-    audio.removeEventListener('canplaythrough', this.handleAudioCanplaythrough);
-    audio.removeEventListener('timeupdate', this.handleAudioTimeupdate);
-    audio.removeEventListener('loadedmetadata', this.handleAudioLoadedmetadata);
-    audio.removeEventListener('volumechange', this.handleAudioVolumechange);
-    audio.removeEventListener('durationchange', this.handleAudioDurationchange);
-    audio.removeEventListener('progress', this.handleAudioProgress);
     audio.removeEventListener('loopchange', this.handleAudioLoopchange);
-    audio.removeEventListener('ratechange', this.handleAudioRatechange);
     removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
@@ -788,6 +767,17 @@ class PlayerContextProvider extends Component {
           crossOrigin={this.props.crossOrigin}
           preload="metadata"
           loop={this.state.loop}
+          onPlay={this.handleAudioPlay}
+          onPause={this.handleAudioPause}
+          onEnded={this.handleAudioEnded}
+          onStalled={this.handleAudioStalled}
+          onCanPlayThrough={this.handleAudioCanplaythrough}
+          onTimeUpdate={this.handleAudioTimeupdate}
+          onLoadedMetadata={this.handleAudioLoadedmetadata}
+          onVolumeChange={this.handleAudioVolumechange}
+          onDurationChange={this.handleAudioDurationchange}
+          onProgress={this.handleAudioProgress}
+          onRateChange={this.handleAudioRatechange}
         >
           {sources.map(source =>
             <source key={source.src} src={source.src} type={source.type} />

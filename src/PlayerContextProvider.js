@@ -303,9 +303,6 @@ class PlayerContextProvider extends Component {
 
     clearTimeout(this.gapLengthTimeout);
     clearTimeout(this.delayTimeout);
-
-    // pause the audio element before we unmount
-    audio.pause();
   }
 
   setAudioElementRef (ref) {

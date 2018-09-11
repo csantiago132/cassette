@@ -44,7 +44,7 @@ class PlayerContextGroup extends Component {
           const value = groupContext
             ? {
               ...groupContext,
-              groupProps: { ...groupContext.groupProps, ...this.props },
+              groupProps: { ...groupContext.groupProps, ...this.props }
             }
             : {
               groupProps: this.props,
@@ -63,7 +63,7 @@ class PlayerContextGroup extends Component {
 }
 
 PlayerContextGroup.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default PlayerContextGroup;

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import lifecyclesPolyfill from 'react-lifecycles-compat';
 import arrayFindIndex from 'array-find-index';
 import Fragment from 'react-dot-fragment';
 
 import PlayerContext from './PlayerContext';
+import GroupContext from './GroupContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
@@ -826,7 +827,8 @@ PlayerContextProvider.propTypes = {
   onRepeatStrategyUpdate: PropTypes.func,
   onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
-  audioElementRef: PropTypes.func
+  audioElementRef: PropTypes.func,
+  children: PropTypes.node.isRequired
 };
 
 PlayerContextProvider.defaultProps = {
@@ -856,4 +858,55 @@ PlayerContextProvider.defaultProps = {
 
 lifecyclesPolyfill(PlayerContextProvider);
 
-export default PlayerContextProvider;
+class PlayerContextGroupMember extends Component {
+  componentDidMount () {
+    this.props.groupContext.registerMediaElement(this.mediaElement);
+  }
+
+  componentWillUnmount () {
+    this.props.groupContext.unregisterMediaElement(this.mediaElement);
+  }
+
+  render () {
+    const { groupContext, props } = this.props;
+    const { audioElementRef, ...rest } = props;
+    return (
+      <PlayerContextProvider
+        {...groupContext.groupProps}
+        {...rest}
+        audioElementRef={ref => {
+          if (audioElementRef) {
+            audioElementRef(ref);
+          }
+          this.mediaElement = ref;
+        }}
+      />
+    );
+  }
+}
+
+PlayerContextGroupMember.propTypes = {
+  groupContext: PropTypes.shape({
+    groupProps: PropTypes.object.isRequired,
+    registerMediaElement: PropTypes.func.isRequired,
+    unregisterMediaElement: PropTypes.func.isRequired
+  }).isRequired
+};
+
+function PlayerContextGroupConsumer (props) {
+  return (
+    <GroupContext.Consumer>
+      {groupContext => {
+        if (!groupContext) {
+          return createElement(PlayerContextProvider, props);
+        }
+        return createElement(PlayerContextGroupMember, {
+          groupContext,
+          props
+        });
+      }}
+    </GroupContext.Consumer>
+  );
+}
+
+export default PlayerContextGroupConsumer;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
 import lifecyclesPolyfill from 'react-lifecycles-compat';
 import arrayFindIndex from 'array-find-index';
@@ -858,15 +858,55 @@ PlayerContextProvider.defaultProps = {
 
 lifecyclesPolyfill(PlayerContextProvider);
 
+class PlayerContextGroupMember extends Component {
+  componentDidMount () {
+    this.props.groupContext.registerMediaElement(this.mediaElement);
+  }
+
+  componentWillUnmount () {
+    this.props.groupContext.unregisterMediaElement(this.mediaElement);
+  }
+
+  render () {
+    const { groupContext, props } = this.props;
+    const { audioElementRef, ...rest } = props;
+    return (
+      <PlayerContextProvider
+        {...groupContext.groupProps}
+        {...rest}
+        audioElementRef={ref => {
+          if (audioElementRef) {
+            audioElementRef(ref);
+          }
+          this.mediaElement = ref;
+        }}
+      />
+    );
+  }
+}
+
+PlayerContextGroupMember.propTypes = {
+  groupContext: PropTypes.shape({
+    groupProps: PropTypes.object.isRequired,
+    registerMediaElement: PropTypes.func.isRequired,
+    unregisterMediaElement: PropTypes.func.isRequired
+  }).isRequired
+};
+
 function PlayerContextGroupConsumer (props) {
   return (
     <GroupContext.Consumer>
-      {groupProps => <PlayerContextProvider {...groupProps} {...props} />}
+      {groupContext => {
+        if (!groupContext) {
+          return createElement(PlayerContextProvider, props);
+        }
+        return createElement(PlayerContextGroupMember, {
+          groupContext,
+          props
+        });
+      }}
     </GroupContext.Consumer>
   );
 }
-
-PlayerContextGroupConsumer.displayName =
-  `GroupContextConsumer(PlayerContextProvider)`;
 
 export default PlayerContextGroupConsumer;

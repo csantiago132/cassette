@@ -35,6 +35,9 @@ class FullscreenContextProvider extends PureComponent {
   }
 
   requestFullscreen () {
+    if (!this.props.fullscreenEnabled) {
+      return;
+    }
     if (this.fullscreenElement.requestFullscreen) {
       this.fullscreenElement.requestFullscreen();
     } else if (this.fullscreenElement.webkitRequestFullscreen) {

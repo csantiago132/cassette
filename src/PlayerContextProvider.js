@@ -756,6 +756,7 @@ class PlayerContextProvider extends Component {
       this.props.playlist,
       this.state.activeTrackIndex
     );
+    const playerContext = this.getControlProps();
     return (
       <Fragment>
         <video
@@ -780,8 +781,10 @@ class PlayerContextProvider extends Component {
             <source key={source.src} src={source.src} type={source.type} />
           )}
         </video>
-        <PlayerContext.Provider value={this.getControlProps()}>
-          {this.props.children}
+        <PlayerContext.Provider value={playerContext}>
+          {typeof this.props.children === 'function'
+            ? this.props.children(playerContext)
+            : this.props.children}
         </PlayerContext.Provider>
       </Fragment>
     );
@@ -815,7 +818,7 @@ PlayerContextProvider.propTypes = {
   onShuffleUpdate: PropTypes.func,
   onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func,
-  children: PropTypes.node.isRequired
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
 };
 
 PlayerContextProvider.defaultProps = {

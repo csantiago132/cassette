@@ -85,9 +85,7 @@ class AudioPlayer extends Component {
     }
     return (
       <PlayerContextProvider {...rest}>
-        <PlayerContext.Consumer>
-          {playerContext => audioPlayer(playerContext)}
-        </PlayerContext.Consumer>
+        {playerContext => audioPlayer(playerContext)}
       </PlayerContextProvider>
     );
   }

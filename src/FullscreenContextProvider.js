@@ -74,7 +74,9 @@ class FullscreenContextProvider extends PureComponent {
             requestExitFullscreen: this.requestExitFullscreen
           }}
         >
-          {this.props.children}
+          {typeof this.props.children === 'function'
+            ? this.props.children(playerContext)
+            : this.props.children}
         </FullscreenContext.Provider>
       </div>
     );
@@ -83,7 +85,7 @@ class FullscreenContextProvider extends PureComponent {
 
 FullscreenContextProvider.propTypes = {
   fullscreenEnabled: PropTypes.bool.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
 };
 
 FullscreenContextProvider.defaultProps = {

@@ -45,12 +45,12 @@ class FullscreenContextProvider extends PureComponent {
   }
 
   requestExitFullscreen () {
-    if (this.fullscreenElement.requestExitFullscreen) {
-      this.fullscreenElement.requestExitFullscreen();
-    } else if (this.fullscreenElement.webkitRequestExitFullscreen) {
-      this.fullscreenElement.webkitRequestExitFullscreen();
-    } else if (this.fullscreenElement.mozRequestExitFullscreen) {
-      this.fullscreenElement.mozRequestExitFullscreen();
+    if (document.requestExitFullscreen) {
+      document.requestExitFullscreen();
+    } else if (document.webkitRequestExitFullscreen) {
+      document.webkitRequestExitFullscreen();
+    } else if (document.mozRequestExitFullscreen) {
+      document.mozRequestExitFullscreen();
     }
   }
 

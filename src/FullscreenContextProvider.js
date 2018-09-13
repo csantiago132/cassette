@@ -17,7 +17,7 @@ class FullscreenContextProvider extends PureComponent {
     this.requestFullscreen = this.requestFullscreen.bind(this);
     this.requestExitFullscreen = this.requestExitFullscreen.bind(this);
     this.handleFullscreenChange = this.handleFullscreenChange.bind(this);
-    this.fullscreenElement = createRef();
+    this.fullscreenElement = null;
   }
 
   componentDidMount () {
@@ -65,20 +65,19 @@ class FullscreenContextProvider extends PureComponent {
 
   render () {
     const { fullscreen } = this.state;
+    const fullscreenContext = {
+      fullscreen,
+      requestFullscreen: this.requestFullscreen,
+      requestExitFullscreen: this.requestExitFullscreen
+    };
     return (
       <div
-        ref={this.fullscreenElement}
+        ref={elem => this.fullscreenElement = elem}
         style={fullscreen ? fullscreenStyle : undefined}
       >
-        <FullscreenContext.Provider
-          value={{
-            fullscreen,
-            requestFullscreen: this.requestFullscreen,
-            requestExitFullscreen: this.requestExitFullscreen
-          }}
-        >
+        <FullscreenContext.Provider value={fullscreenContext}>
           {typeof this.props.children === 'function'
-            ? this.props.children(playerContext)
+            ? this.props.children(fullscreenContext)
             : this.props.children}
         </FullscreenContext.Provider>
       </div>

@@ -6,6 +6,28 @@ import playerContextFilter from '../factories/playerContextFilter';
 import * as PlayerPropTypes from '../PlayerPropTypes';
 import { logWarning } from '../utils/console';
 
+/* Here is an explanation of the 4 different types of "height"/"width"
+ * referenced in this file:
+ *   1. displayWidth / displayHeight
+ *     - These are optional props for determining which resolution
+ *       we use to display the video. They are assigned to canvas.width
+ *       and canvas.height. If one or both are left out, then we use the
+ *       video's regular dimensions to figure it out.
+ *       We optionally multiply these by the devicePixelRatio to support
+ *       hi-DPI (e.g. Retina) displays.
+ *   2. realDisplayWidth / realDisplayHeight
+ *     - These reflect whatever canvas.width and canvas.height are.
+ *       This is different than displayWidth / displayHeight since
+ *       they are actual values and can't be null.
+ *   3. containerWidth / containerHeight
+ *     - These reflect the actual client offsetWidth and offsetHeight
+ *       of the div container around the canvas, in CSS pixels.
+ *   4. canvas.style.width / canvas.style.height
+ *     - These values are used to scale the canvas's onscreen area.
+ *       They form the same ratio as realDisplayWidth / realDisplayHeight
+ *       but are adjusted so the canvas maximally fills the container area.
+ */
+
 class VideoDisplay extends PureComponent {
   constructor(props) {
     super(props);

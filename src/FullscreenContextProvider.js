@@ -21,15 +21,39 @@ class FullscreenContextProvider extends PureComponent {
   }
 
   componentDidMount () {
-    this.fullscreenElement.addEventListener(
+    document.addEventListener(
       'fullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'webkitfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'mozfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'msfullscreenchange',
       this.handleFullscreenChange
     );
   }
 
   componentWillUnmount () {
-    this.fullscreenElement.removeEventListener(
+    document.removeEventListener(
       'fullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'webkitfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'mozfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'msfullscreenchange',
       this.handleFullscreenChange
     );
   }
@@ -43,23 +67,33 @@ class FullscreenContextProvider extends PureComponent {
     } else if (this.fullscreenElement.webkitRequestFullscreen) {
       this.fullscreenElement.webkitRequestFullscreen();
     } else if (this.fullscreenElement.mozRequestFullscreen) {
-      this.fullscreenElement.mozRequestFullscreen();
+      this.fullscreenElement.mozRequestFullScreen();
+    } else if (this.fullscreenElement.msRequestFullscreen) {
+      this.fullscreenElement.msRequestFullscreen();
     }
   }
 
   requestExitFullscreen () {
-    if (document.requestExitFullscreen) {
-      document.requestExitFullscreen();
-    } else if (document.webkitRequestExitFullscreen) {
-      document.webkitRequestExitFullscreen();
-    } else if (document.mozRequestExitFullscreen) {
-      document.mozRequestExitFullscreen();
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.webkitCancelFullScreen) {
+      document.webkitCancelFullScreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.mozExitFullscreen();
     }
   }
 
   handleFullscreenChange () {
+    const documentFullscreenElement = document.fullscreenElement
+      || document.webkitFullscreenElement
+      || document.mozFullScreenElement
+      || document.msFullscreenElement;
     this.setState({
-      fullscreen: document.fullscreenElement === this.fullscreenElement
+      fullscreen: documentFullscreenElement === this.fullscreenElement
     });
   }
 

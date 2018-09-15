@@ -160,7 +160,7 @@ class VideoDisplay extends PureComponent {
       } else {
         // video is taller than container - scale with bars on left and right
         canvasStyle.height = containerHeight;
-        canvasStyle.width = realDisplayRatio * containerHeight;
+        canvasStyle.width = containerHeight * realDisplayRatio;
       }
     }
 

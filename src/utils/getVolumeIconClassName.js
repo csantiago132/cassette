@@ -1,4 +1,4 @@
-function getVolumeIconClassName (volume, muted) {
+function getVolumeIconClassName(volume, muted) {
   if (muted) {
     return 'icono-volumeMute';
   }

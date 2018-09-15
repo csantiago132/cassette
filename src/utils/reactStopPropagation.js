@@ -1,4 +1,4 @@
-function stopPropagation (e) {
+function stopPropagation(e) {
   e.stopPropagation();
   e.nativeEvent.stopImmediatePropagation();
 }

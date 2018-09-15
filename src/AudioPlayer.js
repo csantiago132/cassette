@@ -15,12 +15,12 @@ import getControlRenderProp from './utils/getControlRenderProp';
 import './styles/index.scss';
 
 let nextControlKey = 0;
-function getNextControlKey () {
+function getNextControlKey() {
   return (nextControlKey++).toString();
 }
 
 class AudioPlayer extends Component {
-  getKeyedChildren (elements) {
+  getKeyedChildren(elements) {
     if (typeof Map === 'undefined') {
       // If we don't have a map, then we'll just let components get
       // re-mounted on re-order, which should be okay most of the time
@@ -58,7 +58,7 @@ class AudioPlayer extends Component {
     });
   }
 
-  render () {
+  render() {
     const {
       getDisplayText,
       controls,
@@ -75,9 +75,9 @@ class AudioPlayer extends Component {
 
     const audioPlayer = playerContext => (
       <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
-        {fullscreenContext =>
+        {fullscreenContext => (
           <div className="rrap">
-            {showVideo &&
+            {showVideo && (
               <VideoDisplay
                 className="rrap__video_display_container"
                 onClick={playerContext.onTogglePause}
@@ -86,21 +86,28 @@ class AudioPlayer extends Component {
                 displayHeight={videoDisplayHeight}
                 scaleForDevicePixelRatio={scaleVideoForDevicePixelRatio}
                 playerContext={playerContext}
-              />}
+              />
+            )}
             <ControlWrapper
-              title={getDisplayText(playerContext.playlist[playerContext.activeTrackIndex])}
+              title={getDisplayText(
+                playerContext.playlist[playerContext.activeTrackIndex]
+              )}
             >
               {this.getKeyedChildren(
                 controls.map((control, index) => {
                   const renderControl = getControlRenderProp(control);
-                  return renderControl && renderControl({
-                    playerContext,
-                    fullscreenContext
-                  });
+                  return (
+                    renderControl &&
+                    renderControl({
+                      playerContext,
+                      fullscreenContext
+                    })
+                  );
                 })
               )}
             </ControlWrapper>
-          </div>}
+          </div>
+        )}
       </FullscreenContextProvider>
     );
 
@@ -125,7 +132,7 @@ AudioPlayer.propTypes = {
   processVideoFrame: PropTypes.func,
   videoDisplayWidth: PropTypes.number,
   videoDisplayHeight: PropTypes.number,
-  scaleVideoForDevicePixelRatio: PropTypes.bool,
+  scaleVideoForDevicePixelRatio: PropTypes.bool
 };
 
 AudioPlayer.defaultProps = {
@@ -135,7 +142,7 @@ AudioPlayer.defaultProps = {
     'playpause',
     'forwardskip',
     'spacer',
-    'progress',
+    'progress'
   ],
   controlWrapper: AudioControlBar,
   getDisplayText: getDisplayText,

@@ -8,7 +8,7 @@ import { repeatStrategyOptions } from '../constants';
 import * as PlayerPropTypes from '../PlayerPropTypes';
 import playerContextFilter from '../factories/playerContextFilter';
 
-function getNextRepeatStrategy (repeatStrategy) {
+function getNextRepeatStrategy(repeatStrategy) {
   let nextIndex = repeatStrategyOptions.indexOf(repeatStrategy) + 1;
   if (nextIndex >= repeatStrategyOptions.length) {
     nextIndex = 0;
@@ -17,20 +17,20 @@ function getNextRepeatStrategy (repeatStrategy) {
 }
 
 class RepeatButton extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     // bind methods fired on React events
     this.handleNextRepeatStrategy = this.handleNextRepeatStrategy.bind(this);
   }
 
-  handleNextRepeatStrategy () {
+  handleNextRepeatStrategy() {
     this.props.onSetRepeatStrategy(
       getNextRepeatStrategy(this.props.repeatStrategy)
     );
   }
 
-  render () {
+  render() {
     const { repeatStrategy } = this.props;
     const Icon = repeatStrategy === 'track' ? RepeatOneIcon : RepeatIcon;
     return (

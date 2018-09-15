@@ -9,7 +9,7 @@ const fullscreenStyle = {
 };
 
 class FullscreenContextProvider extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       fullscreen: false
@@ -20,11 +20,8 @@ class FullscreenContextProvider extends PureComponent {
     this.fullscreenElement = null;
   }
 
-  componentDidMount () {
-    document.addEventListener(
-      'fullscreenchange',
-      this.handleFullscreenChange
-    );
+  componentDidMount() {
+    document.addEventListener('fullscreenchange', this.handleFullscreenChange);
     document.addEventListener(
       'webkitfullscreenchange',
       this.handleFullscreenChange
@@ -39,7 +36,7 @@ class FullscreenContextProvider extends PureComponent {
     );
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     document.removeEventListener(
       'fullscreenchange',
       this.handleFullscreenChange
@@ -58,7 +55,7 @@ class FullscreenContextProvider extends PureComponent {
     );
   }
 
-  requestFullscreen () {
+  requestFullscreen() {
     if (!this.props.fullscreenEnabled) {
       return;
     }
@@ -73,7 +70,7 @@ class FullscreenContextProvider extends PureComponent {
     }
   }
 
-  requestExitFullscreen () {
+  requestExitFullscreen() {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.webkitExitFullscreen) {
@@ -87,17 +84,18 @@ class FullscreenContextProvider extends PureComponent {
     }
   }
 
-  handleFullscreenChange () {
-    const documentFullscreenElement = document.fullscreenElement
-      || document.webkitFullscreenElement
-      || document.mozFullScreenElement
-      || document.msFullscreenElement;
+  handleFullscreenChange() {
+    const documentFullscreenElement =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
     this.setState({
       fullscreen: documentFullscreenElement === this.fullscreenElement
     });
   }
 
-  render () {
+  render() {
     const { fullscreen } = this.state;
     const fullscreenContext = {
       fullscreen,
@@ -106,7 +104,7 @@ class FullscreenContextProvider extends PureComponent {
     };
     return (
       <div
-        ref={elem => this.fullscreenElement = elem}
+        ref={elem => (this.fullscreenElement = elem)}
         style={fullscreen ? fullscreenStyle : undefined}
       >
         <FullscreenContext.Provider value={fullscreenContext}>

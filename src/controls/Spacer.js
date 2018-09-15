@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 class Spacer extends PureComponent {
-  render () {
+  render() {
     return <div className="rrap__spacer" />;
   }
 }

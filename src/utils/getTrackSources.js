@@ -2,7 +2,7 @@ import isPlaylistValid from './isPlaylistValid';
 
 const blankSources = [{ src: '' }];
 
-function getTrackSources (playlist, index) {
+function getTrackSources(playlist, index) {
   if (!isPlaylistValid(playlist)) {
     return blankSources;
   }

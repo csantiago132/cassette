@@ -1,7 +1,7 @@
 const loopchange = 'loopchange';
 const srcrequest = 'srcrequest';
 
-function createCustomAudioElement (audio = document.createElement('audio')) {
+function createCustomAudioElement(audio = document.createElement('audio')) {
   new MutationObserver(() => {
     audio.dispatchEvent(new Event(loopchange));
   }).observe(audio, {

@@ -25,7 +25,7 @@ const controlComponents = {
 };
 
 const cache = {};
-function getControlRenderProp (control) {
+function getControlRenderProp(control) {
   if (typeof control === 'function') {
     return control;
   }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import GroupContext from './GroupContext';
 
 class PlayerContextGroup extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.registerMediaElement = this.registerMediaElement.bind(this);
     this.unregisterMediaElement = this.unregisterMediaElement.bind(this);
@@ -12,19 +12,23 @@ class PlayerContextGroup extends Component {
     this.mediaElements = [];
   }
 
-  registerMediaElement (elem) {
+  registerMediaElement(elem) {
     this.mediaElements = this.mediaElements.concat(elem);
     elem.addEventListener('play', this.enforceOneAudioSourceOnly, true);
     elem.addEventListener('volumechange', this.enforceOneAudioSourceOnly, true);
   }
 
-  unregisterMediaElement (elem) {
+  unregisterMediaElement(elem) {
     this.mediaElements = this.mediaElements.filter(element => elem !== element);
     elem.removeEventListener('play', this.enforceOneAudioSourceOnly, true);
-    elem.removeEventListener('volumechange', this.enforceOneAudioSourceOnly, true);
+    elem.removeEventListener(
+      'volumechange',
+      this.enforceOneAudioSourceOnly,
+      true
+    );
   }
 
-  enforceOneAudioSourceOnly (e) {
+  enforceOneAudioSourceOnly(e) {
     const mediaElement = e.target;
     const { paused, muted } = mediaElement;
     if (paused || muted) {
@@ -37,20 +41,20 @@ class PlayerContextGroup extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <GroupContext.Consumer>
         {groupContext => {
           const value = groupContext
             ? {
-              ...groupContext,
-              groupProps: { ...groupContext.groupProps, ...this.props }
-            }
+                ...groupContext,
+                groupProps: { ...groupContext.groupProps, ...this.props }
+              }
             : {
-              groupProps: this.props,
-              registerMediaElement: this.registerMediaElement,
-              unregisterMediaElement: this.unregisterMediaElement
-            };
+                groupProps: this.props,
+                registerMediaElement: this.registerMediaElement,
+                unregisterMediaElement: this.unregisterMediaElement
+              };
           return (
             <GroupContext.Provider value={value}>
               {this.props.children}

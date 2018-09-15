@@ -6,7 +6,7 @@ import getHandleStyle from '../../utils/getHandleStyle';
 import * as PlayerPropTypes from '../../PlayerPropTypes';
 
 class ProgressBarDisplay extends PureComponent {
-  render () {
+  render() {
     const {
       className,
       progressClassName,
@@ -29,12 +29,14 @@ class ProgressBarDisplay extends PureComponent {
         onTouchStart={onTouchStart}
         onClick={onClick}
       >
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          touchAction: 'none'
-        }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            touchAction: 'none'
+          }}
+        >
           <div
             className={progressClassName}
             style={{

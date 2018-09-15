@@ -1,4 +1,4 @@
-function getRepeatStrategy (loop, cycle) {
+function getRepeatStrategy(loop, cycle) {
   if (loop) {
     return 'track';
   }

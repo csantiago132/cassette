@@ -6,7 +6,7 @@ import convertToNumberWithinIntervalBounds from '../../utils/convertToNumberWith
 import * as PlayerPropTypes from '../../PlayerPropTypes';
 
 class ProgressBar extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.progressContainer = null;
@@ -19,7 +19,7 @@ class ProgressBar extends PureComponent {
     this.handleAdjustComplete = this.handleAdjustComplete.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // add event listeners bound outside the scope of our component
     window.addEventListener('mousemove', this.handleAdjustProgress);
     document.addEventListener('touchmove', this.handleAdjustProgress);
@@ -27,7 +27,7 @@ class ProgressBar extends PureComponent {
     document.addEventListener('touchend', this.handleAdjustComplete);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // remove event listeners bound outside the scope of our component
     window.removeEventListener('mousemove', this.handleAdjustProgress);
     document.removeEventListener('touchmove', this.handleAdjustProgress);
@@ -35,11 +35,11 @@ class ProgressBar extends PureComponent {
     document.removeEventListener('touchend', this.handleAdjustComplete);
   }
 
-  setProgressContainerRef (ref) {
+  setProgressContainerRef(ref) {
     this.progressContainer = ref;
-  };
+  }
 
-  getProgressFromPageCoordinates (pageX, pageY) {
+  getProgressFromPageCoordinates(pageX, pageY) {
     const {
       left,
       top,
@@ -51,16 +51,16 @@ class ProgressBar extends PureComponent {
       case 'down':
         return (pageY - top - scrollTop) / height;
       case 'left':
-        return 1 - ((pageX - left - scrollLeft) / width);
+        return 1 - (pageX - left - scrollLeft) / width;
       case 'up':
-        return 1 - ((pageY - top - scrollTop) / height);
+        return 1 - (pageY - top - scrollTop) / height;
       case 'right':
       default:
         return (pageX - left - scrollLeft) / width;
     }
   }
 
-  handleAdjustProgress (event) {
+  handleAdjustProgress(event) {
     const { readonly, adjusting, onAdjustProgress } = this.props;
     if (readonly) {
       return;
@@ -79,11 +79,15 @@ class ProgressBar extends PureComponent {
     const pageX = isTouch ? event.targetTouches.item(0).pageX : event.pageX;
     const pageY = isTouch ? event.targetTouches.item(0).pageY : event.pageY;
     const progress = this.getProgressFromPageCoordinates(pageX, pageY);
-    const progressInBounds = convertToNumberWithinIntervalBounds(progress, 0, 1);
+    const progressInBounds = convertToNumberWithinIntervalBounds(
+      progress,
+      0,
+      1
+    );
     onAdjustProgress(progressInBounds);
   }
 
-  handleAdjustComplete (event) {
+  handleAdjustComplete(event) {
     const { adjusting, onAdjustComplete } = this.props;
     /* this function is activated when the user lets go of
      * the mouse, so if .rrap__noselect was applied
@@ -102,7 +106,7 @@ class ProgressBar extends PureComponent {
     }
   }
 
-  render () {
+  render() {
     const {
       className,
       progressClassName,

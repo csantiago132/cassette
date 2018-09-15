@@ -1,4 +1,4 @@
-function isPlaylistValid (playlist) {
+function isPlaylistValid(playlist) {
   return Boolean(playlist && playlist.length);
 }
 

@@ -1,8 +1,8 @@
 import { createElement } from 'react';
 import PropTypes from 'prop-types';
 
-function playerContextFilter (component, contextPropNames) {
-  function PlayerContextFilter ({
+function playerContextFilter(component, contextPropNames) {
+  function PlayerContextFilter({
     playerContext = {},
     fullscreenContext = {},
     ...childProps

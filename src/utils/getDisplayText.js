@@ -1,6 +1,6 @@
 import isPlaylistValid from './isPlaylistValid';
 
-function getDisplayText (track) {
+function getDisplayText(track) {
   if (!track) {
     return '';
   }

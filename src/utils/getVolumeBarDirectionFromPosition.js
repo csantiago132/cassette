@@ -1,4 +1,4 @@
-function getVolumeBarDirectionFromPosition (volumeBarPosition) {
+function getVolumeBarDirectionFromPosition(volumeBarPosition) {
   switch (volumeBarPosition) {
     case 'rightabove':
     case 'rightbelow':

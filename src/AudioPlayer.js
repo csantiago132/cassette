@@ -64,6 +64,10 @@ class AudioPlayer extends Component {
       controls,
       fullscreenEnabled,
       showVideo,
+      processVideoFrame,
+      videoDisplayWidth,
+      videoDisplayHeight,
+      scaleVideoForDevicePixelRatio,
       controlWrapper: ControlWrapper,
       playerContext: ancestorPlayerContext,
       ...rest
@@ -77,6 +81,10 @@ class AudioPlayer extends Component {
               <VideoDisplay
                 className="rrap__video_display_container"
                 onClick={playerContext.onTogglePause}
+                processFrame={processVideoFrame}
+                displayWidth={videoDisplayWidth}
+                displayHeight={videoDisplayHeight}
+                scaleForDevicePixelRatio={scaleVideoForDevicePixelRatio}
                 playerContext={playerContext}
               />}
             <ControlWrapper
@@ -113,7 +121,11 @@ AudioPlayer.propTypes = {
   getDisplayText: PropTypes.func.isRequired,
   playerContext: PropTypes.object,
   fullscreenEnabled: PropTypes.bool.isRequired,
-  showVideo: PropTypes.bool.isRequired
+  showVideo: PropTypes.bool.isRequired,
+  processVideoFrame: PropTypes.func,
+  videoDisplayWidth: PropTypes.number,
+  videoDisplayHeight: PropTypes.number,
+  scaleVideoForDevicePixelRatio: PropTypes.bool,
 };
 
 AudioPlayer.defaultProps = {

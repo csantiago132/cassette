@@ -11,6 +11,10 @@
         margin: 0;
         background: gold;
       }
+      #audio_player_container {
+        width: 500px;
+        margin: 1rem;
+      }
       .demo {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       }
@@ -219,13 +223,10 @@
               crossOrigin: 'anonymous'
             }, React.createElement(AudioPlayer.PlayerContextConsumer, {}, function (playerContext) {
               return React.createElement(React.Fragment, {},
-                React.createElement(AudioPlayer.VideoDisplay, {
-                  playerContext: playerContext,
-                  className: 'video_display'
-                }),
                 React.createElement(AudioPlayer, {
                   playerContext: playerContext,
-                  style: { position: 'fixed', bottom: 0, width: '100%' },
+                  showVideo: true,
+                  videoDisplayWidth: 720,
                   controls: [
                     'spacer',
                     'backskip',
@@ -235,7 +236,8 @@
                     'shuffle',
                     'repeat',
                     'spacer',
-                    'progress'
+                    'progress',
+                    'fullscreen'
                   ],
                 })
               )

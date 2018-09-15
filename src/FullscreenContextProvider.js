@@ -1,0 +1,131 @@
+import React, { PureComponent, createRef } from 'react';
+import PropTypes from 'prop-types';
+
+import FullscreenContext from './FullscreenContext';
+
+const fullscreenStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+class FullscreenContextProvider extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.state = {
+      fullscreen: false
+    };
+    this.requestFullscreen = this.requestFullscreen.bind(this);
+    this.requestExitFullscreen = this.requestExitFullscreen.bind(this);
+    this.handleFullscreenChange = this.handleFullscreenChange.bind(this);
+    this.fullscreenElement = null;
+  }
+
+  componentDidMount () {
+    document.addEventListener(
+      'fullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'webkitfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'mozfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.addEventListener(
+      'msfullscreenchange',
+      this.handleFullscreenChange
+    );
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener(
+      'fullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'webkitfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'mozfullscreenchange',
+      this.handleFullscreenChange
+    );
+    document.removeEventListener(
+      'msfullscreenchange',
+      this.handleFullscreenChange
+    );
+  }
+
+  requestFullscreen () {
+    if (!this.props.fullscreenEnabled) {
+      return;
+    }
+    if (this.fullscreenElement.requestFullscreen) {
+      this.fullscreenElement.requestFullscreen();
+    } else if (this.fullscreenElement.webkitRequestFullscreen) {
+      this.fullscreenElement.webkitRequestFullscreen();
+    } else if (this.fullscreenElement.mozRequestFullscreen) {
+      this.fullscreenElement.mozRequestFullScreen();
+    } else if (this.fullscreenElement.msRequestFullscreen) {
+      this.fullscreenElement.msRequestFullscreen();
+    }
+  }
+
+  requestExitFullscreen () {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.webkitCancelFullScreen) {
+      document.webkitCancelFullScreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.mozExitFullscreen();
+    }
+  }
+
+  handleFullscreenChange () {
+    const documentFullscreenElement = document.fullscreenElement
+      || document.webkitFullscreenElement
+      || document.mozFullScreenElement
+      || document.msFullscreenElement;
+    this.setState({
+      fullscreen: documentFullscreenElement === this.fullscreenElement
+    });
+  }
+
+  render () {
+    const { fullscreen } = this.state;
+    const fullscreenContext = {
+      fullscreen,
+      requestFullscreen: this.requestFullscreen,
+      requestExitFullscreen: this.requestExitFullscreen
+    };
+    return (
+      <div
+        ref={elem => this.fullscreenElement = elem}
+        style={fullscreen ? fullscreenStyle : undefined}
+      >
+        <FullscreenContext.Provider value={fullscreenContext}>
+          {typeof this.props.children === 'function'
+            ? this.props.children(fullscreenContext)
+            : this.props.children}
+        </FullscreenContext.Provider>
+      </div>
+    );
+  }
+}
+
+FullscreenContextProvider.propTypes = {
+  fullscreenEnabled: PropTypes.bool.isRequired,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
+};
+
+FullscreenContextProvider.defaultProps = {
+  fullscreenEnabled: true
+};
+
+export default FullscreenContextProvider;

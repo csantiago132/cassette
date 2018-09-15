@@ -4,8 +4,11 @@ import classNames from 'classnames';
 
 import PlayerContextProvider from './PlayerContextProvider';
 import PlayerContext from './PlayerContext';
+import FullscreenContextProvider from './FullscreenContextProvider';
+import FullscreenContext from './FullscreenContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import AudioControlBar from './controls/AudioControlBar';
+import VideoDisplay from './controls/VideoDisplay';
 import getDisplayText from './utils/getDisplayText';
 import getControlRenderProp from './utils/getControlRenderProp';
 
@@ -57,27 +60,48 @@ class AudioPlayer extends Component {
 
   render () {
     const {
-      style,
       getDisplayText,
       controls,
+      fullscreenEnabled,
+      showVideo,
+      processVideoFrame,
+      videoDisplayWidth,
+      videoDisplayHeight,
+      scaleVideoForDevicePixelRatio,
       controlWrapper: ControlWrapper,
       playerContext: ancestorPlayerContext,
       ...rest
     } = this.props;
 
     const audioPlayer = playerContext => (
-      <div style={style}>
-        <ControlWrapper
-          title={getDisplayText(playerContext.playlist[playerContext.activeTrackIndex])}
-        >
-          {this.getKeyedChildren(
-            controls.map((control, index) => {
-              const renderControl = getControlRenderProp(control);
-              return renderControl && renderControl(playerContext);
-            })
-          )}
-        </ControlWrapper>
-      </div>
+      <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
+        {fullscreenContext =>
+          <div className="rrap">
+            {showVideo &&
+              <VideoDisplay
+                className="rrap__video_display_container"
+                onClick={playerContext.onTogglePause}
+                processFrame={processVideoFrame}
+                displayWidth={videoDisplayWidth}
+                displayHeight={videoDisplayHeight}
+                scaleForDevicePixelRatio={scaleVideoForDevicePixelRatio}
+                playerContext={playerContext}
+              />}
+            <ControlWrapper
+              title={getDisplayText(playerContext.playlist[playerContext.activeTrackIndex])}
+            >
+              {this.getKeyedChildren(
+                controls.map((control, index) => {
+                  const renderControl = getControlRenderProp(control);
+                  return renderControl && renderControl({
+                    playerContext,
+                    fullscreenContext
+                  });
+                })
+              )}
+            </ControlWrapper>
+          </div>}
+      </FullscreenContextProvider>
     );
 
     if (ancestorPlayerContext) {
@@ -85,9 +109,7 @@ class AudioPlayer extends Component {
     }
     return (
       <PlayerContextProvider {...rest}>
-        <PlayerContext.Consumer>
-          {playerContext => audioPlayer(playerContext)}
-        </PlayerContext.Consumer>
+        {playerContext => audioPlayer(playerContext)}
       </PlayerContextProvider>
     );
   }
@@ -97,8 +119,13 @@ AudioPlayer.propTypes = {
   controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
   controlWrapper: PropTypes.func.isRequired,
   getDisplayText: PropTypes.func.isRequired,
-  style: PropTypes.object,
-  playerContext: PropTypes.object
+  playerContext: PropTypes.object,
+  fullscreenEnabled: PropTypes.bool.isRequired,
+  showVideo: PropTypes.bool.isRequired,
+  processVideoFrame: PropTypes.func,
+  videoDisplayWidth: PropTypes.number,
+  videoDisplayHeight: PropTypes.number,
+  scaleVideoForDevicePixelRatio: PropTypes.bool,
 };
 
 AudioPlayer.defaultProps = {
@@ -108,10 +135,12 @@ AudioPlayer.defaultProps = {
     'playpause',
     'forwardskip',
     'spacer',
-    'progress'
+    'progress',
   ],
   controlWrapper: AudioControlBar,
-  getDisplayText: getDisplayText
+  getDisplayText: getDisplayText,
+  fullscreenEnabled: true,
+  showVideo: false
 };
 
 export default AudioPlayer;

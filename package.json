@@ -11,7 +11,14 @@
     "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path example.html",
     "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path example.html",
     "prepublish": "npm run build",
+    "prettier": "pretty-quick --staged \"**/*.js\"",
+    "prettier-check": "./bin/prettier-check.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier-check"
+    }
   },
   "repository": {
     "type": "git",
@@ -43,6 +50,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.41",
     "@babel/preset-env": "^7.0.0-beta.41",
     "@babel/preset-react": "^7.0.0-beta.41",
+    "@benwiley4000/svg-react-loader": "^0.4.5-fix-vulnerabilities",
     "array-find-index": "^1.0.2",
     "autoprefixer": "^7.1.1",
     "babel-loader": "^8.0.0-beta.2",
@@ -57,17 +65,19 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-uglifycss": "^1.0.8",
+    "husky": "^1.0.0-rc.14",
     "icono": "^1.3.1",
     "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "^0.2.0",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "postcss-loader": "^2.0.5",
+    "prettier": "1.14.2",
+    "pretty-quick": "^1.6.0",
     "react-dot-fragment": "^0.2.5",
     "react-lifecycles-compat": "^1.0.2",
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.5",
-    "@benwiley4000/svg-react-loader": "^0.4.5-fix-vulnerabilities",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-serve": "^2.0.2"

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class AudioControlBar extends Component {
   render () {
     return (
-      <div className="rrap" title={this.props.title}>
+      <div className="rrap__control_bar" title={this.props.title}>
         {this.props.children}
       </div>
     );

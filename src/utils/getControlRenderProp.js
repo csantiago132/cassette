@@ -8,6 +8,7 @@ import RepeatButton from '../controls/RepeatButton';
 import ShuffleButton from '../controls/ShuffleButton';
 import AudioProgress from '../controls/AudioProgress';
 import AudioProgressDisplay from '../controls/AudioProgressDisplay';
+import FullscreenButton from '../controls/FullscreenButton';
 import Spacer from '../controls/Spacer';
 
 const controlComponents = {
@@ -19,6 +20,7 @@ const controlComponents = {
   shuffle: ShuffleButton,
   progress: AudioProgress,
   progressdisplay: AudioProgressDisplay,
+  fullscreen: FullscreenButton,
   spacer: Spacer
 };
 
@@ -33,7 +35,9 @@ function getControlRenderProp (control) {
     }
     const component = controlComponents[control];
     if (component) {
-      const fn = playerContext => createElement(component, { playerContext });
+      const fn = ({ playerContext, fullscreenContext }) => {
+        return createElement(component, { playerContext, fullscreenContext });
+      };
       cache[control] = fn;
       return fn;
     }

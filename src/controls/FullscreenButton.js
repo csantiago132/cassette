@@ -7,7 +7,7 @@ import FullscreenExitIcon from '@benwiley4000/svg-react-loader?name=FullscreenEx
 import playerContextFilter from '../factories/playerContextFilter';
 
 class FullscreenButton extends PureComponent {
-  render () {
+  render() {
     const { fullscreen, requestFullscreen, requestExitFullscreen } = this.props;
     const IconComponent = fullscreen ? FullscreenExitIcon : FullscreenIcon;
     return (

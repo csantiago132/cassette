@@ -1,8 +1,8 @@
-function getClassNameForRange (min, max) {
+function getClassNameForRange(min, max) {
   return 'rrap__audio_info__' + min + (max ? '-' + max : '');
 }
 
-function getStatusBarSizeClassName (width) {
+function getStatusBarSizeClassName(width) {
   if (width < 166) return null;
   if (width < 246) return getClassNameForRange(166, 245);
   if (width < 346) return getClassNameForRange(246, 345);

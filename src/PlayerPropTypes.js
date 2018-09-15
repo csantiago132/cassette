@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { repeatStrategyOptions } from './constants';
 import { logWarning } from './utils/console';
 
-function requiredOnlyUnlessHasProp (propType, altPropName) {
+function requiredOnlyUnlessHasProp(propType, altPropName) {
   let warnedAboutDefiningBoth = false;
-  function validate (props, propName, componentName, ...rest) {
+  function validate(props, propName, componentName, ...rest) {
     if (propName in props) {
       if (!warnedAboutDefiningBoth && altPropName in props) {
         logWarning(
@@ -86,8 +86,4 @@ export const progressDirection = PropTypes.oneOf([
   'down'
 ]);
 
-export const seekMode = PropTypes.oneOf([
-  'paused',
-  'immediate',
-  'onrelease'
-]);
+export const seekMode = PropTypes.oneOf(['paused', 'immediate', 'onrelease']);

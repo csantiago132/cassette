@@ -14,7 +14,7 @@ const volumeControlStyle = {
 };
 
 class VolumeControl extends PureComponent {
-  static getDerivedStateFromProps (nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const { hover, volumeBarPosition } = prevState;
     if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {
       return {
@@ -24,7 +24,7 @@ class VolumeControl extends PureComponent {
     return null;
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -45,10 +45,12 @@ class VolumeControl extends PureComponent {
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
     // bind listeners to add on mount and remove on unmount
-    this.handleMuteToggleTouchStart = this.handleMuteToggleTouchStart.bind(this);
+    this.handleMuteToggleTouchStart = this.handleMuteToggleTouchStart.bind(
+      this
+    );
   }
 
-  componentDidMount () {
+  componentDidMount() {
     /* this should be a normal React listener but there seems to be a bug
      * in React preventing that from working as expected:
      * https://github.com/facebook/react/issues/9809
@@ -63,7 +65,7 @@ class VolumeControl extends PureComponent {
     document.addEventListener('touchstart', this.handleMouseLeave);
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     /* if we've applied a hidden class to our volume bar, it's because
      * we need to measure the element dimensions in order to figure out
      * where and in which direction to position it. if there isn't enough
@@ -86,14 +88,16 @@ class VolumeControl extends PureComponent {
       const volumeBarContainerHeight = this.volumeBarContainerRef.offsetHeight;
       let newPosition;
       if (volumeBarPosition === 'hiddenup') {
-        newPosition = volumeBarContainerHeight <= top ? 'upabove' : 'hiddenright';
+        newPosition =
+          volumeBarContainerHeight <= top ? 'upabove' : 'hiddenright';
       } else {
         if (volumeBarContainerHeight <= top) {
           newPosition = 'rightabove';
         } else {
           const viewportHeight = document.documentElement.clientHeight;
           const bottom = viewportHeight - volumeControlRect.bottom;
-          newPosition = volumeBarContainerHeight <= bottom ? 'rightbelow' : null;
+          newPosition =
+            volumeBarContainerHeight <= bottom ? 'rightbelow' : null;
         }
       }
       this.setState({
@@ -102,7 +106,7 @@ class VolumeControl extends PureComponent {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.muteToggleRef.removeEventListener(
       'touchstart',
       this.handleMuteToggleTouchStart
@@ -110,53 +114,54 @@ class VolumeControl extends PureComponent {
     document.removeEventListener('touchstart', this.handleMouseLeave);
   }
 
-  setVolumeControlRef (ref) {
+  setVolumeControlRef(ref) {
     this.volumeControlRef = ref;
   }
 
-  setMuteToggleRef (ref) {
+  setMuteToggleRef(ref) {
     this.muteToggleRef = ref;
   }
 
-  setVolumeBarContainerRef (ref) {
+  setVolumeBarContainerRef(ref) {
     this.volumeBarContainerRef = ref;
   }
 
-  handleMouseEnter () {
+  handleMouseEnter() {
     this.setState({
       hover: true,
       volumeBarPosition: this.state.volumeBarPosition || 'hiddenup'
     });
   }
 
-  handleMouseLeave () {
+  handleMouseLeave() {
     this.setState({
       hover: false,
-      volumeBarPosition: (
-        this.props.setVolumeInProgress ? this.state.volumeBarPosition : null
-      )
+      volumeBarPosition: this.props.setVolumeInProgress
+        ? this.state.volumeBarPosition
+        : null
     });
   }
 
-  handleMuteToggleTouchStart (e) {
+  handleMuteToggleTouchStart(e) {
     if (!this.state.hover) {
       e.preventDefault();
       this.handleMouseEnter();
     }
   }
 
-  renderHandle () {
+  renderHandle() {
     return (
-      <div className={classNames(
-        'handle',
-        { highlight: this.props.setVolumeInProgress }
-      )}>
+      <div
+        className={classNames('handle', {
+          highlight: this.props.setVolumeInProgress
+        })}
+      >
         <div />
       </div>
     );
   }
 
-  render () {
+  render() {
     const {
       volume,
       muted,
@@ -177,16 +182,17 @@ class VolumeControl extends PureComponent {
       >
         <button
           ref={this.setMuteToggleRef}
-          className={classNames(
-            'button rrap__audio_button',
-            { highlight: hover }
-          )}
+          className={classNames('button rrap__audio_button', {
+            highlight: hover
+          })}
           onClick={onToggleMuted}
         >
-          <div className={classNames(
-            'foreground',
-            getVolumeIconClassName(volume, muted)
-          )} />
+          <div
+            className={classNames(
+              'foreground',
+              getVolumeIconClassName(volume, muted)
+            )}
+          />
         </button>
         {volumeBarPosition && (
           <div
@@ -203,7 +209,9 @@ class VolumeControl extends PureComponent {
               )}
               progressClassName="volume"
               progress={muted ? 0 : volume}
-              progressDirection={getVolumeBarDirectionFromPosition(volumeBarPosition)}
+              progressDirection={getVolumeBarDirectionFromPosition(
+                volumeBarPosition
+              )}
               handle={this.renderHandle()}
               adjusting={setVolumeInProgress}
               onAdjustProgress={onSetVolume}

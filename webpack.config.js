@@ -5,34 +5,36 @@ var path = require('path');
 
 var OUTPUT_DIR = './dist';
 
-function babelConfig (esmodules, minimize) {
+function babelConfig(esmodules, minimize) {
   return {
     presets: [
-      ['@babel/preset-env', {
-        modules: false,
-        loose: true,
-        targets: esmodules ? { esmodules: true } : undefined
-      }],
+      [
+        '@babel/preset-env',
+        {
+          modules: false,
+          loose: true,
+          targets: esmodules ? { esmodules: true } : undefined
+        }
+      ],
       '@babel/react'
     ],
-    plugins:
-      minimize
-        ? [
+    plugins: minimize
+      ? [
           '@babel/plugin-proposal-object-rest-spread',
           [
             'transform-react-remove-prop-types',
             { mode: 'remove', removeImport: true }
           ]
         ]
-        : ['@babel/plugin-proposal-object-rest-spread']
+      : ['@babel/plugin-proposal-object-rest-spread']
   };
 }
 
-function webpackConfig (esmodules, minimize) {
+function webpackConfig(esmodules, minimize) {
   return {
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     entry: {
-      [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js',
+      [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js'
     },
     resolve: {
       extensions: ['.js', '.jsx']
@@ -53,10 +55,7 @@ function webpackConfig (esmodules, minimize) {
       rules: [
         {
           test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader'
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
         },
         {
           test: /\.scss$/,
@@ -84,7 +83,7 @@ function webpackConfig (esmodules, minimize) {
         commonjs2: 'prop-types',
         amd: 'prop-types'
       },
-      'react': {
+      react: {
         root: 'React',
         commonjs: 'react',
         commonjs2: 'react',
@@ -127,7 +126,7 @@ var configResult = (function() {
         webpackConfig(true, true),
         webpackConfig(false, true),
         webpackConfig(true, false),
-        webpackConfig(false, false),
+        webpackConfig(false, false)
       ];
   }
 })();

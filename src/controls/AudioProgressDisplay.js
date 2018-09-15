@@ -17,7 +17,7 @@ const audioStatusBarStyle = {
 };
 
 class AudioProgressDisplay extends Component {
-  render () {
+  render() {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;
     return (
@@ -30,7 +30,9 @@ class AudioProgressDisplay extends Component {
         <AudioStatusBar
           style={audioStatusBarStyle}
           displayText={getDisplayText(playlist[activeTrackIndex]) || ''}
-          displayTime={`${convertToTime(currentTime)} / ${convertToTime(duration)}`}
+          displayTime={`${convertToTime(currentTime)} / ${convertToTime(
+            duration
+          )}`}
         />
       </div>
     );
@@ -44,7 +46,9 @@ AudioProgressDisplay.propTypes = {
   duration: PropTypes.number.isRequired
 };
 
-export default playerContextFilter(
-  AudioProgressDisplay,
-  ['playlist', 'activeTrackIndex', 'currentTime', 'duration']
-);
+export default playerContextFilter(AudioProgressDisplay, [
+  'playlist',
+  'activeTrackIndex',
+  'currentTime',
+  'duration'
+]);

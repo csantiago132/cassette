@@ -19,18 +19,18 @@ const audioStatusBarStyle = {
 };
 
 class AudioProgress extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     // bind methods fired on React events
     this.handleSeekPreview = this.handleSeekPreview.bind(this);
   }
 
-  handleSeekPreview (progress) {
+  handleSeekPreview(progress) {
     this.props.onSeekPreview(progress * this.props.duration);
   }
 
-  render () {
+  render() {
     const {
       playlist,
       activeTrackIndex,

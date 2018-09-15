@@ -1,4 +1,4 @@
-function streamVideoElementToCanvas (videoElement, canvas, callback) {
+function streamVideoElementToCanvas(videoElement, canvas, callback) {
   const ctx = canvas.getContext('2d');
   let requestId = null;
   let widthSet = null;
@@ -7,16 +7,16 @@ function streamVideoElementToCanvas (videoElement, canvas, callback) {
   requestId = requestAnimationFrame(streamToCanvas);
 
   return {
-    endStream () {
+    endStream() {
       cancelAnimationFrame(requestId);
     },
-    setCanvasSize (width, height) {
+    setCanvasSize(width, height) {
       widthSet = width || null;
       heightSet = height || null;
     }
   };
 
-  function streamToCanvas () {
+  function streamToCanvas() {
     const { videoWidth, videoHeight } = videoElement;
     let targetWidth = videoWidth;
     let targetHeight = videoHeight;

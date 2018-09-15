@@ -5,7 +5,7 @@ import SkipButton from './common/SkipButton';
 import playerContextFilter from '../factories/playerContextFilter';
 
 class ForwardSkipButton extends PureComponent {
-  render () {
+  render() {
     return <SkipButton onClick={this.props.onForwardSkip} />;
   }
 }

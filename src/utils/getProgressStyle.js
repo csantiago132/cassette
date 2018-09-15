@@ -1,4 +1,4 @@
-function getProgressStyle (progress, progressDirection) {
+function getProgressStyle(progress, progressDirection) {
   const progressAheadPercentage = `${(1 - (progress || 0)) * 100}%`;
   const style = {
     position: 'absolute',

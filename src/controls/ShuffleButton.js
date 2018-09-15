@@ -6,7 +6,7 @@ import ShuffleIcon from '@benwiley4000/svg-react-loader?name=ShuffleIcon!materia
 import playerContextFilter from '../factories/playerContextFilter';
 
 class ShuffleButton extends PureComponent {
-  render () {
+  render() {
     const { shuffle, onToggleShuffle } = this.props;
     return (
       <button

@@ -19,7 +19,7 @@ import streamVideoElementToCanvas from './utils/streamVideoElementToCanvas';
 import { logError, logWarning } from './utils/console';
 import { repeatStrategyOptions } from './constants';
 
-function playErrorHandler (err) {
+function playErrorHandler(err) {
   logError(err);
   if (err.name === 'NotAllowedError') {
     const warningMessage =
@@ -73,7 +73,7 @@ const defaultState = {
 };
 
 // assumes playlist is valid
-function getGoToTrackState (prevState, index, shouldPlay = true) {
+function getGoToTrackState(prevState, index, shouldPlay = true) {
   const isNewTrack = prevState.activeTrackIndex !== index;
   return {
     activeTrackIndex: index,
@@ -86,8 +86,7 @@ function getGoToTrackState (prevState, index, shouldPlay = true) {
 }
 
 class PlayerContextProvider extends Component {
-
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -163,8 +162,8 @@ class PlayerContextProvider extends Component {
     this.handleAudioRatechange = this.handleAudioRatechange.bind(this);
   }
 
-  componentDidMount () {
-    const audio = this.audio = createCustomAudioElement(this.audio);
+  componentDidMount() {
+    const audio = (this.audio = createCustomAudioElement(this.audio));
 
     // initialize audio properties
     audio.currentTime = this.state.currentTime;
@@ -186,7 +185,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  static getDerivedStateFromProps (nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const newPlaylist = nextProps.playlist;
 
     const baseNewState = {
@@ -237,7 +236,7 @@ class PlayerContextProvider extends Component {
     };
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     this.audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
 
     // Update media event listeners that may have changed
@@ -294,7 +293,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { audio } = this;
     // remove special event listeners on the audio element
     audio.removeEventListener('srcrequest', this.handleAudioSrcrequest);
@@ -305,18 +304,18 @@ class PlayerContextProvider extends Component {
     clearTimeout(this.delayTimeout);
   }
 
-  setAudioElementRef (ref) {
+  setAudioElementRef(ref) {
     this.audio = ref;
     if (typeof this.props.audioElementRef === 'function') {
       this.props.audioElementRef(ref);
     }
   }
 
-  addMediaEventListeners (mediaEvents) {
+  addMediaEventListeners(mediaEvents) {
     if (!mediaEvents) {
       return;
     }
-    Object.keys(mediaEvents).forEach((type) => {
+    Object.keys(mediaEvents).forEach(type => {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
@@ -324,11 +323,11 @@ class PlayerContextProvider extends Component {
     });
   }
 
-  removeMediaEventListeners (mediaEvents) {
+  removeMediaEventListeners(mediaEvents) {
     if (!mediaEvents) {
       return;
     }
-    Object.keys(mediaEvents).forEach((type) => {
+    Object.keys(mediaEvents).forEach(type => {
       if (typeof mediaEvents[type] !== 'function') {
         return;
       }
@@ -336,56 +335,60 @@ class PlayerContextProvider extends Component {
     });
   }
 
-  stealMediaSession () {
-    if (!(window.MediaSession && navigator.mediaSession instanceof MediaSession)) {
+  stealMediaSession() {
+    if (
+      !(window.MediaSession && navigator.mediaSession instanceof MediaSession)
+    ) {
       return;
     }
     navigator.mediaSession.metadata = new MediaMetadata(
       this.props.playlist[this.state.activeTrackIndex]
     );
-    supportableMediaSessionActions.map(action => {
-      if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
-        return null;
-      }
-      const seekLength = this.props.mediaSessionSeekLengthInSeconds;
-      switch (action) {
-        case 'play':
-          return this.togglePause.bind(this, false);
-        case 'pause':
-          return this.togglePause.bind(this, true);
-        case 'previoustrack':
-          return this.backSkip;
-        case 'nexttrack':
-          return this.forwardSkip;
-        case 'seekbackward':
-          return () => this.audio.currentTime -= seekLength;
-        case 'seekforward':
-          return () => this.audio.currentTime += seekLength;
-        default:
-          return undefined;
-      }
-    }).forEach((handler, i) => {
-      navigator.mediaSession.setActionHandler(
-        supportableMediaSessionActions[i],
-        handler
-      );
-    });
+    supportableMediaSessionActions
+      .map(action => {
+        if (this.props.supportedMediaSessionActions.indexOf(action) === -1) {
+          return null;
+        }
+        const seekLength = this.props.mediaSessionSeekLengthInSeconds;
+        switch (action) {
+          case 'play':
+            return this.togglePause.bind(this, false);
+          case 'pause':
+            return this.togglePause.bind(this, true);
+          case 'previoustrack':
+            return this.backSkip;
+          case 'nexttrack':
+            return this.forwardSkip;
+          case 'seekbackward':
+            return () => (this.audio.currentTime -= seekLength);
+          case 'seekforward':
+            return () => (this.audio.currentTime += seekLength);
+          default:
+            return undefined;
+        }
+      })
+      .forEach((handler, i) => {
+        navigator.mediaSession.setActionHandler(
+          supportableMediaSessionActions[i],
+          handler
+        );
+      });
   }
 
-  pipeVideoStreamToCanvas (canvas, callback) {
+  pipeVideoStreamToCanvas(canvas, callback) {
     return streamVideoElementToCanvas(this.audio, canvas, callback);
   }
 
-  handleAudioPlay () {
-    this.setState(state => state.paused === false ? null : ({ paused: false }));
+  handleAudioPlay() {
+    this.setState(state => (state.paused === false ? null : { paused: false }));
     this.stealMediaSession();
   }
 
-  handleAudioPause () {
-    this.setState(state => state.paused === true ? null : ({ paused: true }));
+  handleAudioPause() {
+    this.setState(state => (state.paused === true ? null : { paused: true }));
   }
 
-  handleAudioSrcrequest (e) {
+  handleAudioSrcrequest(e) {
     const { playlist } = this.props;
     const sources = getTrackSources(playlist, this.state.activeTrackIndex);
     if (arrayFindIndex(sources, s => s.src === e.srcRequested) !== -1) {
@@ -398,15 +401,15 @@ class PlayerContextProvider extends Component {
     if (newTrackIndex === -1) {
       logError(
         `Source '${newSrc}' does not exist in the loaded playlist. ` +
-        `Make sure you've updated the 'playlist' prop to PlayerContextProvider ` +
-        `before you select this track!`
+          `Make sure you've updated the 'playlist' prop to PlayerContextProvider ` +
+          `before you select this track!`
       );
       return;
     }
     this.selectTrackIndex(newTrackIndex);
   }
 
-  handleAudioEnded () {
+  handleAudioEnded() {
     clearTimeout(this.gapLengthTimeout);
     const { playlist, loadFirstTrackOnPlaylistComplete } = this.props;
     if (!isPlaylistValid(playlist)) {
@@ -425,61 +428,55 @@ class PlayerContextProvider extends Component {
     );
   }
 
-  handleAudioStalled () {
-    this.setState(state => state.stalled === true ? null : ({ stalled: true }));
+  handleAudioStalled() {
+    this.setState(state => (state.stalled === true ? null : { stalled: true }));
   }
 
-  handleAudioCanplaythrough () {
-    this.setState(state =>
-      state.stalled === false
-        ? null
-        : ({ stalled: false })
+  handleAudioCanplaythrough() {
+    this.setState(
+      state => (state.stalled === false ? null : { stalled: false })
     );
   }
 
-  handleAudioTimeupdate () {
+  handleAudioTimeupdate() {
     const { currentTime, played } = this.audio;
     this.setState({ currentTime, played });
   }
 
-  handleAudioLoadedmetadata () {
-    this.setState(state =>
-      state.trackLoading === false
-        ? null
-        : ({ trackLoading: false })
+  handleAudioLoadedmetadata() {
+    this.setState(
+      state => (state.trackLoading === false ? null : { trackLoading: false })
     );
   }
 
-  handleAudioVolumechange () {
+  handleAudioVolumechange() {
     const { volume, muted } = this.audio;
     this.setState({ volume, muted });
   }
 
-  handleAudioDurationchange () {
+  handleAudioDurationchange() {
     const { duration } = this.audio;
     this.setState({ duration });
   }
 
-  handleAudioProgress () {
+  handleAudioProgress() {
     const { buffered } = this.audio;
     this.setState({ buffered });
   }
 
-  handleAudioLoopchange () {
+  handleAudioLoopchange() {
     const { loop } = this.audio;
-    this.setState(state => state.loop === loop ? null : ({ loop }));
+    this.setState(state => (state.loop === loop ? null : { loop }));
   }
 
-  handleAudioRatechange () {
+  handleAudioRatechange() {
     const { playbackRate } = this.audio;
-    this.setState(state =>
-      state.playbackRate === playbackRate
-        ? null
-        : ({ playbackRate })
+    this.setState(
+      state => (state.playbackRate === playbackRate ? null : { playbackRate })
     );
   }
 
-  togglePause (value) {
+  togglePause(value) {
     const pause = typeof value === 'boolean' ? value : !this.state.paused;
     if (pause) {
       this.audio.pause();
@@ -491,14 +488,16 @@ class PlayerContextProvider extends Component {
     try {
       const playPromise = this.audio.play();
       if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(err => {
-          // AbortError is pretty much always called because we're skipping
-          // tracks quickly or hitting pause before a track has a chance to
-          // play. It's pretty safe to just ignore these error messages.
-          if (err.name !== 'AbortError') {
-            return Promise.reject(err);
-          }
-        }).catch(playErrorHandler);
+        playPromise
+          .catch(err => {
+            // AbortError is pretty much always called because we're skipping
+            // tracks quickly or hitting pause before a track has a chance to
+            // play. It's pretty safe to just ignore these error messages.
+            if (err.name !== 'AbortError') {
+              return Promise.reject(err);
+            }
+          })
+          .catch(playErrorHandler);
       }
     } catch (err) {
       playErrorHandler(err);
@@ -506,11 +505,11 @@ class PlayerContextProvider extends Component {
   }
 
   // assumes playlist is valid - don't call without checking
-  goToTrack (index, shouldPlay = true) {
+  goToTrack(index, shouldPlay = true) {
     this.setState(state => getGoToTrackState(state, index, shouldPlay));
   }
 
-  selectTrackIndex (index) {
+  selectTrackIndex(index) {
     const { playlist } = this.props;
     if (!isPlaylistValid(playlist)) {
       return;
@@ -525,7 +524,7 @@ class PlayerContextProvider extends Component {
     this.goToTrack(index);
   }
 
-  backSkip () {
+  backSkip() {
     const { playlist, stayOnBackSkipThreshold } = this.props;
     const { audio } = this;
     const { cycle, activeTrackIndex, shuffle } = this.state;
@@ -555,7 +554,7 @@ class PlayerContextProvider extends Component {
     this.goToTrack(index);
   }
 
-  forwardSkip () {
+  forwardSkip() {
     const { playlist } = this.props;
     const { cycle, activeTrackIndex, shuffle } = this.state;
     if (
@@ -579,7 +578,7 @@ class PlayerContextProvider extends Component {
     this.goToTrack(index);
   }
 
-  seekPreview (targetTime) {
+  seekPreview(targetTime) {
     if (!isPlaylistValid(this.props.playlist)) {
       return;
     }
@@ -609,7 +608,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  seekComplete () {
+  seekComplete() {
     const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
     const baseStateUpdate = {
       seekInProgress: false,
@@ -634,7 +633,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  setVolume (volume) {
+  setVolume(volume) {
     if (!this.state.setVolumeInProgress) {
       this.setState({
         setVolumeInProgress: true
@@ -645,7 +644,7 @@ class PlayerContextProvider extends Component {
     this.audio.volume = volumeInBounds;
   }
 
-  setVolumeComplete () {
+  setVolumeComplete() {
     this.setState({
       setVolumeInProgress: false
     });
@@ -654,7 +653,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  toggleMuted (value) {
+  toggleMuted(value) {
     const muted = typeof value === 'boolean' ? value : !this.state.muted;
     this.audio.muted = muted;
     if (!muted) {
@@ -662,7 +661,7 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  toggleShuffle (value) {
+  toggleShuffle(value) {
     const shuffle = typeof value === 'boolean' ? value : !this.state.shuffle;
     this.setState({ shuffle });
     if (typeof this.props.onShuffleUpdate === 'function') {
@@ -670,11 +669,14 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  setRepeatStrategy (repeatStrategy) {
+  setRepeatStrategy(repeatStrategy) {
     if (repeatStrategyOptions.indexOf(repeatStrategy) === -1) {
       logWarning(
-        'repeatStrategy "' + repeatStrategy + '" is not one of: ' +
-        repeatStrategyOptions.split(', ') + '.'
+        'repeatStrategy "' +
+          repeatStrategy +
+          '" is not one of: ' +
+          repeatStrategyOptions.split(', ') +
+          '.'
       );
       return;
     }
@@ -710,11 +712,11 @@ class PlayerContextProvider extends Component {
     }
   }
 
-  setPlaybackRate (rate) {
+  setPlaybackRate(rate) {
     this.audio.playbackRate = rate;
   }
 
-  getControlProps () {
+  getControlProps() {
     const { props, state } = this;
     return {
       playlist: props.playlist,
@@ -751,7 +753,7 @@ class PlayerContextProvider extends Component {
     };
   }
 
-  render () {
+  render() {
     const sources = getTrackSources(
       this.props.playlist,
       this.state.activeTrackIndex
@@ -777,9 +779,9 @@ class PlayerContextProvider extends Component {
           onProgress={this.handleAudioProgress}
           onRateChange={this.handleAudioRatechange}
         >
-          {sources.map(source =>
+          {sources.map(source => (
             <source key={source.src} src={source.src} type={source.type} />
-          )}
+          ))}
         </video>
         <PlayerContext.Provider value={playerContext}>
           {typeof this.props.children === 'function'
@@ -789,7 +791,6 @@ class PlayerContextProvider extends Component {
       </Fragment>
     );
   }
-
 }
 
 PlayerContextProvider.propTypes = {
@@ -837,27 +838,22 @@ PlayerContextProvider.defaultProps = {
   maintainPlaybackRate: false,
   allowBackShuffle: false,
   stayOnBackSkipThreshold: 5,
-  supportedMediaSessionActions: [
-    'play',
-    'pause',
-    'previoustrack',
-    'nexttrack'
-  ],
+  supportedMediaSessionActions: ['play', 'pause', 'previoustrack', 'nexttrack'],
   mediaSessionSeekLengthInSeconds: 10
 };
 
 lifecyclesPolyfill(PlayerContextProvider);
 
 class PlayerContextGroupMember extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.groupContext.registerMediaElement(this.mediaElement);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.groupContext.unregisterMediaElement(this.mediaElement);
   }
 
-  render () {
+  render() {
     const { groupContext, props } = this.props;
     const { audioElementRef, ...rest } = props;
     return (
@@ -883,7 +879,7 @@ PlayerContextGroupMember.propTypes = {
   }).isRequired
 };
 
-function PlayerContextGroupConsumer (props) {
+function PlayerContextGroupConsumer(props) {
   return (
     <GroupContext.Consumer>
       {groupContext => {

@@ -41,7 +41,7 @@ class VideoDisplay extends PureComponent {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // set initial canvas size to 0 to avoid weird layout glitches with
     // the default canvas size (300x150 px in Chrome)
     this.canvas.width = 0;
@@ -49,12 +49,12 @@ class VideoDisplay extends PureComponent {
 
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
-    const {
-      endStream,
-      setCanvasSize
-    } = this.props.pipeVideoStreamToCanvas(this.canvas, ctx => {
-      this.handleFrameUpdate(ctx);
-    });
+    const { endStream, setCanvasSize } = this.props.pipeVideoStreamToCanvas(
+      this.canvas,
+      ctx => {
+        this.handleFrameUpdate(ctx);
+      }
+    );
     setCanvasSize(displayWidth, displayHeight);
     this.endStream = endStream;
     this.setCanvasSize = setCanvasSize;
@@ -66,19 +66,19 @@ class VideoDisplay extends PureComponent {
     this.containerResizeObserver.observe(this.containerElement);
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
     this.setCanvasSize(displayWidth, displayHeight);
     this.updateContainerDimensions();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.endStream();
     this.containerResizeObserver.disconnect();
   }
 
-  checkForBadStuff () {
+  checkForBadStuff() {
     if (
       !this.warnedAboutBadStuff &&
       this.props.processFrame &&
@@ -87,18 +87,20 @@ class VideoDisplay extends PureComponent {
     ) {
       logWarning(
         'VideoDisplay: Supplying a processFrame function without also ' +
-        'giving a displayWidth or displayHeight means the video will be ' +
-        'processed at the full resolution. This may lead to a poor framerate.'
+          'giving a displayWidth or displayHeight means the video will be ' +
+          'processed at the full resolution. This may lead to a poor framerate.'
       );
       this.warnedAboutBadStuff = true;
     }
   }
 
-  updateContainerDimensions () {
+  updateContainerDimensions() {
     const { offsetWidth, offsetHeight } = this.containerElement;
     this.setState(state => {
-      if (offsetWidth === state.containerWidth
-        && offsetHeight === state.containerHeight) {
+      if (
+        offsetWidth === state.containerWidth &&
+        offsetHeight === state.containerHeight
+      ) {
         return null;
       }
       return {
@@ -108,21 +110,27 @@ class VideoDisplay extends PureComponent {
     });
   }
 
-  getDeviceDisplayDimensions () {
-    const { displayWidth, displayHeight, scaleForDevicePixelRatio } = this.props;
-    const scale = scaleForDevicePixelRatio && window.devicePixelRatio || 1;
+  getDeviceDisplayDimensions() {
+    const {
+      displayWidth,
+      displayHeight,
+      scaleForDevicePixelRatio
+    } = this.props;
+    const scale = (scaleForDevicePixelRatio && window.devicePixelRatio) || 1;
     return {
-      displayWidth: displayWidth && (scale * displayWidth),
-      displayHeight: displayHeight && (scale * displayHeight)
+      displayWidth: displayWidth && scale * displayWidth,
+      displayHeight: displayHeight && scale * displayHeight
     };
   }
 
-  handleFrameUpdate (canvasContext) {
+  handleFrameUpdate(canvasContext) {
     const { width, height } = this.canvas;
     if (width && height) {
       this.setState(state => {
-        if (width === state.realDisplayWidth
-          && height === state.realDisplayHeight) {
+        if (
+          width === state.realDisplayWidth &&
+          height === state.realDisplayHeight
+        ) {
           return null;
         }
         return {
@@ -143,14 +151,14 @@ class VideoDisplay extends PureComponent {
     if (!this.warnedAboutNoImageData) {
       logWarning(
         'The processFrame function should return an ImageData object. ' +
-        'Normally you\'ll just mutate the provided ImageData and ' +
-        'return it.'
+          "Normally you'll just mutate the provided ImageData and " +
+          'return it.'
       );
       this.warnedAboutNoImageData = true;
     }
   }
 
-  render () {
+  render() {
     const { background, ...attributes } = this.props;
     delete attributes.pipeVideoStreamToCanvas;
     delete attributes.processFrame;
@@ -166,10 +174,12 @@ class VideoDisplay extends PureComponent {
     } = this.state;
 
     const canvasStyle = {};
-    if (realDisplayWidth
-      && realDisplayHeight
-      && containerWidth
-      && containerHeight) {
+    if (
+      realDisplayWidth &&
+      realDisplayHeight &&
+      containerWidth &&
+      containerHeight
+    ) {
       const realDisplayRatio = realDisplayWidth / realDisplayHeight;
       const containerRatio = containerWidth / containerHeight;
       if (realDisplayRatio === containerRatio) {
@@ -196,9 +206,9 @@ class VideoDisplay extends PureComponent {
           justifyContent: 'center',
           alignItems: 'center'
         }}
-        ref={elem => this.containerElement = elem}
+        ref={elem => (this.containerElement = elem)}
       >
-        <canvas style={canvasStyle} ref={elem => this.canvas = elem} />
+        <canvas style={canvasStyle} ref={elem => (this.canvas = elem)} />
       </div>
     );
   }

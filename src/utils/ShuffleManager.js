@@ -9,7 +9,7 @@
  */
 
 class ShuffleManager {
-  constructor (list, options = {}) {
+  constructor(list, options = {}) {
     this._list = list;
     this._forwardStack = [];
     this._backStack = [];
@@ -18,7 +18,7 @@ class ShuffleManager {
     this._allowBackShuffle = Boolean(options.allowBackShuffle);
   }
 
-  findNextItem (currentIndex) {
+  findNextItem(currentIndex) {
     if (currentIndex !== undefined) {
       this.setCurrentIndex(currentIndex);
     }
@@ -32,7 +32,7 @@ class ShuffleManager {
     return this._currentItem;
   }
 
-  findPreviousItem (currentIndex) {
+  findPreviousItem(currentIndex) {
     if (currentIndex !== undefined) {
       this.setCurrentIndex(currentIndex);
     }
@@ -46,7 +46,7 @@ class ShuffleManager {
     return this._currentItem;
   }
 
-  pickNextItem (index, currentIndex) {
+  pickNextItem(index, currentIndex) {
     if (currentIndex !== undefined) {
       this.setCurrentIndex(currentIndex);
     }
@@ -61,11 +61,11 @@ class ShuffleManager {
     return this._currentItem;
   }
 
-  setList (list) {
+  setList(list) {
     this._list = list;
   }
 
-  setOptions (options) {
+  setOptions(options) {
     for (const o of Object.keys(options)) {
       switch (o) {
         case 'allowBackShuffle':
@@ -77,7 +77,7 @@ class ShuffleManager {
     }
   }
 
-  setCurrentIndex (currentIndex) {
+  setCurrentIndex(currentIndex) {
     const item = this._list[currentIndex];
     if (this._currentItem !== item) {
       this.clear();
@@ -85,14 +85,14 @@ class ShuffleManager {
     }
   }
 
-  clear () {
+  clear() {
     this._forwardStack.length = 0;
     this._backStack.length = 0;
     this._currentItem = undefined;
   }
 }
 
-function _goForward (n, forwardStack, backStack, currentItem) {
+function _goForward(n, forwardStack, backStack, currentItem) {
   let item = currentItem;
   for (let i = 0; i < n; i++) {
     if (!forwardStack.length) {
@@ -106,7 +106,7 @@ function _goForward (n, forwardStack, backStack, currentItem) {
   return item;
 }
 
-function _allItemsMatch (list, item) {
+function _allItemsMatch(list, item) {
   if (!list.length) {
     return false;
   }
@@ -118,7 +118,7 @@ function _allItemsMatch (list, item) {
   return true;
 }
 
-function _findNextItem (list, forwardStack, backStack, currentItem, allowMore) {
+function _findNextItem(list, forwardStack, backStack, currentItem, allowMore) {
   let item = currentItem;
   if (!list.length) {
     return undefined;
@@ -138,7 +138,7 @@ function _findNextItem (list, forwardStack, backStack, currentItem, allowMore) {
   }
   let nextItem;
   do {
-      nextItem = list[Math.floor(Math.random() * list.length)];
+    nextItem = list[Math.floor(Math.random() * list.length)];
   } while (item === nextItem || nextItem === undefined);
   // if we're skipping items that aren't in our current list we may
   // have some items in our forwardStack - make sure we move to the front.

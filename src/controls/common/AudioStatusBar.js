@@ -6,7 +6,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import getStatusBarSizeClassName from '../../utils/getStatusBarSizeClassName';
 
 class AudioStatusBar extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -23,7 +23,7 @@ class AudioStatusBar extends PureComponent {
     this.handleResize = this.handleResize.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.statusBarResizeObserver = new ResizeObserver(this.handleResize);
     this.statusBarResizeObserver.observe(this.statusBarRef);
   }
@@ -32,11 +32,11 @@ class AudioStatusBar extends PureComponent {
     this.statusBarResizeObserver.disconnect();
   }
 
-  setStatusBarRef (ref) {
+  setStatusBarRef(ref) {
     this.statusBarRef = ref;
   }
 
-  handleResize (entries) {
+  handleResize(entries) {
     for (const entry of entries) {
       if (entry.target === this.statusBarRef) {
         const { width } = entry.contentRect;
@@ -48,7 +48,7 @@ class AudioStatusBar extends PureComponent {
     }
   }
 
-  render () {
+  render() {
     const { className, style, displayText, displayTime } = this.props;
     return (
       <div
@@ -57,10 +57,12 @@ class AudioStatusBar extends PureComponent {
         style={style}
       >
         <div className="rrap__audio_info_marquee">
-          <div className={classNames(
-            'rrap__audio_info',
-            this.state.elementSizeClassName
-          )}>
+          <div
+            className={classNames(
+              'rrap__audio_info',
+              this.state.elementSizeClassName
+            )}
+          >
             {displayText}
           </div>
         </div>

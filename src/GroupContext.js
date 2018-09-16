@@ -1,4 +1,4 @@
-import createContext from 'create-react-context';
+import { createContext } from 'react';
 
 const GroupContext = createContext(null);
 GroupContext.Provider.displayName = 'GroupContext.Provider';

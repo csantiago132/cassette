@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import lifecyclesPolyfill from 'react-lifecycles-compat';
 
 import ProgressBar from './common/ProgressBar';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
@@ -232,8 +231,6 @@ VolumeControl.propTypes = {
   onSetVolumeComplete: PropTypes.func.isRequired,
   onToggleMuted: PropTypes.func.isRequired
 };
-
-lifecyclesPolyfill(VolumeControl);
 
 export default playerContextFilter(VolumeControl, [
   'volume',

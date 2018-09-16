@@ -1,8 +1,6 @@
-import React, { Component, createElement } from 'react';
+import React, { Component, Fragment, createElement } from 'react';
 import PropTypes from 'prop-types';
-import lifecyclesPolyfill from 'react-lifecycles-compat';
 import arrayFindIndex from 'array-find-index';
-import Fragment from 'react-dot-fragment';
 
 import PlayerContext from './PlayerContext';
 import GroupContext from './GroupContext';
@@ -841,8 +839,6 @@ PlayerContextProvider.defaultProps = {
   supportedMediaSessionActions: ['play', 'pause', 'previoustrack', 'nexttrack'],
   mediaSessionSeekLengthInSeconds: 10
 };
-
-lifecyclesPolyfill(PlayerContextProvider);
 
 class PlayerContextGroupMember extends Component {
   componentDidMount() {

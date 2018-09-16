@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>React Responsive Audio Player</title>
+    <link rel="stylesheet" href="dist/css/audioplayer.css">
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: gold;
+      }
+      #audio_player_container {
+        width: 500px;
+        margin: 1rem;
+      }
+      .demo {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      .header {
+        margin: 2rem;
+        color: #222;
+        font-size: 42px;
+      }
+      .source {
+        margin-top: 2rem;
+        margin-left: 2.6rem;
+        margin-right: 1rem;
+        font-style: italic;
+        font-size: 18px;
+      }
+      .mute_message {
+        margin-left: 2.6rem;
+        margin-right: 1rem;
+      }
+      .mute_message.hidden {
+        display: none;
+      }
+      .video_display {
+        height: 250px;
+        border: 1px solid #333;
+        margin-left: 2rem;
+      }
+      @media (max-width: 330px) {
+        .rrap__shuffle_btn {
+          display: none;
+        }
+      }
+      @media (max-width: 400px) {
+        .rrap__repeat_btn {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo">
+      <h1 class="header">React Responsive Audio Player</h1>
+      <div id="audio_player_container"></div>
+    </main>
+
+    <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types/prop-types.js"></script>
+    <script src="https://unpkg.com/resize-observer-polyfill"></script>
+
+    <script type="module" src="/dist/esm/audioplayer.js"></script>
+    <script nomodule src="/dist/es5/audioplayer.js"></script>
+
+    <script src="/example/playlist.js"></script>
+    <script src="/example/ExampleApp.js"></script>
+    <script src="/example/ExamplePlayerContextProvider.js"></script>
+    <script src="/example/ExampleAudioPlayer.js"></script>
+    <script src="/example/ExampleMediaInfo.js"></script>
+    <script src="/example/ExampleMuteMessage.js"></script>
+    <script>
+      window.onload = function() {
+        ReactDOM.render(
+          React.createElement(ExampleApp, { playlist: playlist }),
+          document.getElementById('audio_player_container')
+        );
+      }
+    </script>
+  </body>
+</html>

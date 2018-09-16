@@ -7,6 +7,7 @@ import GroupContext from './GroupContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
+import { getStateSnapshot, restoreStateFromSnapshot } from './utils/snapshot';
 import getSourceList from './utils/getSourceList';
 import getTrackSources from './utils/getTrackSources';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
@@ -113,7 +114,10 @@ class PlayerContextProvider extends Component {
       // true if user is currently dragging mouse to change the volume
       setVolumeInProgress: false,
       // playlist prop copied to state (for getDerivedStateFromProps)
-      __playlist__: props.playlist
+      __playlist__: props.playlist,
+      ...(props.initialStateSnapshot
+        ? restoreStateFromSnapshot(props.initialStateSnapshot, props)
+        : {})
     };
 
     // volume at last time we were unmuted and not actively setting volume
@@ -173,7 +177,6 @@ class PlayerContextProvider extends Component {
     // add special event listeners on the audio element
     audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
     audio.addEventListener('loopchange', this.handleAudioLoopchange);
-    this.addMediaEventListeners(this.props.onMediaEvent);
 
     if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
       clearTimeout(this.delayTimeout);
@@ -237,10 +240,6 @@ class PlayerContextProvider extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
 
-    // Update media event listeners that may have changed
-    this.removeMediaEventListeners(prevProps.onMediaEvent);
-    this.addMediaEventListeners(this.props.onMediaEvent);
-
     this.shuffler.setList(getSourceList(this.props.playlist));
     this.shuffler.setOptions({
       allowBackShuffle: this.props.allowBackShuffle
@@ -272,13 +271,6 @@ class PlayerContextProvider extends Component {
       this.stealMediaSession();
     }
 
-    if (
-      this.state.activeTrackIndex !== prevState.activeTrackIndex &&
-      typeof this.props.onActiveTrackUpdate === 'function'
-    ) {
-      this.props.onActiveTrackUpdate(this.state.activeTrackIndex);
-    }
-
     if (this.state.awaitingPlay) {
       this.setState({
         awaitingPlay: false
@@ -289,6 +281,13 @@ class PlayerContextProvider extends Component {
         this.togglePause(false);
       });
     }
+
+    clearTimeout(this.snapshotUpdateTimeout);
+    this.snapshotUpdateTimeout = setTimeout(() => {
+      if (this.props.onStateSnapshot) {
+        this.props.onStateSnapshot(getStateSnapshot(this.state));
+      }
+    }, 100);
   }
 
   componentWillUnmount() {
@@ -296,7 +295,6 @@ class PlayerContextProvider extends Component {
     // remove special event listeners on the audio element
     audio.removeEventListener('srcrequest', this.handleAudioSrcrequest);
     audio.removeEventListener('loopchange', this.handleAudioLoopchange);
-    removeMediaEventListeners(this.props.onMediaEvent);
 
     clearTimeout(this.gapLengthTimeout);
     clearTimeout(this.delayTimeout);
@@ -307,30 +305,6 @@ class PlayerContextProvider extends Component {
     if (typeof this.props.audioElementRef === 'function') {
       this.props.audioElementRef(ref);
     }
-  }
-
-  addMediaEventListeners(mediaEvents) {
-    if (!mediaEvents) {
-      return;
-    }
-    Object.keys(mediaEvents).forEach(type => {
-      if (typeof mediaEvents[type] !== 'function') {
-        return;
-      }
-      this.audio.addEventListener(type, mediaEvents[type]);
-    });
-  }
-
-  removeMediaEventListeners(mediaEvents) {
-    if (!mediaEvents) {
-      return;
-    }
-    Object.keys(mediaEvents).forEach(type => {
-      if (typeof mediaEvents[type] !== 'function') {
-        return;
-      }
-      this.audio.removeEventListener(type, mediaEvents[type]);
-    });
   }
 
   stealMediaSession() {
@@ -662,9 +636,6 @@ class PlayerContextProvider extends Component {
   toggleShuffle(value) {
     const shuffle = typeof value === 'boolean' ? value : !this.state.shuffle;
     this.setState({ shuffle });
-    if (typeof this.props.onShuffleUpdate === 'function') {
-      this.props.onShuffleUpdate(shuffle);
-    }
   }
 
   setRepeatStrategy(repeatStrategy) {
@@ -702,12 +673,6 @@ class PlayerContextProvider extends Component {
           return null;
       }
     });
-    if (
-      typeof this.props.onRepeatStrategyUpdate === 'function' &&
-      prevRepeatStrategy !== repeatStrategy
-    ) {
-      this.props.onRepeatStrategyUpdate(repeatStrategy);
-    }
   }
 
   setPlaybackRate(rate) {
@@ -812,11 +777,11 @@ PlayerContextProvider.propTypes = {
     PlayerPropTypes.mediaSessionAction.isRequired
   ).isRequired,
   mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
-  onActiveTrackUpdate: PropTypes.func,
-  onRepeatStrategyUpdate: PropTypes.func,
-  onShuffleUpdate: PropTypes.func,
-  onMediaEvent: PropTypes.objectOf(PropTypes.func.isRequired),
   audioElementRef: PropTypes.func,
+  initialStateSnapshot: PropTypes.shape({
+    __unstable__: PropTypes.object.isRequired
+  }),
+  onStateSnapshot: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
 };
 

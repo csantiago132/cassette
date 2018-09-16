@@ -8,10 +8,10 @@ If you're fixing a bug you found, please open an issue (for tracking purposes), 
 ### Build
 To install build dependencies, run `npm install`.
 
-Run webpack with `npm run build`. Built files can be found in the `dist/` directory. You can also use `npm run dev`; it's configured to do exactly the same thing, except it will continue watching for any changes you make, and recompile. It will also open `example.html` in the web browser!
+Run webpack with `npm run build`. Built files can be found in the `dist/` directory. You can also use `npm run dev`; it's configured to do exactly the same thing, except it will continue watching for any changes you make, and recompile. It will also open `example/index.html` in the web browser!
 
 ### Test
-After building, you can test your changes by opening up `example.html` in a web browser.
+After building, you can test your changes by opening up `example/index.html` in a web browser.
 
 ### Testing on mobile devices
 

@@ -12,6 +12,7 @@
     "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path example.html",
     "prepublish": "npm run build",
     "prettier": "pretty-quick --staged \"**/*.js\"",
+    "prettier:all": "prettier --write \"**/*.js\"",
     "prettier-check": "node prettier-check.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

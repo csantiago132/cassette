@@ -18,11 +18,13 @@ $maincolor: $rrap_btn_bg_color;
   text-align: left;
   text-indent: -9999px;
   direction: ltr;
-  &:before, &:after{
-    content:'';
+  &:before,
+  &:after {
+    content: '';
     pointer-events: none;
   }
-  &, & *{
+  &,
+  & * {
     box-sizing: border-box;
   }
 }

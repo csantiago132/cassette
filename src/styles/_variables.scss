@@ -7,7 +7,7 @@ $rrap_btn_height: $rrap_base_height !default;
 $rrap_btn_margin: 4px !default;
 $rrap_btn_padding: 11px !default;
 $rrap_btn_normal_opacity: 0.8 !default;
-$rrap_btn_hover_opacity: 1.0 !default;
+$rrap_btn_hover_opacity: 1 !default;
 $rrap_btn_active_opacity: 0.7 !default;
 
 $rrap_spacer_width: 10px !default;
@@ -49,4 +49,7 @@ $rrap_volume_handle_hover_opacity: $rrap_btn_hover_opacity !default;
 $rrap_volume_handle_active_opacity: $rrap_btn_hover_opacity !default; // on purpose
 
 $rrap_material_toggle_btn_on_color: $rrap_btn_bg_color !default;
-$rrap_material_toggle_btn_off_color: rgba($rrap_material_toggle_btn_on_color, 0.5) !default;
+$rrap_material_toggle_btn_off_color: rgba(
+  $rrap_material_toggle_btn_on_color,
+  0.5
+) !default;

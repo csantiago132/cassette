@@ -46,4 +46,4 @@ $rrap_volume_handle_hover_opacity: $rrap_btn_hover_opacity !default;
 $rrap_volume_handle_active_opacity: $rrap_btn_hover_opacity !default; // on purpose
 
 $rrap_material_toggle_btn_on_color: $rrap_btn_bg_color !default;
-$rrap_material_toggle_btn_off_color: darken($rrap_material_toggle_btn_on_color, 50%) !default;
+$rrap_material_toggle_btn_off_color: rgba($rrap_material_toggle_btn_on_color, 0.5) !default;

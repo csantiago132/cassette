@@ -13,12 +13,12 @@
     "prepublish": "npm run build",
     "prettier": "pretty-quick --staged \"**/*.js\"",
     "prettier:all": "prettier --write \"**/*.js\"",
-    "prettier-check": "node prettier-check.js",
+    "lint": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier-check"
+      "pre-commit": "npm run lint"
     }
   },
   "repository": {
@@ -54,11 +54,16 @@
     "@benwiley4000/svg-react-loader": "^0.4.5-fix-vulnerabilities",
     "array-find-index": "^1.0.2",
     "autoprefixer": "^7.1.1",
+    "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.0-beta.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "classnames": "^2.2.5",
     "compression-webpack-plugin": "^1.1.11",
     "css-loader": "^0.28.4",
+    "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-react": "^7.11.1",
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
     "gulp-postcss": "^7.0.0",
@@ -67,6 +72,7 @@
     "gulp-uglifycss": "^1.0.8",
     "husky": "^1.0.0-rc.14",
     "icono": "^1.3.1",
+    "lint-staged": "^7.2.2",
     "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "^0.2.0",
     "node-sass": "^4.9.3",

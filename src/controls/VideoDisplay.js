@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
 import playerContextFilter from '../factories/playerContextFilter';
-import * as PlayerPropTypes from '../PlayerPropTypes';
 import { logWarning } from '../utils/console';
 
 /* Here is an explanation of the 4 different types of "height"/"width"

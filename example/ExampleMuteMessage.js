@@ -1,3 +1,6 @@
+/* globals React, PropTypes */
+
+// eslint-disable-next-line no-unused-vars
 class ExampleMuteMessage extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -43,3 +46,7 @@ class ExampleMuteMessage extends React.PureComponent {
     );
   }
 }
+
+ExampleMuteMessage.propTypes = {
+  muted: PropTypes.bool.isRequired
+};

@@ -309,10 +309,12 @@ class PlayerContextProvider extends Component {
 
   stealMediaSession() {
     if (
+      // eslint-disable-next-line no-undef
       !(window.MediaSession && navigator.mediaSession instanceof MediaSession)
     ) {
       return;
     }
+    // eslint-disable-next-line no-undef
     navigator.mediaSession.metadata = new MediaMetadata(
       this.props.playlist[this.state.activeTrackIndex]
     );
@@ -372,9 +374,9 @@ class PlayerContextProvider extends Component {
     const newTrackIndex = findTrackIndexByUrl(playlist, e.srcRequested);
     if (newTrackIndex === -1) {
       logError(
-        `Source '${newSrc}' does not exist in the loaded playlist. ` +
-          `Make sure you've updated the 'playlist' prop to PlayerContextProvider ` +
-          `before you select this track!`
+        `Source '${e.srcRequested}' does not exist in the loaded playlist. ` +
+          `Make sure you've updated the 'playlist' prop to ` +
+          `PlayerContextProvider before you select this track!`
       );
       return;
     }
@@ -574,6 +576,7 @@ class PlayerContextProvider extends Component {
       case 'immediate':
         this.setState(baseStateUpdate);
         this.audio.currentTime = targetTime;
+        break;
       case 'onrelease':
         this.setState(baseStateUpdate);
         break;
@@ -649,10 +652,6 @@ class PlayerContextProvider extends Component {
       );
       return;
     }
-    const prevRepeatStrategy = getRepeatStrategy(
-      this.state.loop,
-      this.state.cycle
-    );
     this.setState(() => {
       switch (repeatStrategy) {
         case 'track':

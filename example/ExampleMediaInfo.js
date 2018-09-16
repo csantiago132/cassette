@@ -1,3 +1,6 @@
+/* globals React, AudioPlayer, ExampleMuteMessage */
+
+// eslint-disable-next-line no-unused-vars
 function ExampleMediaInfo() {
   return React.createElement(AudioPlayer.PlayerContextConsumer, {}, function(
     playerContext

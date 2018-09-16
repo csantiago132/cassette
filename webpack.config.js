@@ -47,10 +47,6 @@ function webpackConfig(esmodules, minimize) {
       library: 'AudioPlayer',
       filename: `${esmodules ? 'esm/' : 'es5/'}[name].js`
     },
-    devServer: {
-      inline: true,
-      staticOptions: { index: 'example.html' }
-    },
     module: {
       rules: [
         {

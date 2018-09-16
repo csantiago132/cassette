@@ -14,6 +14,7 @@
     "prettier": "pretty-quick --staged \"**/*.js\"",
     "prettier:all": "prettier --write \"**/*.js\"",
     "lint": "lint-staged",
+    "lint:all": "eslint \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {

@@ -1,3 +1,6 @@
+/* globals React, AudioPlayer, PropTypes */
+
+// eslint-disable-next-line no-unused-vars
 class ExamplePlayerContextProvider extends React.Component {
   constructor(props) {
     super(props);
@@ -27,3 +30,8 @@ class ExamplePlayerContextProvider extends React.Component {
     );
   }
 }
+
+ExamplePlayerContextProvider.propTypes = {
+  playlist: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  children: PropTypes.node.isRequired
+};

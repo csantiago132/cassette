@@ -1,5 +1,3 @@
-import isPlaylistValid from './isPlaylistValid';
-
 function getDisplayText(track) {
   if (!track) {
     return '';

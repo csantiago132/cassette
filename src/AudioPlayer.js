@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import PlayerContextProvider from './PlayerContextProvider';
-import PlayerContext from './PlayerContext';
 import FullscreenContextProvider from './FullscreenContextProvider';
-import FullscreenContext from './FullscreenContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import AudioControlBar from './controls/AudioControlBar';
 import VideoDisplay from './controls/VideoDisplay';
@@ -94,7 +91,7 @@ class AudioPlayer extends Component {
               )}
             >
               {this.getKeyedChildren(
-                controls.map((control, index) => {
+                controls.map(control => {
                   const renderControl = getControlRenderProp(control);
                   return (
                     renderControl &&

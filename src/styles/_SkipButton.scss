@@ -17,7 +17,7 @@
     .right_facing_triangle {
       width: 0;
       height: 0;
-      border-left: 16px solid $rrap_play_btn_border_color;
+      border-left: 16px solid $rrap_skip_btn_color;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
     }
@@ -25,9 +25,9 @@
       width: 0;
       height: 0;
       margin-left: -3px;
-      border-left: 3px solid $rrap_play_btn_border_color;
-      border-top: 10px solid $rrap_play_btn_border_color;
-      border-bottom: 10px solid $rrap_play_btn_border_color;
+      border-left: 3px solid $rrap_skip_btn_color;
+      border-top: 10px solid $rrap_skip_btn_color;
+      border-bottom: 10px solid $rrap_skip_btn_color;
     }
   }
 }

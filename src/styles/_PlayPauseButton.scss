@@ -2,60 +2,67 @@
 
 .rrap {
 
-  /* http://codepen.io/aralon/pen/NqGWXZ */
+  /* https://codepen.io/OxyDesign/pen/ojpepQ */
   &__play_pause_button {
+    position: relative;
+    width: $rrap_play_btn_width;
+    height: $rrap_play_btn_height;
     background: none;
     border: none;
 
-    .play_pause_inner {
-      height: $rrap_play_btn_inner_height;
-      width: $rrap_play_btn_inner_width;
-      overflow: hidden;
-      position: relative;
-    }
-    .triangle_1 {
-      transform: translate(0, -100%);
-    }
-    .triangle_2 {
-      transform: translate(0, 100%);
-    }
-    .triangle_1,
-    .triangle_2 {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background-color: transparent;
-      width: 0;
-      height: 0;
-      border-right: 30px solid $rrap_play_btn_triangle_color;
-      border-top: 15px solid transparent;
-      border-bottom: 15px solid transparent;
-      transition: transform 0.25s ease;
-    }
     .left,
     .right {
+      position: absolute;
+      top: 0;
+      transition-property: width;
+      transition-duration: $rrap_play_btn_transition_duration;
+      transition-timing-function: $rrap_play_btn_transition_timing_function;
+      width: 50%;
       height: 100%;
-      background-color: $rrap_btn_bg_color;
-      width: $rrap_play_btn_pause_bar_width;
-      transition: all 0.25s ease;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        transition-property: border, height;
+        transition-duration: $rrap_play_btn_transition_duration;
+        transition-timing-function: $rrap_play_btn_transition_timing_function;
+        border-style: solid;
+        border-width: $rrap_play_btn_height/2 $rrap_play_btn_width;
+        border-color: transparent transparent transparent $rrap_play_btn_color;
+        width: 0;
+        height: 0;
+      }
     }
-    .left {
-      float: left;
+
+    .left{
+      left: 0;
+
+      &::after {
+        left: 0;
+      }
     }
+
     .right {
-      float: right;
+      right: 0;
+
+      &::after {
+        right: 0 - $rrap_play_btn_width;
+      }
     }
-    &.paused {
+
+    &.playing {
 
       .left,
       .right {
-        width: 50%;
-      }
-      .triangle_1 {
-        transform: translate(0, -50%);
-      }
-      .triangle_2 {
-        transform: translate(0, 50%);
+        width: $rrap_play_btn_pause_bar_width;
+
+        &::after {
+          border-width: 0 $rrap_play_btn_width;
+          height: $rrap_play_btn_height;
+        }
       }
     }
   }

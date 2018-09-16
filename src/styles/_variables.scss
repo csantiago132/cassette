@@ -19,11 +19,14 @@ $rrap_time_margin: 20px !default;
 $rrap_marquee_margin: $rrap_spacer_width !default;
 $rrap_marquee_width: calc(100% - 180px) !default;
 
-$rrap_play_btn_border_color: $rrap_btn_bg_color !default;
+$rrap_play_btn_color: $rrap_btn_bg_color !default;
 $rrap_play_btn_pause_bar_width: 36% !default;
-$rrap_play_btn_inner_height: 30px !default;
-$rrap_play_btn_inner_width: 30px !default;
-$rrap_play_btn_triangle_color: $rrap_base_bg_color !default;
+$rrap_play_btn_height: 30px !default;
+$rrap_play_btn_width: 30px !default;
+$rrap_play_btn_transition_duration: 0.25s !default;
+$rrap_play_btn_transition_timing_function: ease !default;
+
+$rrap_skip_btn_color: $rrap_btn_bg_color !default;
 
 $rrap_progress_bg_color: rgba(127, 127, 127, 0.295) !default;
 

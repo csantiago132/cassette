@@ -1,6 +1,9 @@
 @import 'variables';
 
 .rrap {
+  &__audio_button_wrapper {
+    display: inline-block;
+  }
 
   &__audio_button {
     padding-left: $rrap_btn_padding;

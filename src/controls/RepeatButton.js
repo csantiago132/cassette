@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import RepeatIcon from '@benwiley4000/svg-react-loader?name=RepeatIcon!material-design-icons/av/svg/design/ic_repeat_48px.svg?';
 import RepeatOneIcon from '@benwiley4000/svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
+import ButtonWrapper from './common/ButtonWrapper';
 import { repeatStrategyOptions } from '../constants';
 import * as PlayerPropTypes from '../PlayerPropTypes';
 import playerContextFilter from '../factories/playerContextFilter';
@@ -34,17 +35,19 @@ class RepeatButton extends PureComponent {
     const { repeatStrategy } = this.props;
     const Icon = repeatStrategy === 'track' ? RepeatOneIcon : RepeatIcon;
     return (
-      <button
-        className={classNames(
-          'rrap__material_toggle rrap__audio_button rrap__repeat_btn',
-          { on: repeatStrategy !== 'none' }
-        )}
-        onClick={this.handleNextRepeatStrategy}
-      >
-        <div className="inner foreground">
-          <Icon width="100%" height="100%" />
-        </div>
-      </button>
+      <ButtonWrapper>
+        <button
+          className={classNames(
+            'rrap__material_toggle rrap__audio_button rrap__repeat_btn',
+            { on: repeatStrategy !== 'none' }
+          )}
+          onClick={this.handleNextRepeatStrategy}
+        >
+          <div className="inner foreground">
+            <Icon width="100%" height="100%" />
+          </div>
+        </button>
+      </ButtonWrapper>
     );
   }
 }

@@ -1,9 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
+import ButtonWrapper from './common/ButtonWrapper';
+
 class Spacer extends PureComponent {
   render() {
-    return <div className="rrap__spacer" />;
+    return (
+      <ButtonWrapper>
+        <div className="rrap__spacer" />
+      </ButtonWrapper>
+    );
   }
 }
 

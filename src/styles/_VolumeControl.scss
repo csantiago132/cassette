@@ -1,7 +1,6 @@
 @import 'variables';
 
 .rrap {
-
   &__volume_control {
     height: $rrap_volume_control_height;
     position: relative;
@@ -28,7 +27,8 @@
       &.hiddenup,
       &.upabove {
         width: 100%;
-        height: $rrap_volume_bar_height + $rrap_volume_bar_gutter_close + $rrap_volume_bar_gutter_far;
+        height: $rrap_volume_bar_height + $rrap_volume_bar_gutter_close +
+          $rrap_volume_bar_gutter_far;
       }
       &.hiddenright,
       &.rightabove,

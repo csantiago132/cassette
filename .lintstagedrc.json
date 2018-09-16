@@ -1,3 +1,4 @@
 {
-  "*.js": "eslint"
+  "*.js": "eslint",
+  "*.scss": "node prettier-check.js"
 }

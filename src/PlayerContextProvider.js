@@ -7,6 +7,7 @@ import GroupContext from './GroupContext';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import createCustomAudioElement from './factories/createCustomAudioElement';
 import ShuffleManager from './utils/ShuffleManager';
+import { getStateSnapshot, restoreStateFromSnapshot } from './utils/snapshot';
 import getSourceList from './utils/getSourceList';
 import getTrackSources from './utils/getTrackSources';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
@@ -113,7 +114,10 @@ class PlayerContextProvider extends Component {
       // true if user is currently dragging mouse to change the volume
       setVolumeInProgress: false,
       // playlist prop copied to state (for getDerivedStateFromProps)
-      __playlist__: props.playlist
+      __playlist__: props.playlist,
+      ...(props.initialStateSnapshot
+        ? restoreStateFromSnapshot(props.initialStateSnapshot, props)
+        : {})
     };
 
     // volume at last time we were unmuted and not actively setting volume
@@ -277,6 +281,13 @@ class PlayerContextProvider extends Component {
         this.togglePause(false);
       });
     }
+
+    clearTimeout(this.snapshotUpdateTimeout);
+    this.snapshotUpdateTimeout = setTimeout(() => {
+      if (this.props.onStateSnapshot) {
+        this.props.onStateSnapshot(getStateSnapshot(this.state));
+      }
+    }, 100);
   }
 
   componentWillUnmount() {
@@ -767,6 +778,10 @@ PlayerContextProvider.propTypes = {
   ).isRequired,
   mediaSessionSeekLengthInSeconds: PropTypes.number.isRequired,
   audioElementRef: PropTypes.func,
+  initialStateSnapshot: PropTypes.shape({
+    __unstable__: PropTypes.object.isRequired
+  }),
+  onStateSnapshot: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
 };
 

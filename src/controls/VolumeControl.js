@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import ProgressBar from './common/ProgressBar';
+import ButtonWrapper from './common/ButtonWrapper';
 import getVolumeIconClassName from '../utils/getVolumeIconClassName';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
 import stopPropagation from '../utils/reactStopPropagation';
@@ -171,7 +172,7 @@ class VolumeControl extends PureComponent {
     } = this.props;
     const { hover, volumeBarPosition } = this.state;
     return (
-      <div
+      <ButtonWrapper
         ref={this.setVolumeControlRef}
         className="rrap__volume_control"
         style={volumeControlStyle}
@@ -218,7 +219,7 @@ class VolumeControl extends PureComponent {
             />
           </div>
         )}
-      </div>
+      </ButtonWrapper>
     );
   }
 }

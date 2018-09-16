@@ -1,14 +1,16 @@
 @import 'variables';
 
 .rrap {
-
   /* https://codepen.io/OxyDesign/pen/ojpepQ */
   &__play_pause_button {
-    position: relative;
-    width: $rrap_play_btn_width;
-    height: $rrap_play_btn_height;
     background: none;
     border: none;
+
+    .foreground {
+      position: relative;
+      width: $rrap_play_btn_width;
+      height: $rrap_play_btn_height;
+    }
 
     .left,
     .right {
@@ -37,7 +39,7 @@
       }
     }
 
-    .left{
+    .left {
       left: 0;
 
       &::after {
@@ -54,7 +56,6 @@
     }
 
     &.playing {
-
       .left,
       .right {
         width: $rrap_play_btn_pause_bar_width;

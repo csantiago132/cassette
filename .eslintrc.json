@@ -19,5 +19,10 @@
       "jsx": true,
       "experimentalObjectRestSpread": true
     }
+  },
+  "settings": {
+    "react": {
+      "version": "16.3"
+    }
   }
 }

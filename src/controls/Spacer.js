@@ -17,6 +17,4 @@ Spacer.propTypes = {
   style: PropTypes.object
 };
 
-export const renderSpacer = () => <Spacer />;
-
 export default Spacer;

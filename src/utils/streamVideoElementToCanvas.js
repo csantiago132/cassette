@@ -30,11 +30,16 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
       targetHeight = heightSet;
       targetWidth = (heightSet / videoHeight) * videoWidth;
     }
+    // Get rid of any NaNs (probably means there's no video)
+    targetWidth = targetWidth || 0;
+    targetHeight = targetHeight || 0;
     if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
       canvas.width = targetWidth;
       canvas.height = targetHeight;
     }
-    ctx.drawImage(videoElement, 0, 0, targetWidth, targetHeight);
+    if (targetWidth && targetHeight) {
+      ctx.drawImage(videoElement, 0, 0, targetWidth, targetHeight);
+    }
     if (callback) {
       callback(ctx);
     }

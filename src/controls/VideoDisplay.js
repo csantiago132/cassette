@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
 import playerContextFilter from '../factories/playerContextFilter';
+import * as PlayerPropTypes from '../PlayerPropTypes';
 import { logWarning } from '../utils/console';
 
 /* Here is an explanation of the 4 different types of "height"/"width"
@@ -27,7 +28,7 @@ import { logWarning } from '../utils/console';
  *       but are adjusted so the canvas maximally fills the container area.
  */
 
-class VideoDisplay extends PureComponent {
+class VideoDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,15 +49,19 @@ class VideoDisplay extends PureComponent {
 
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
-    const { endStream, setCanvasSize } = this.props.pipeVideoStreamToCanvas(
+    const {
+      endStream,
+      setCanvasSize,
+      setPlaceholderImage
+    } = this.props.pipeVideoStreamToCanvas(
       this.canvas,
-      ctx => {
-        this.handleFrameUpdate(ctx);
-      }
+      this.handleFrameUpdate.bind(this)
     );
     setCanvasSize(displayWidth, displayHeight);
+    this.getPlaceholderImage(setPlaceholderImage);
     this.endStream = endStream;
     this.setCanvasSize = setCanvasSize;
+    this.setPlaceholderImage = setPlaceholderImage;
     this.updateContainerDimensions();
 
     this.containerResizeObserver = new ResizeObserver(
@@ -69,6 +74,7 @@ class VideoDisplay extends PureComponent {
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
     this.setCanvasSize(displayWidth, displayHeight);
+    this.getPlaceholderImage(this.setPlaceholderImage);
     this.updateContainerDimensions();
   }
 
@@ -122,7 +128,25 @@ class VideoDisplay extends PureComponent {
     };
   }
 
-  handleFrameUpdate(canvasContext) {
+  getPlaceholderImage(callback) {
+    const {
+      playlist,
+      activeTrackIndex,
+      getPlaceholderImageForTrack
+    } = this.props;
+    const track = playlist[activeTrackIndex];
+    const img = getPlaceholderImageForTrack(track || null);
+    if (!img) {
+      callback();
+    } else if (img.naturalWidth && img.naturalHeight) {
+      callback(img);
+    } else {
+      img.addEventListener('load', () => callback(img));
+      img.addEventListener('error', () => callback());
+    }
+  }
+
+  handleFrameUpdate(canvasContext, isVideo) {
     const { width, height } = this.canvas;
     if (width && height) {
       this.setState(state => {
@@ -139,6 +163,9 @@ class VideoDisplay extends PureComponent {
       });
     }
     if (!(this.props.processFrame && width && height)) {
+      return;
+    }
+    if (!isVideo && !this.props.shouldProcessPlaceholderImages) {
       return;
     }
     const frameData = canvasContext.getImageData(0, 0, width, height);
@@ -164,6 +191,10 @@ class VideoDisplay extends PureComponent {
     delete attributes.displayWidth;
     delete attributes.displayHeight;
     delete attributes.scaleForDevicePixelRatio;
+    delete attributes.playlist;
+    delete attributes.activeTrackIndex;
+    delete attributes.getPlaceholderImageForTrack;
+    delete attributes.shouldProcessPlaceholderImages;
 
     const {
       realDisplayWidth,
@@ -215,6 +246,8 @@ class VideoDisplay extends PureComponent {
 
 VideoDisplay.propTypes = {
   pipeVideoStreamToCanvas: PropTypes.func.isRequired,
+  playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
+  activeTrackIndex: PropTypes.number.isRequired,
   /* TODO: for documentation
   We might want to use this grayscale function in an example
     processFrame: function (frameData) {
@@ -236,12 +269,26 @@ VideoDisplay.propTypes = {
   displayWidth: PropTypes.number,
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
-  background: PropTypes.string.isRequired
+  background: PropTypes.string.isRequired,
+  getPlaceholderImageForTrack: PropTypes.func,
+  shouldProcessPlaceholderImages: PropTypes.bool.isRequired
 };
 
 VideoDisplay.defaultProps = {
   scaleForDevicePixelRatio: true,
-  background: '#000'
+  background: '#000',
+  getPlaceholderImageForTrack(track) {
+    if (track && track.artwork) {
+      const img = new Image();
+      img.src = track.artwork[0].src;
+      return img;
+    }
+  },
+  shouldProcessPlaceholderImages: false
 };
 
-export default playerContextFilter(VideoDisplay, ['pipeVideoStreamToCanvas']);
+export default playerContextFilter(VideoDisplay, [
+  'pipeVideoStreamToCanvas',
+  'playlist',
+  'activeTrackIndex'
+]);

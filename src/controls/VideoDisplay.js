@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
 import playerContextFilter from '../factories/playerContextFilter';
+import * as PlayerPropTypes from '../PlayerPropTypes';
 import { logWarning } from '../utils/console';
 
 /* Here is an explanation of the 4 different types of "height"/"width"
@@ -195,6 +196,9 @@ class VideoDisplay extends Component {
     delete attributes.displayWidth;
     delete attributes.displayHeight;
     delete attributes.scaleForDevicePixelRatio;
+    delete attributes.playlist;
+    delete attributes.activeTrackIndex;
+    delete attributes.getPlaceholderImageForTrack;
 
     const {
       realDisplayWidth,
@@ -246,6 +250,8 @@ class VideoDisplay extends Component {
 
 VideoDisplay.propTypes = {
   pipeVideoStreamToCanvas: PropTypes.func.isRequired,
+  playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
+  activeTrackIndex: PropTypes.number.isRequired,
   /* TODO: for documentation
   We might want to use this grayscale function in an example
     processFrame: function (frameData) {

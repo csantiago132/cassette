@@ -134,19 +134,10 @@ class VideoDisplay extends Component {
       getPlaceholderImageForTrack
     } = this.props;
     const track = playlist[activeTrackIndex];
-    let img;
-    if (getPlaceholderImageForTrack) {
-      img = getPlaceholderImageForTrack(track || null);
-    } else if (track && track.artwork) {
-      img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = track.artwork[0].src;
-    } else {
-      // no image - bail!
+    const img = getPlaceholderImageForTrack(track || null);
+    if (!img) {
       callback();
-      return;
-    }
-    if (img.naturalWidth && img.naturalHeight) {
+    } else if (img.naturalWidth && img.naturalHeight) {
       callback(img);
     } else {
       img.addEventListener('load', () => callback(img));
@@ -279,7 +270,14 @@ VideoDisplay.propTypes = {
 
 VideoDisplay.defaultProps = {
   scaleForDevicePixelRatio: true,
-  background: '#000'
+  background: '#000',
+  getPlaceholderImageForTrack(track) {
+    if (track && track.artwork) {
+      const img = new Image();
+      img.src = track.artwork[0].src;
+      return img;
+    }
+  }
 };
 
 export default playerContextFilter(VideoDisplay, [

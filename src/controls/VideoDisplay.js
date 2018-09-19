@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -27,7 +27,7 @@ import { logWarning } from '../utils/console';
  *       but are adjusted so the canvas maximally fills the container area.
  */
 
-class VideoDisplay extends PureComponent {
+class VideoDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,15 +48,18 @@ class VideoDisplay extends PureComponent {
 
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
-    const { endStream, setCanvasSize } = this.props.pipeVideoStreamToCanvas(
-      this.canvas,
-      ctx => {
-        this.handleFrameUpdate(ctx);
-      }
-    );
+    const {
+      endStream,
+      setCanvasSize,
+      setPlaceholderImage
+    } = this.props.pipeVideoStreamToCanvas(this.canvas, ctx => {
+      this.handleFrameUpdate(ctx);
+    });
     setCanvasSize(displayWidth, displayHeight);
+    this.getPlaceholderImage(setPlaceholderImage);
     this.endStream = endStream;
     this.setCanvasSize = setCanvasSize;
+    this.setPlaceholderImage = setPlaceholderImage;
     this.updateContainerDimensions();
 
     this.containerResizeObserver = new ResizeObserver(
@@ -69,6 +72,7 @@ class VideoDisplay extends PureComponent {
     this.checkForBadStuff();
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
     this.setCanvasSize(displayWidth, displayHeight);
+    this.getPlaceholderImage(this.setPlaceholderImage);
     this.updateContainerDimensions();
   }
 
@@ -120,6 +124,19 @@ class VideoDisplay extends PureComponent {
       displayWidth: displayWidth && scale * displayWidth,
       displayHeight: displayHeight && scale * displayHeight
     };
+  }
+
+  getPlaceholderImage(callback) {
+    const { playlist, activeTrackIndex } = this.props;
+    if (playlist[activeTrackIndex] && playlist[activeTrackIndex].artwork) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => callback(img);
+      img.onerror = () => callback();
+      img.src = playlist[activeTrackIndex].artwork[0].src;
+    } else {
+      callback();
+    }
   }
 
   handleFrameUpdate(canvasContext) {
@@ -244,4 +261,8 @@ VideoDisplay.defaultProps = {
   background: '#000'
 };
 
-export default playerContextFilter(VideoDisplay, ['pipeVideoStreamToCanvas']);
+export default playerContextFilter(VideoDisplay, [
+  'pipeVideoStreamToCanvas',
+  'playlist',
+  'activeTrackIndex'
+]);

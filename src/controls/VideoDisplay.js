@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -27,7 +27,7 @@ import { logWarning } from '../utils/console';
  *       but are adjusted so the canvas maximally fills the container area.
  */
 
-class VideoDisplay extends Component {
+class VideoDisplay extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -124,54 +124,36 @@ class VideoDisplay extends Component {
 
   handleFrameUpdate(canvasContext) {
     const { width, height } = this.canvas;
-
-    if (!width || !height) {
-      const { playlist, activeTrackIndex } = this.props;
-      if (playlist[activeTrackIndex] && playlist[activeTrackIndex].artwork) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.src = playlist[activeTrackIndex].artwork[0].src;
-        this.canvas.width = img.width;
-        this.canvas.height = img.height;
-        canvasContext.drawImage(img, 0, 0, img.width, img.height);
-      }
-    }
-
-    const { width: finalWidth, height: finalHeight } = this.canvas;
-
-    if (finalWidth && finalHeight) {
+    if (width && height) {
       this.setState(state => {
         if (
-          finalWidth === state.realDisplayWidth &&
-          finalHeight === state.realDisplayHeight
+          width === state.realDisplayWidth &&
+          height === state.realDisplayHeight
         ) {
           return null;
         }
         return {
-          realDisplayWidth: finalWidth,
-          realDisplayHeight: finalHeight
+          realDisplayWidth: width,
+          realDisplayHeight: height
         };
       });
     }
-
-    if (this.props.processFrame && finalWidth && finalHeight) {
-      const frameData = canvasContext.getImageData(
-        0,
-        0,
-        finalWidth,
-        finalHeight
+    if (!(this.props.processFrame && width && height)) {
+      return;
+    }
+    const frameData = canvasContext.getImageData(0, 0, width, height);
+    const newFrameData = this.props.processFrame(frameData);
+    if (newFrameData instanceof ImageData) {
+      canvasContext.putImageData(newFrameData, 0, 0);
+      return;
+    }
+    if (!this.warnedAboutNoImageData) {
+      logWarning(
+        'The processFrame function should return an ImageData object. ' +
+          "Normally you'll just mutate the provided ImageData and " +
+          'return it.'
       );
-      const newFrameData = this.props.processFrame(frameData);
-      if (newFrameData instanceof ImageData) {
-        canvasContext.putImageData(newFrameData, 0, 0);
-      } else if (!this.warnedAboutNoImageData) {
-        logWarning(
-          'The processFrame function should return an ImageData object. ' +
-            "Normally you'll just mutate the provided ImageData and " +
-            'return it.'
-        );
-        this.warnedAboutNoImageData = true;
-      }
+      this.warnedAboutNoImageData = true;
     }
   }
 
@@ -262,8 +244,4 @@ VideoDisplay.defaultProps = {
   background: '#000'
 };
 
-export default playerContextFilter(VideoDisplay, [
-  'pipeVideoStreamToCanvas',
-  'playlist',
-  'activeTrackIndex'
-]);
+export default playerContextFilter(VideoDisplay, ['pipeVideoStreamToCanvas']);

@@ -127,15 +127,29 @@ class VideoDisplay extends Component {
   }
 
   getPlaceholderImage(callback) {
-    const { playlist, activeTrackIndex } = this.props;
-    if (playlist[activeTrackIndex] && playlist[activeTrackIndex].artwork) {
-      const img = new Image();
+    const {
+      playlist,
+      activeTrackIndex,
+      getPlaceholderImageForTrack
+    } = this.props;
+    const track = playlist[activeTrackIndex];
+    let img;
+    if (getPlaceholderImageForTrack) {
+      img = getPlaceholderImageForTrack(track || null);
+    } else if (track && track.artwork) {
+      img = new Image();
       img.crossOrigin = 'anonymous';
-      img.onload = () => callback(img);
-      img.onerror = () => callback();
-      img.src = playlist[activeTrackIndex].artwork[0].src;
+      img.src = track.artwork[0].src;
     } else {
+      // no image - bail!
       callback();
+      return;
+    }
+    if (img.naturalWidth && img.naturalHeight) {
+      callback(img);
+    } else {
+      img.addEventListener('load', () => callback(img));
+      img.addEventListener('error', () => callback());
     }
   }
 
@@ -253,7 +267,8 @@ VideoDisplay.propTypes = {
   displayWidth: PropTypes.number,
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
-  background: PropTypes.string.isRequired
+  background: PropTypes.string.isRequired,
+  getPlaceholderImageForTrack: PropTypes.func
 };
 
 VideoDisplay.defaultProps = {

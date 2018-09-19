@@ -81,7 +81,7 @@ var playlist = [
     artwork: [
       {
         src:
-          'https://en.wikipedia.org/wiki/Rhapsody_in_Blue#/media/File:Rhapsody_in_Blue_cover.jpg'
+          'https://upload.wikimedia.org/wikipedia/commons/d/d5/George_gershwin.jpg'
       }
     ],
     meta: {
@@ -113,7 +113,7 @@ var playlist = [
     artwork: [
       {
         src:
-          'https://en.wikipedia.org/wiki/Rhapsody_in_Blue#/media/File:Rhapsody_in_Blue_cover.jpg'
+          'https://upload.wikimedia.org/wikipedia/commons/d/d5/George_gershwin.jpg'
       }
     ],
     meta: {

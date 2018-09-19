@@ -34,10 +34,10 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
     // audio) then we want to display a placeholder image, if available
     if (!(targetWidth && targetHeight) && placeholderImage) {
       imageElement = placeholderImage;
-      imageWidth = placeholderImage.width;
-      imageHeight = placeholderImage.height;
-      targetWidth = placeholderImage.width;
-      targetHeight = placeholderImage.height;
+      imageWidth = placeholderImage.naturalWidth;
+      imageHeight = placeholderImage.naturalHeight;
+      targetWidth = placeholderImage.naturalWidth;
+      targetHeight = placeholderImage.naturalHeight;
     }
 
     // figure out what resolution the drawn image should be

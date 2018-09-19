@@ -29,6 +29,7 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
     let imageHeight = videoHeight;
     let targetWidth = videoWidth;
     let targetHeight = videoHeight;
+    let isVideo = true;
 
     // however if there's no video to display (usually means we're playing
     // audio) then we want to display a placeholder image, if available
@@ -38,6 +39,7 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
       imageHeight = placeholderImage.naturalHeight;
       targetWidth = placeholderImage.naturalWidth;
       targetHeight = placeholderImage.naturalHeight;
+      isVideo = false;
     }
 
     // figure out what resolution the drawn image should be
@@ -63,7 +65,7 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
 
     // let the callback handle any post-processing
     if (callback) {
-      callback(ctx);
+      callback(ctx, isVideo);
     }
 
     requestId = requestAnimationFrame(streamToCanvas);

@@ -53,9 +53,10 @@ class VideoDisplay extends Component {
       endStream,
       setCanvasSize,
       setPlaceholderImage
-    } = this.props.pipeVideoStreamToCanvas(this.canvas, ctx => {
-      this.handleFrameUpdate(ctx);
-    });
+    } = this.props.pipeVideoStreamToCanvas(
+      this.canvas,
+      this.handleFrameUpdate.bind(this)
+    );
     setCanvasSize(displayWidth, displayHeight);
     this.getPlaceholderImage(setPlaceholderImage);
     this.endStream = endStream;
@@ -145,7 +146,7 @@ class VideoDisplay extends Component {
     }
   }
 
-  handleFrameUpdate(canvasContext) {
+  handleFrameUpdate(canvasContext, isVideo) {
     const { width, height } = this.canvas;
     if (width && height) {
       this.setState(state => {
@@ -162,6 +163,9 @@ class VideoDisplay extends Component {
       });
     }
     if (!(this.props.processFrame && width && height)) {
+      return;
+    }
+    if (!isVideo && !this.props.shouldProcessPlaceholderImages) {
       return;
     }
     const frameData = canvasContext.getImageData(0, 0, width, height);
@@ -190,6 +194,7 @@ class VideoDisplay extends Component {
     delete attributes.playlist;
     delete attributes.activeTrackIndex;
     delete attributes.getPlaceholderImageForTrack;
+    delete attributes.shouldProcessPlaceholderImages;
 
     const {
       realDisplayWidth,
@@ -265,7 +270,8 @@ VideoDisplay.propTypes = {
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
   background: PropTypes.string.isRequired,
-  getPlaceholderImageForTrack: PropTypes.func
+  getPlaceholderImageForTrack: PropTypes.func,
+  shouldProcessPlaceholderImages: PropTypes.bool.isRequired
 };
 
 VideoDisplay.defaultProps = {
@@ -277,7 +283,8 @@ VideoDisplay.defaultProps = {
       img.src = track.artwork[0].src;
       return img;
     }
-  }
+  },
+  shouldProcessPlaceholderImages: false
 };
 
 export default playerContextFilter(VideoDisplay, [

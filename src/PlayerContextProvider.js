@@ -39,6 +39,9 @@ const supportableMediaSessionActions = [
   'seekforward'
 ];
 
+// media element readyState
+const HAVE_NOTHING = 0;
+
 const defaultState = {
   // indicates whether audio player should be paused
   paused: true,
@@ -171,7 +174,14 @@ class PlayerContextProvider extends Component {
     const audio = (this.audio = createCustomAudioElement(this.audio));
 
     // initialize audio properties
-    audio.currentTime = this.state.currentTime;
+    if (audio.readyState !== HAVE_NOTHING) {
+      // we only set the currentTime now if we're beyond the
+      // HAVE_NOTHING readyState. Otherwise we'll let this get
+      // set when the loadedmetadata event fires. This avoids
+      // an issue where some browsers ignore or delay currentTime
+      // updates when in the HAVE_NOTHING state.
+      audio.currentTime = this.state.currentTime;
+    }
     audio.volume = this.state.volume;
     audio.muted = this.state.muted;
     audio.defaultPlaybackRate = this.props.defaultPlaybackRate;
@@ -424,6 +434,9 @@ class PlayerContextProvider extends Component {
   }
 
   handleAudioLoadedmetadata() {
+    if (this.audio.currentTime !== this.state.currentTime) {
+      this.audio.currentTime = this.state.currentTime;
+    }
     this.setState(
       state => (state.trackLoading === false ? null : { trackLoading: false })
     );

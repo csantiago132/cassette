@@ -4,6 +4,7 @@ import findTrackIndexByUrl from './findTrackIndexByUrl';
 
 export function getStateSnapshot(state) {
   const {
+    paused,
     currentTime,
     activeTrackIndex,
     volume,
@@ -16,6 +17,7 @@ export function getStateSnapshot(state) {
   } = state;
   return {
     __unstable__: {
+      paused,
       currentTime,
       activeTrackIndex,
       volume,
@@ -33,6 +35,7 @@ export function getStateSnapshot(state) {
 
 export function restoreStateFromSnapshot(snapshot, props) {
   const {
+    paused,
     currentTime,
     activeTrackIndex,
     volume,
@@ -44,6 +47,10 @@ export function restoreStateFromSnapshot(snapshot, props) {
     activeTrackSrc
   } = snapshot.__unstable__;
   const restoredStateValues = {};
+  if (isPlaylistValid(props.playlist) && typeof paused === 'boolean') {
+    // using awaitingPlay instead of paused triggers an animation
+    restoredStateValues.awaitingPlay = !paused;
+  }
   if (typeof volume === 'number' && volume >= 0 && volume <= 1) {
     restoredStateValues.volume = volume;
   }

@@ -195,7 +195,6 @@ class PlayerContextProvider extends Component {
       this.setState({
         awaitingPlay: false
       });
-      clearTimeout(this.delayTimeout);
       this.delayTimeout = setTimeout(() => {
         this.togglePause(false);
       }, this.props.autoplayDelayInSeconds * 1000);
@@ -470,6 +469,7 @@ class PlayerContextProvider extends Component {
   }
 
   togglePause(value) {
+    clearTimeout(this.delayTimeout);
     const pause = typeof value === 'boolean' ? value : !this.state.paused;
     if (pause) {
       this.audio.pause();
@@ -499,6 +499,7 @@ class PlayerContextProvider extends Component {
 
   // assumes playlist is valid - don't call without checking
   goToTrack(index, shouldPlay = true) {
+    clearTimeout(this.delayTimeout);
     this.setState(state => getGoToTrackState(state, index, shouldPlay));
   }
 

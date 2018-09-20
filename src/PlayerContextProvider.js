@@ -113,8 +113,11 @@ class PlayerContextProvider extends Component {
       playbackRate: props.defaultPlaybackRate,
       // true if user is currently dragging mouse to change the volume
       setVolumeInProgress: false,
+      // initialize awaitingPlay from autoplay prop
+      awaitingPlay: props.autoplay && isPlaylistValid(props.playlist),
       // playlist prop copied to state (for getDerivedStateFromProps)
       __playlist__: props.playlist,
+      // load overrides from previously-captured state snapshot
       ...(props.initialStateSnapshot
         ? restoreStateFromSnapshot(props.initialStateSnapshot, props)
         : {})
@@ -178,7 +181,10 @@ class PlayerContextProvider extends Component {
     audio.addEventListener('srcrequest', this.handleAudioSrcrequest);
     audio.addEventListener('loopchange', this.handleAudioLoopchange);
 
-    if (isPlaylistValid(this.props.playlist) && this.props.autoplay) {
+    if (this.state.awaitingPlay) {
+      this.setState({
+        awaitingPlay: false
+      });
       clearTimeout(this.delayTimeout);
       this.delayTimeout = setTimeout(() => {
         this.togglePause(false);
@@ -757,7 +763,7 @@ class PlayerContextProvider extends Component {
 
 PlayerContextProvider.propTypes = {
   playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
-  autoplay: PropTypes.bool,
+  autoplay: PropTypes.bool.isRequired,
   autoplayDelayInSeconds: PropTypes.number.isRequired,
   gapLengthInSeconds: PropTypes.number.isRequired,
   crossOrigin: PlayerPropTypes.crossOriginAttribute,

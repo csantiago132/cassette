@@ -3,45 +3,56 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ResizeObserver from 'resize-observer-polyfill';
 
-import getStatusBarSizeClassName from '../../utils/getStatusBarSizeClassName';
-
 class AudioStatusBar extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      elementSizeClassName: null
+      marqueeContainerWidth: null
     };
 
-    this.statusBarRef = null;
-    this.statusBarResizeObserver = null;
-
-    // bind methods fired on React events
-    this.setStatusBarRef = this.setStatusBarRef.bind(this);
+    this.marqueeContainerElement = null;
+    this.marqueeContainerResizeObserver = null;
 
     // bind listeners to add on mount and remove on unmount
     this.handleResize = this.handleResize.bind(this);
   }
 
   componentDidMount() {
-    this.statusBarResizeObserver = new ResizeObserver(this.handleResize);
-    this.statusBarResizeObserver.observe(this.statusBarRef);
+    this.marqueeContainerResizeObserver = new ResizeObserver(this.handleResize);
+    this.marqueeContainerResizeObserver.observe(this.marqueeContainerElement);
   }
 
   componentWillUnmount() {
-    this.statusBarResizeObserver.disconnect();
+    this.marqueeContainerResizeObserver.disconnect();
   }
 
-  setStatusBarRef(ref) {
-    this.statusBarRef = ref;
+  shouldUseMarquee() {
+    if (!this.marqueeContainerElement) {
+      return false;
+    }
+    this.measuringContext =
+      this.measuringContext ||
+      document.createElement('canvas').getContext('2d');
+    this.measuringContext.font = getComputedStyle(
+      this.marqueeContainerElement
+    ).font;
+    const textWidth = this.measuringContext.measureText(this.props.displayText)
+      .width;
+    return textWidth > this.state.marqueeContainerWidth;
   }
 
   handleResize(entries) {
     for (const entry of entries) {
-      if (entry.target === this.statusBarRef) {
+      if (entry.target === this.marqueeContainerElement) {
         const { width } = entry.contentRect;
-        this.setState({
-          elementSizeClassName: getStatusBarSizeClassName(width)
+        this.setState(state => {
+          if (state.marqueeContainerWidth === width) {
+            return null;
+          }
+          return {
+            marqueeContainerWidth: width
+          };
         });
         return;
       }
@@ -50,21 +61,20 @@ class AudioStatusBar extends PureComponent {
 
   render() {
     const { className, style, displayText, displayTime } = this.props;
+    const shouldUseMarquee = this.shouldUseMarquee();
     return (
       <div
-        ref={this.setStatusBarRef}
         className={classNames('rrap__audio_status_bar', className)}
         style={style}
       >
-        <div className="rrap__audio_info_marquee">
-          <div
-            className={classNames(
-              'rrap__audio_info',
-              this.state.elementSizeClassName
-            )}
-          >
-            {displayText}
-          </div>
+        <div
+          className="rrap__audio_info_marquee"
+          ref={elem => (this.marqueeContainerElement = elem)}
+        >
+          {shouldUseMarquee && (
+            <marquee scrollamount={3}>{displayText}</marquee>
+          )}
+          {!shouldUseMarquee && displayText}
         </div>
         <div className="rrap__audio_time_progress">{displayTime}</div>
       </div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -15,29 +15,35 @@ function numToPx(num) {
   return `${num}px`;
 }
 
-class MaybeMarquee extends Component {
-  componentDidMount() {
+class MaybeMarquee extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      contentHeight: 0
+    };
+
     this.moveMarquee = this.moveMarquee.bind(this);
     this.handleResize = this.handleResize.bind(this);
+  }
 
+  componentDidMount() {
     this.animationFrameRequest = requestAnimationFrame(this.moveMarquee);
 
     this.marqueeContainerElementWidth = getComputedStyle(
       this.marqueeContainerElement
     ).width;
-    this.movingContentContainerElementWidth = getComputedStyle(
-      this.movingContentContainerElement
-    ).width;
+    const contentStyle = getComputedStyle(this.movingContentContainerElement);
+    this.movingContentContainerElementWidth = contentStyle.width;
+    this.setState({
+      contentHeight: contentStyle.height
+    });
 
     this.resizeObserver = new ResizeObserver(this.handleResize);
     this.resizeObserver.observe(this.marqueeContainerElement);
     this.resizeObserver.observe(this.movingContentContainerElement);
 
     this.lastMovementTime = getNow();
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return nextProps.content !== this.props.content;
   }
 
   componentWillUnmount() {
@@ -87,24 +93,28 @@ class MaybeMarquee extends Component {
   }
 
   handleResize(entries) {
-    let contentHeight;
     for (const entry of entries) {
       if (entry.target === this.marqueeContainerElement) {
         this.marqueeContainerElementWidth = entry.contentRect.width;
       }
       if (entry.target === this.movingContentContainerElement) {
         this.movingContentContainerElementWidth = entry.contentRect.width;
-        contentHeight = entry.contentRect.height;
+        this.setState({
+          contentHeight: entry.contentRect.height
+        });
       }
     }
-    this.marqueeContainerElement.style.height = numToPx(contentHeight);
   }
 
   render() {
     return (
       <div
         ref={elem => (this.marqueeContainerElement = elem)}
-        style={{ position: 'relative', overflow: 'hidden' }}
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          height: this.state.contentHeight
+        }}
       >
         <div
           ref={elem => (this.movingContentContainerElement = elem)}

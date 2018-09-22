@@ -399,6 +399,11 @@ class PlayerContextProvider extends Component {
   }
 
   handleAudioEnded() {
+    if (this.state.seekInProgress) {
+      // nothing to do if we're in the middle of a seek
+      // (this can happen if we're in seekMode: immediate)
+      return;
+    }
     clearTimeout(this.gapLengthTimeout);
     const { playlist, loadFirstTrackOnPlaylistComplete } = this.props;
     if (!isPlaylistValid(playlist)) {
@@ -594,8 +599,18 @@ class PlayerContextProvider extends Component {
         }
         break;
       case 'immediate':
-        this.setState(baseStateUpdate);
+        this.setState(({ paused, awaitingResumeOnSeekComplete }) => ({
+          ...baseStateUpdate,
+          awaitingResumeOnSeekComplete: paused
+            ? awaitingResumeOnSeekComplete
+            : true
+        }));
         this.audio.currentTime = targetTime;
+        if (this.state.awaitingResumeOnSeekComplete && !this.audio.ended) {
+          // if we earlier encountered an 'ended' state,
+          // un-pausing becomes necessary to resume playback
+          this.togglePause(false);
+        }
         break;
       case 'onrelease':
         this.setState(baseStateUpdate);
@@ -624,7 +639,11 @@ class PlayerContextProvider extends Component {
     });
     this.audio.currentTime = seekPreviewTime;
     if (awaitingResumeOnSeekComplete) {
-      this.togglePause(false);
+      if (this.audio.ended) {
+        this.forwardSkip();
+      } else {
+        this.togglePause(false);
+      }
     }
   }
 

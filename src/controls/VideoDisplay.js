@@ -28,6 +28,12 @@ import { logWarning } from '../utils/console';
  *       but are adjusted so the canvas maximally fills the container area.
  */
 
+// 'x:y' -> x / y
+function extractAspectRatio(aspectRatio) {
+  const values = aspectRatio.split(':').map(Number);
+  return values[0] / values[1];
+}
+
 class VideoDisplay extends Component {
   constructor(props) {
     super(props);
@@ -184,7 +190,7 @@ class VideoDisplay extends Component {
   }
 
   render() {
-    const { background, ...attributes } = this.props;
+    const { background, aspectRatio, fullscreen, ...attributes } = this.props;
     delete attributes.pipeVideoStreamToCanvas;
     delete attributes.processFrame;
     delete attributes.displayWidth;
@@ -225,16 +231,29 @@ class VideoDisplay extends Component {
       }
     }
 
+    const containerStyle = {
+      ...(attributes.style || {}),
+      background,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    };
+    if (aspectRatio && containerWidth && !fullscreen) {
+      if (containerStyle.height && !this.warnedAboutStyleOverride) {
+        logWarning(
+          'VideoDisplay cannot style.height prop which is ' +
+            'overridden by aspectRatio.'
+        );
+        this.warnedAboutStyleOverride = true;
+      }
+      // h = w/(x/y)  -->  h*(x/y) = w  -->  x/y = w/h
+      containerStyle.height = containerWidth / extractAspectRatio(aspectRatio);
+    }
+
     return (
       <div
         {...attributes}
-        style={{
-          ...(attributes.style || {}),
-          background,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
+        style={containerStyle}
         ref={elem => (this.containerElement = elem)}
       >
         <canvas style={canvasStyle} ref={elem => (this.canvas = elem)} />
@@ -247,6 +266,7 @@ VideoDisplay.propTypes = {
   pipeVideoStreamToCanvas: PropTypes.func.isRequired,
   playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
   activeTrackIndex: PropTypes.number.isRequired,
+  fullscreen: PropTypes.bool,
   /* TODO: for documentation
   We might want to use this grayscale function in an example
     processFrame: function (frameData) {
@@ -268,6 +288,7 @@ VideoDisplay.propTypes = {
   displayWidth: PropTypes.number,
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
+  aspectRatio: PlayerPropTypes.aspectRatio,
   background: PropTypes.string.isRequired,
   getPlaceholderImageForTrack: PropTypes.func,
   shouldProcessPlaceholderImages: PropTypes.bool.isRequired
@@ -275,6 +296,7 @@ VideoDisplay.propTypes = {
 
 VideoDisplay.defaultProps = {
   scaleForDevicePixelRatio: true,
+  aspectRatio: '16:9',
   background: '#000',
   getPlaceholderImageForTrack(track) {
     if (track && track.artwork) {
@@ -289,5 +311,6 @@ VideoDisplay.defaultProps = {
 export default playerContextFilter(VideoDisplay, [
   'pipeVideoStreamToCanvas',
   'playlist',
-  'activeTrackIndex'
+  'activeTrackIndex',
+  'fullscreen'
 ]);

@@ -61,11 +61,7 @@ class AudioPlayer extends Component {
       controls,
       fullscreenEnabled,
       showVideo,
-      processVideoFrame,
-      videoDisplayWidth,
-      videoDisplayHeight,
-      scaleVideoForDevicePixelRatio,
-      videoAspectRatio,
+      renderVideoDisplay,
       controlWrapper: ControlWrapper,
       playerContext: ancestorPlayerContext,
       ...rest
@@ -75,19 +71,7 @@ class AudioPlayer extends Component {
       <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
         {fullscreenContext => (
           <div className="rrap">
-            {showVideo && (
-              <VideoDisplay
-                className="rrap__video_display_container"
-                onClick={playerContext.onTogglePause}
-                processFrame={processVideoFrame}
-                displayWidth={videoDisplayWidth}
-                displayHeight={videoDisplayHeight}
-                scaleForDevicePixelRatio={scaleVideoForDevicePixelRatio}
-                aspectRatio={videoAspectRatio}
-                playerContext={playerContext}
-                fullscreenContext={fullscreenContext}
-              />
-            )}
+            {showVideo && renderVideoDisplay(playerContext, fullscreenContext)}
             <ControlWrapper
               title={getDisplayText(
                 playerContext.playlist[playerContext.activeTrackIndex]
@@ -129,9 +113,7 @@ AudioPlayer.propTypes = {
   playerContext: PropTypes.object,
   fullscreenEnabled: PropTypes.bool.isRequired,
   showVideo: PropTypes.bool.isRequired,
-  processVideoFrame: PropTypes.func,
-  scaleVideoForDevicePixelRatio: PropTypes.bool,
-  videoAspectRatio: PlayerPropTypes.aspectRatio
+  renderVideoDisplay: PropTypes.func.isRequired
 };
 
 AudioPlayer.defaultProps = {
@@ -146,7 +128,17 @@ AudioPlayer.defaultProps = {
   controlWrapper: AudioControlBar,
   getDisplayText: getDisplayText,
   fullscreenEnabled: true,
-  showVideo: false
+  showVideo: false,
+  renderVideoDisplay(playerContext, fullscreenContext) {
+    return (
+      <VideoDisplay
+        className="rrap__video_display_container"
+        onClick={playerContext.onTogglePause}
+        playerContext={playerContext}
+        fullscreenContext={fullscreenContext}
+      />
+    );
+  }
 };
 
 export default AudioPlayer;

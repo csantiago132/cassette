@@ -87,3 +87,19 @@ export const progressDirection = PropTypes.oneOf([
 ]);
 
 export const seekMode = PropTypes.oneOf(['paused', 'immediate', 'onrelease']);
+
+export function aspectRatio(props, propName) {
+  const prop = props[propName];
+  if (prop === undefined) {
+    return;
+  }
+  if (
+    typeof prop !== 'string' ||
+    prop.split(':').length !== 2 ||
+    prop.split(':').some(isNaN)
+  ) {
+    return new Error(
+      `The ${propName} prop should be a string of the form 'x:y'. Example: 16:9`
+    );
+  }
+}

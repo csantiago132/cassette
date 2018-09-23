@@ -75,7 +75,6 @@ class VideoDisplay extends Component {
     const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
     this.setCanvasSize(displayWidth, displayHeight);
     this.getPlaceholderImage(this.setPlaceholderImage);
-    this.updateContainerDimensions();
   }
 
   componentWillUnmount() {

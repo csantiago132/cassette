@@ -182,6 +182,7 @@ class VolumeControl extends PureComponent {
       >
         <button
           ref={this.setMuteToggleRef}
+          type="button"
           className={classNames('button rrap__audio_button', {
             highlight: hover
           })}

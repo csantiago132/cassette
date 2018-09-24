@@ -24,5 +24,12 @@
     "react": {
       "version": "16.3"
     }
+  },
+  "rules": {
+    "react/button-has-type": ["error", {
+      "button": true,
+      "submit": false,
+      "reset": false
+    }]
   }
 }

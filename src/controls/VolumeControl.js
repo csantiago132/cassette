@@ -194,31 +194,30 @@ class VolumeControl extends PureComponent {
             )}
           />
         </button>
-        {volumeBarPosition && (
-          <div
-            ref={this.setVolumeBarContainerRef}
+        <div
+          hidden={!volumeBarPosition}
+          ref={this.setVolumeBarContainerRef}
+          className={classNames(
+            'rrap__volume_control__volume_bar_container',
+            volumeBarPosition
+          )}
+        >
+          <ProgressBar
             className={classNames(
-              'rrap__volume_control__volume_bar_container',
+              'rrap__volume_control__volume_bar',
               volumeBarPosition
             )}
-          >
-            <ProgressBar
-              className={classNames(
-                'rrap__volume_control__volume_bar',
-                volumeBarPosition
-              )}
-              progressClassName="volume"
-              progress={muted ? 0 : volume}
-              progressDirection={getVolumeBarDirectionFromPosition(
-                volumeBarPosition
-              )}
-              handle={this.renderHandle()}
-              adjusting={setVolumeInProgress}
-              onAdjustProgress={onSetVolume}
-              onAdjustComplete={onSetVolumeComplete}
-            />
-          </div>
-        )}
+            progressClassName="volume"
+            progress={muted ? 0 : volume}
+            progressDirection={getVolumeBarDirectionFromPosition(
+              volumeBarPosition
+            )}
+            handle={this.renderHandle()}
+            adjusting={setVolumeInProgress}
+            onAdjustProgress={onSetVolume}
+            onAdjustComplete={onSetVolumeComplete}
+          />
+        </div>
       </ButtonWrapper>
     );
   }

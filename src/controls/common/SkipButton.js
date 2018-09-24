@@ -10,6 +10,7 @@ class SkipButton extends PureComponent {
     return (
       <ButtonWrapper>
         <button
+          type="button"
           className={classNames('rrap__skip_button rrap__audio_button', {
             back
           })}

@@ -11,6 +11,7 @@ class PlayPauseButton extends PureComponent {
     return (
       <ButtonWrapper>
         <button
+          type="button"
           className={classNames('rrap__play_pause_button rrap__audio_button', {
             playing: !paused || awaitingResumeOnSeekComplete
           })}

@@ -14,6 +14,7 @@ class FullscreenButton extends PureComponent {
     return (
       <ButtonWrapper>
         <button
+          type="button"
           className={classNames(
             'rrap__material_toggle rrap__audio_button rrap__fullscreen_btn',
             { on: fullscreen }

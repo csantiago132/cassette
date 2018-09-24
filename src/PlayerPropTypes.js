@@ -29,6 +29,7 @@ export const controlKeyword = PropTypes.oneOf([
   'backskip',
   'forwardskip',
   'volume',
+  'mute',
   'repeat',
   'shuffle',
   'progress',

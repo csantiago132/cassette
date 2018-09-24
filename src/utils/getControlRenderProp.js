@@ -4,6 +4,7 @@ import PlayPauseButton from '../controls/PlayPauseButton';
 import BackSkipButton from '../controls/BackSkipButton';
 import ForwardSkipButton from '../controls/ForwardSkipButton';
 import VolumeControl from '../controls/VolumeControl';
+import MuteButton from '../controls/MuteButton';
 import RepeatButton from '../controls/RepeatButton';
 import ShuffleButton from '../controls/ShuffleButton';
 import AudioProgress from '../controls/AudioProgress';
@@ -16,6 +17,7 @@ const controlComponents = {
   backskip: BackSkipButton,
   forwardskip: ForwardSkipButton,
   volume: VolumeControl,
+  mute: MuteButton,
   repeat: RepeatButton,
   shuffle: ShuffleButton,
   progress: AudioProgress,

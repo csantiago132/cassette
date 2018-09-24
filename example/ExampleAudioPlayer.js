@@ -8,19 +8,6 @@ function ExampleAudioPlayer() {
     return React.createElement(AudioPlayer, {
       playerContext: playerContext,
       showVideo: true,
-      renderVideoDisplay: function renderVideoDisplay(
-        playerContext,
-        fullscreenContext
-      ) {
-        return React.createElement(AudioPlayer.VideoDisplay, {
-          className: 'rrap__video_display_container',
-          onClick: playerContext.onTogglePause,
-          playerContext,
-          fullscreenContext,
-          displayWidth: 720
-        });
-      },
-      videoDisplayWidth: 720,
       controls: [
         'spacer',
         'backskip',

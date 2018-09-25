@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import PlayerContextProvider from './PlayerContextProvider';
+import PlayerContext from './PlayerContext';
 import FullscreenContextProvider from './FullscreenContextProvider';
 import * as PlayerPropTypes from './PlayerPropTypes';
 import AudioControlBar from './controls/AudioControlBar';
@@ -63,7 +64,6 @@ class AudioPlayer extends Component {
       showVideo,
       renderVideoDisplay,
       controlWrapper: ControlWrapper,
-      playerContext: ancestorPlayerContext,
       ...rest
     } = this.props;
 
@@ -92,13 +92,19 @@ class AudioPlayer extends Component {
       </FullscreenContextProvider>
     );
 
-    if (ancestorPlayerContext) {
-      return audioPlayer(ancestorPlayerContext);
-    }
     return (
-      <PlayerContextProvider {...rest}>
-        {playerContext => audioPlayer(playerContext)}
-      </PlayerContextProvider>
+      <PlayerContext.Consumer>
+        {ancestorPlayerContext => {
+          if (ancestorPlayerContext) {
+            return audioPlayer(ancestorPlayerContext);
+          }
+          return (
+            <PlayerContextProvider {...rest}>
+              {playerContext => audioPlayer(playerContext)}
+            </PlayerContextProvider>
+          );
+        }}
+      </PlayerContext.Consumer>
     );
   }
 }
@@ -107,7 +113,6 @@ AudioPlayer.propTypes = {
   controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
   controlWrapper: PropTypes.func.isRequired,
   getDisplayText: PropTypes.func.isRequired,
-  playerContext: PropTypes.object,
   fullscreenEnabled: PropTypes.bool.isRequired,
   showVideo: PropTypes.bool.isRequired,
   renderVideoDisplay: PropTypes.func.isRequired
@@ -126,13 +131,12 @@ AudioPlayer.defaultProps = {
   getDisplayText: getDisplayText,
   fullscreenEnabled: true,
   showVideo: false,
+  // eslint-disable-next-line no-unused-vars
   renderVideoDisplay(playerContext, fullscreenContext) {
     return (
       <VideoDisplay
         className="rrap__video_display_container"
         onClick={playerContext.onTogglePause}
-        playerContext={playerContext}
-        fullscreenContext={fullscreenContext}
       />
     );
   }

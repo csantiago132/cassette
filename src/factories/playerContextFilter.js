@@ -1,24 +1,42 @@
-import { createElement } from 'react';
-import PropTypes from 'prop-types';
+import React, { createElement } from 'react';
+
+import PlayerContext from '../PlayerContext';
+import FullscreenContext from '../FullscreenContext';
+import { logWarning } from '../utils/console';
 
 function playerContextFilter(component, contextPropNames) {
-  function PlayerContextFilter({
-    playerContext = {},
-    fullscreenContext = {},
-    ...childProps
-  }) {
-    for (const propName of contextPropNames) {
-      childProps[propName] = playerContext.hasOwnProperty(propName)
-        ? playerContext[propName]
-        : fullscreenContext[propName];
-    }
-    return createElement(component, childProps);
-  }
-  PlayerContextFilter.propTypes = {
-    playerContext: PropTypes.object,
-    fullscreenContext: PropTypes.object
-  };
+  const warned = {};
   const childName = component.displayName || component.name;
+  function PlayerContextFilter(props) {
+    return (
+      <FullscreenContext.Consumer>
+        {fullscreenContext => (
+          <PlayerContext.Consumer>
+            {playerContext => {
+              const childProps = { ...props };
+              for (const propName of contextPropNames) {
+                if (playerContext.hasOwnProperty(propName)) {
+                  childProps[propName] = playerContext[propName];
+                } else if (fullscreenContext.hasOwnProperty(propName)) {
+                  childProps[propName] = fullscreenContext[propName];
+                } else if (!warned[propName]) {
+                  logWarning(
+                    "Prop '" +
+                      propName +
+                      "' for component " +
+                      childName +
+                      ' not found in playerContext or fullscreenContext.'
+                  );
+                  warned[propName] = true;
+                }
+              }
+              return createElement(component, childProps);
+            }}
+          </PlayerContext.Consumer>
+        )}
+      </FullscreenContext.Consumer>
+    );
+  }
   if (childName) {
     PlayerContextFilter.displayName = `PlayerContextFilter(${childName})`;
   }

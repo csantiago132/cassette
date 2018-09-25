@@ -3,25 +3,26 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import ButtonWrapper from './common/ButtonWrapper';
-import getVolumeIconClassName from '../utils/getVolumeIconClassName';
+import getVolumeIconComponent from '../utils/getVolumeIconComponent';
 import playerContextFilter from '../factories/playerContextFilter';
 
 class MuteButton extends PureComponent {
   render() {
     const { volume, muted, onToggleMuted } = this.props;
+    const VolumeIcon = getVolumeIconComponent(volume, muted);
     return (
-      <ButtonWrapper className="rrap__volume_control">
+      <ButtonWrapper>
         <button
           type="button"
-          className="button rrap__audio_button rrap__mute_btn"
+          className={classNames(
+            'rrap__material_toggle rrap__audio_button rrap__mute_btn',
+            { on: !muted }
+          )}
           onClick={onToggleMuted}
         >
-          <div
-            className={classNames(
-              'foreground',
-              getVolumeIconClassName(volume, muted)
-            )}
-          />
+          <div className="foreground inner">
+            <VolumeIcon width="100%" height="100%" />
+          </div>
         </button>
       </ButtonWrapper>
     );

@@ -5,15 +5,6 @@
     height: $rrap_volume_control_height;
     position: relative;
 
-    .button {
-      background: none;
-      border: none;
-      width: $rrap_volume_btn_width;
-
-      [class*='icono-volume'] {
-        margin-left: 0;
-      }
-    }
     &__volume_bar_container {
       position: absolute;
       left: 50%;

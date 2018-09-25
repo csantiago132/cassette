@@ -41,6 +41,7 @@
       position: absolute;
       border-radius: $rrap_volume_bar_width / 2;
       background-color: $rrap_base_bg_color;
+      box-shadow: $rrap_volume_bar_box_shadow;
 
       &.hiddenup,
       &.upabove {

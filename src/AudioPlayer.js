@@ -82,10 +82,7 @@ class AudioPlayer extends Component {
                   const renderControl = getControlRenderProp(control);
                   return (
                     renderControl &&
-                    renderControl({
-                      playerContext,
-                      fullscreenContext
-                    })
+                    renderControl(playerContext, fullscreenContext)
                   );
                 })
               )}

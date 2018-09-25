@@ -37,7 +37,7 @@ function getControlRenderProp(control) {
     }
     const component = controlComponents[control];
     if (component) {
-      const fn = ({ playerContext, fullscreenContext }) => {
+      const fn = (playerContext, fullscreenContext) => {
         return createElement(component, { playerContext, fullscreenContext });
       };
       cache[control] = fn;

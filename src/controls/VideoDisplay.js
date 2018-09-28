@@ -34,6 +34,8 @@ function extractAspectRatio(aspectRatio) {
   return values[0] / values[1];
 }
 
+const defaultBgColor = '#000';
+
 class VideoDisplay extends Component {
   constructor(props) {
     super(props);
@@ -190,7 +192,7 @@ class VideoDisplay extends Component {
   }
 
   render() {
-    const { background, aspectRatio, fullscreen, ...attributes } = this.props;
+    const { aspectRatio, fullscreen, ...attributes } = this.props;
     delete attributes.pipeVideoStreamToCanvas;
     delete attributes.processFrame;
     delete attributes.displayWidth;
@@ -232,11 +234,11 @@ class VideoDisplay extends Component {
     }
 
     const containerStyle = {
-      ...(attributes.style || {}),
-      background,
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      background: defaultBgColor,
+      ...(attributes.style || {})
     };
     if (aspectRatio && containerWidth && !fullscreen) {
       if (containerStyle.height && !this.warnedAboutStyleOverride) {
@@ -289,7 +291,6 @@ VideoDisplay.propTypes = {
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
   aspectRatio: PlayerPropTypes.aspectRatio,
-  background: PropTypes.string.isRequired,
   getPlaceholderImageForTrack: PropTypes.func,
   shouldProcessPlaceholderImages: PropTypes.bool.isRequired
 };
@@ -297,7 +298,6 @@ VideoDisplay.propTypes = {
 VideoDisplay.defaultProps = {
   scaleForDevicePixelRatio: true,
   aspectRatio: '16:9',
-  background: '#000',
   getPlaceholderImageForTrack(track) {
     if (track && track.artwork) {
       const img = new Image();

@@ -719,7 +719,7 @@ class PlayerContextProvider extends Component {
 
   getControlProps() {
     const { props, state } = this;
-    return {
+    const playerContext = {
       playlist: props.playlist,
       activeTrackIndex: state.activeTrackIndex,
       trackLoading: state.trackLoading,
@@ -752,6 +752,19 @@ class PlayerContextProvider extends Component {
       onSetRepeatStrategy: this.setRepeatStrategy,
       onSetPlaybackRate: this.setPlaybackRate
     };
+    if (this.playerContext) {
+      // only update this.playerContext if something has changed
+      for (const key of Object.keys(this.playerContext)) {
+        if (playerContext[key] !== this.playerContext[key]) {
+          this.playerContext = playerContext;
+          break;
+        }
+      }
+    } else {
+      // first time - nothing to compare
+      this.playerContext = playerContext;
+    }
+    return this.playerContext;
   }
 
   render() {

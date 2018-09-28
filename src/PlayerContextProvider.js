@@ -204,6 +204,12 @@ class PlayerContextProvider extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const newPlaylist = nextProps.playlist;
 
+    if (newPlaylist === prevState.__playlist__) {
+      // reference comparison is equal so we'll
+      // assume the playlist is unchanged.
+      return null;
+    }
+
     const baseNewState = {
       __playlist__: newPlaylist
     };

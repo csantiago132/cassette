@@ -95,17 +95,28 @@ class FullscreenContextProvider extends PureComponent {
     });
   }
 
-  render() {
-    const { fullscreen } = this.state;
+  getFullscreenContext() {
     const fullscreenContext = {
-      fullscreen,
+      fullscreen: this.state.fullscreen,
       requestFullscreen: this.requestFullscreen,
       requestExitFullscreen: this.requestExitFullscreen
     };
+    if (
+      this.fullscreenContext &&
+      fullscreenContext.fullscreen === this.fullscreenContext.fullscreen
+    ) {
+      // no change
+      return this.fullscreenContext;
+    }
+    return (this.fullscreenContext = fullscreenContext);
+  }
+
+  render() {
+    const fullscreenContext = this.getFullscreenContext();
     return (
       <div
         ref={elem => (this.fullscreenElement = elem)}
-        style={fullscreen ? fullscreenStyle : undefined}
+        style={this.state.fullscreen ? fullscreenStyle : undefined}
       >
         <FullscreenContext.Provider value={fullscreenContext}>
           {typeof this.props.children === 'function'

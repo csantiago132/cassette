@@ -19,14 +19,6 @@ function getNextControlKey() {
 
 class AudioPlayer extends Component {
   getKeyedChildren(elements) {
-    if (typeof Map === 'undefined') {
-      // If we don't have a map, then we'll just let components get
-      // re-mounted on re-order, which should be okay most of the time
-      return elements.map((element, i) => {
-        return element && React.cloneElement(element, { key: i });
-      });
-    }
-
     // cache of keys to use in controls render
     // (to maintain state in case order changes)
     this.controlKeys = this.controlKeys || new Map();

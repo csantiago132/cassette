@@ -204,6 +204,12 @@ class PlayerContextProvider extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const newPlaylist = nextProps.playlist;
 
+    if (newPlaylist === prevState.__playlist__) {
+      // reference comparison is equal so we'll
+      // assume the playlist is unchanged.
+      return null;
+    }
+
     const baseNewState = {
       __playlist__: newPlaylist
     };
@@ -719,7 +725,7 @@ class PlayerContextProvider extends Component {
 
   getControlProps() {
     const { props, state } = this;
-    return {
+    const playerContext = {
       playlist: props.playlist,
       activeTrackIndex: state.activeTrackIndex,
       trackLoading: state.trackLoading,
@@ -752,6 +758,19 @@ class PlayerContextProvider extends Component {
       onSetRepeatStrategy: this.setRepeatStrategy,
       onSetPlaybackRate: this.setPlaybackRate
     };
+    if (this.playerContext) {
+      // only update this.playerContext if something has changed
+      for (const key of Object.keys(this.playerContext)) {
+        if (playerContext[key] !== this.playerContext[key]) {
+          this.playerContext = playerContext;
+          break;
+        }
+      }
+    } else {
+      // first time - nothing to compare
+      this.playerContext = playerContext;
+    }
+    return this.playerContext;
   }
 
   render() {

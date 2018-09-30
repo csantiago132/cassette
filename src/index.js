@@ -332,6 +332,9 @@ class AudioPlayer extends React.Component {
 
     // pause the audio element before we unmount
     this.audio.pause();
+
+    // remove noselect class in case a seek is in progress
+    document.body.classList.remove('noselect');
   }
 
   componentWillReceiveProps (nextProps) {

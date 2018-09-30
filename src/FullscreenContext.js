@@ -17,7 +17,6 @@ const FullscreenContext = createContext({
     );
   }
 });
-FullscreenContext.Provider.displayName = 'FullscreenContext.Provider';
-FullscreenContext.Consumer.displayName = 'FullscreenContext.Consumer';
+FullscreenContext.displayName = 'FullscreenContext';
 
 export default FullscreenContext;

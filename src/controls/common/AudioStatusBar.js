@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import MaybeMarquee from './MaybeMarquee';
+import classNames from '../../utils/classNames';
 
 class AudioStatusBar extends PureComponent {
   render() {

@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import FullscreenIcon from '@benwiley4000/svg-react-loader?name=FullscreenIcon!material-design-icons/navigation/svg/design/ic_fullscreen_48px.svg?';
 import FullscreenExitIcon from '@benwiley4000/svg-react-loader?name=FullscreenExitIcon!material-design-icons/navigation/svg/design/ic_fullscreen_exit_48px.svg?';
 
 import ButtonWrapper from './common/ButtonWrapper';
 import playerContextFilter from '../factories/playerContextFilter';
+import classNames from '../utils/classNames';
 
 class FullscreenButton extends PureComponent {
   render() {

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import ButtonWrapper from './ButtonWrapper';
+import classNames from '../../utils/classNames';
 
 class SkipButton extends PureComponent {
   render() {

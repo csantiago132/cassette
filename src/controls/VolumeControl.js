@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import ProgressBar from './common/ProgressBar';
 import ButtonWrapper from './common/ButtonWrapper';
@@ -8,6 +7,7 @@ import getVolumeIconComponent from '../utils/getVolumeIconComponent';
 import getVolumeBarDirectionFromPosition from '../utils/getVolumeBarDirectionFromPosition';
 import stopPropagation from '../utils/reactStopPropagation';
 import playerContextFilter from '../factories/playerContextFilter';
+import classNames from '../utils/classNames';
 
 const volumeControlStyle = {
   touchAction: 'none'

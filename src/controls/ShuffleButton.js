@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import ShuffleIcon from '@benwiley4000/svg-react-loader?name=ShuffleIcon!material-design-icons/av/svg/design/ic_shuffle_48px.svg?';
 
 import ButtonWrapper from './common/ButtonWrapper';
 import playerContextFilter from '../factories/playerContextFilter';
+import classNames from '../utils/classNames';
 
 class ShuffleButton extends PureComponent {
   render() {

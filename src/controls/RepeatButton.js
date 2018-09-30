@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import RepeatIcon from '@benwiley4000/svg-react-loader?name=RepeatIcon!material-design-icons/av/svg/design/ic_repeat_48px.svg?';
 import RepeatOneIcon from '@benwiley4000/svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
@@ -8,6 +7,7 @@ import ButtonWrapper from './common/ButtonWrapper';
 import { repeatStrategyOptions } from '../constants';
 import * as PlayerPropTypes from '../PlayerPropTypes';
 import playerContextFilter from '../factories/playerContextFilter';
+import classNames from '../utils/classNames';
 
 function getNextRepeatStrategy(repeatStrategy) {
   let nextIndex = repeatStrategyOptions.indexOf(repeatStrategy) + 1;

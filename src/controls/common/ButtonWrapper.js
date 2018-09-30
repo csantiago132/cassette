@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
+import classNames from '../../utils/classNames';
 
 const ButtonWrapper = forwardRef(({ className, children, ...rest }, ref) => {
   return (

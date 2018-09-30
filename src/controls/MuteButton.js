@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import ButtonWrapper from './common/ButtonWrapper';
 import getVolumeIconComponent from '../utils/getVolumeIconComponent';
 import playerContextFilter from '../factories/playerContextFilter';
+import classNames from '../utils/classNames';
 
 class MuteButton extends PureComponent {
   render() {

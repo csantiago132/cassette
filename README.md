@@ -81,13 +81,16 @@ The fastest way to get off the ground with this module is to paste the following
         [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
          { url: 'song2.ogg', title: 'Oggs Oggs Oggs' }];
       ReactDOM.render(
-        React.createElement(AudioPlayer, {
-          playlist: playlist,
-          autoplay: true,
-          autoplayDelayInSeconds: 2.1,
-          style: { position: 'fixed', bottom: 0 },
-          controls: ['playpause', 'forwardskip', 'progressdisplay']
-        }),
+        React.createElement(
+          'div',
+          { style: { position: 'fixed', bottom: 0, width: '100%' } },
+          React.createElement(AudioPlayer, {
+            playlist: playlist,
+            autoplay: true,
+            autoplayDelayInSeconds: 2.1,
+            controls: ['playpause', 'forwardskip', 'progressdisplay']
+          })
+        ),
         document.getElementById('audio_player_container')
       );
     </script>

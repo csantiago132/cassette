@@ -10,6 +10,7 @@ import ShuffleManager from './utils/ShuffleManager';
 import { getStateSnapshot, restoreStateFromSnapshot } from './utils/snapshot';
 import getSourceList from './utils/getSourceList';
 import getTrackSources from './utils/getTrackSources';
+import getTimeRangesArray from './utils/getTimeRangesArray';
 import findTrackIndexByUrl from './utils/findTrackIndexByUrl';
 import isPlaylistValid from './utils/isPlaylistValid';
 import getRepeatStrategy from './utils/getRepeatStrategy';
@@ -60,14 +61,10 @@ const defaultState = {
   awaitingResumeOnSeekComplete: false,
   // the duration in seconds of the loaded track
   duration: 0,
-  /* the TimeRanges object representing the buffered sections of the
-   * loaded track
-   */
-  buffered: null,
-  /* the TimeRanges object representing the played sections of the
-   * loaded track
-   */
-  played: null,
+  // array describing the buffered ranges in the loaded track
+  bufferedRanges: [],
+  // array describing the already-played ranges in the loaded track
+  playedRanges: [],
   // true if the audio is currently stalled pending data buffering
   stalled: false,
   // true if the active track should play on the next componentDidUpdate
@@ -440,7 +437,10 @@ class PlayerContextProvider extends Component {
 
   handleAudioTimeupdate() {
     const { currentTime, played } = this.audio;
-    this.setState({ currentTime, played });
+    this.setState({
+      currentTime,
+      playedRanges: getTimeRangesArray(played)
+    });
   }
 
   handleAudioLoadedmetadata() {
@@ -463,8 +463,9 @@ class PlayerContextProvider extends Component {
   }
 
   handleAudioProgress() {
-    const { buffered } = this.audio;
-    this.setState({ buffered });
+    this.setState({
+      bufferedRanges: getTimeRangesArray(this.audio.buffered)
+    });
   }
 
   handleAudioLoopchange() {
@@ -735,8 +736,8 @@ class PlayerContextProvider extends Component {
       seekInProgress: state.seekInProgress,
       awaitingResumeOnSeekComplete: state.awaitingResumeOnSeekComplete,
       duration: state.duration,
-      buffered: state.buffered,
-      played: state.played,
+      bufferedRanges: state.bufferedRanges,
+      playedRanges: state.playedRanges,
       volume: state.volume,
       muted: state.muted,
       shuffle: state.shuffle,

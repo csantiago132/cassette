@@ -147,8 +147,6 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `getDisplayText`: a function which takes a track object and returns a string used to represent that track in the UI. By default, the track will be displayed as "[artist] - [title]".
 
-* `style`: a React style object which is applied to the outermost div in the component. **undefined** by default.
-
 * `onMediaEvent`: An object where the keys are [media event types](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) and the values are callback functions. **undefined** by default.
 
 * `audioElementRef`: A callback function called after the component mounts and before it unmounts. Similar to [React ref callback prop](https://facebook.github.io/react/docs/refs-and-the-dom.html#the-ref-callback-attribute) but its only parameter is the internally-referenced HTML audio element, not the component itself. **undefined** by default. *NOTE:* This ref should not be used for audio element event listeners; use `onMediaEvent`.
@@ -168,6 +166,8 @@ These will be removed in v2.0!  Please migrate away.
 * `disableSeek`: a boolean value that if true prevents seeking. **false** by default. Use the `controls` prop instead.
 
 * `displayText` on the track object for `playlist`: a string value that determines the UI display name for a track. Instead, use `title` and `artist` to provide information on a track object, and use the `getDisplayText` function prop for custom display if needed.
+
+* `style`: a React style object which is applied to the outermost div in the component. **undefined** by default.
 
 ## Does this work with the Web Audio API?
 

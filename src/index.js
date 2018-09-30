@@ -27,6 +27,10 @@ const deprecatedProps = [
     alternativeMessage:
       'Use `title` and `artist` to provide track information, and override ' +
         ' the `getDisplayText` function prop for custom display if needed.'
+  },
+  {
+    name: 'style',
+    alternativeMessage: 'Apply styles to a container element or use CSS.'
   }
 ];
 

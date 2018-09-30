@@ -5,6 +5,15 @@ import ProgressBarDisplay from './ProgressBarDisplay';
 import convertToNumberWithinIntervalBounds from '../../utils/convertToNumberWithinIntervalBounds';
 import * as PlayerPropTypes from '../../PlayerPropTypes';
 
+const noselectStyles = `
+cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+`;
+
 class ProgressBar extends PureComponent {
   constructor(props) {
     super(props);
@@ -25,6 +34,17 @@ class ProgressBar extends PureComponent {
     document.addEventListener('touchmove', this.handleAdjustProgress);
     window.addEventListener('mouseup', this.handleAdjustComplete);
     document.addEventListener('touchend', this.handleAdjustComplete);
+
+    setTimeout(() => {
+      const style = document.createElement('style');
+      const className = `noselect_${Math.random()
+        .toString(16)
+        .slice(2, 7)}`;
+      style.innerText = `.${className}{${noselectStyles}}`;
+      document.body.appendChild(style);
+      this.noselectStyleElement = style;
+      this.noselectClassName = className;
+    });
   }
 
   componentWillUnmount() {
@@ -35,11 +55,16 @@ class ProgressBar extends PureComponent {
     document.removeEventListener('touchend', this.handleAdjustComplete);
 
     // remove noselect class in case a drag is in progress
-    document.body.classList.remove('rrap__noselect');
+    this.toggleNoselect(false);
+    this.noselectStyleElement.parentNode.removeChild(this.noselectStyleElement);
   }
 
   setProgressContainerRef(ref) {
     this.progressContainer = ref;
+  }
+
+  toggleNoselect(on) {
+    document.body.classList[on ? 'add' : 'remove'](this.noselectClassName);
   }
 
   getProgressFromPageCoordinates(pageX, pageY) {
@@ -70,7 +95,7 @@ class ProgressBar extends PureComponent {
     }
     // make sure we don't select stuff in the background
     if (event.type === 'mousedown' || event.type === 'touchstart') {
-      document.body.classList.add('rrap__noselect');
+      this.toggleNoselect(true);
     } else if (!adjusting) {
       return;
     }
@@ -96,7 +121,7 @@ class ProgressBar extends PureComponent {
      * the mouse, so if .rrap__noselect was applied
      * to the document body, get rid of it.
      */
-    document.body.classList.remove('rrap__noselect');
+    this.toggleNoselect(false);
     if (!adjusting) {
       return;
     }

@@ -192,7 +192,12 @@ class VideoDisplay extends Component {
   }
 
   render() {
-    const { aspectRatio, fullscreen, ...attributes } = this.props;
+    const {
+      aspectRatio,
+      fullscreen,
+      maintainAspectRatioInFullscreen,
+      ...attributes
+    } = this.props;
     delete attributes.pipeVideoStreamToCanvas;
     delete attributes.processFrame;
     delete attributes.displayWidth;
@@ -240,7 +245,11 @@ class VideoDisplay extends Component {
       background: defaultBgColor,
       ...(attributes.style || {})
     };
-    if (aspectRatio && containerWidth && !fullscreen) {
+    if (
+      aspectRatio &&
+      containerWidth &&
+      (!fullscreen || maintainAspectRatioInFullscreen)
+    ) {
       if (containerStyle.height && !this.warnedAboutStyleOverride) {
         logWarning(
           'VideoDisplay cannot style.height prop which is ' +
@@ -292,7 +301,8 @@ VideoDisplay.propTypes = {
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
   aspectRatio: PlayerPropTypes.aspectRatio,
   getPlaceholderImageForTrack: PropTypes.func,
-  shouldProcessPlaceholderImages: PropTypes.bool.isRequired
+  shouldProcessPlaceholderImages: PropTypes.bool.isRequired,
+  maintainAspectRatioInFullscreen: PropTypes.bool.isRequired
 };
 
 VideoDisplay.defaultProps = {
@@ -305,7 +315,8 @@ VideoDisplay.defaultProps = {
       return img;
     }
   },
-  shouldProcessPlaceholderImages: false
+  shouldProcessPlaceholderImages: false,
+  maintainAspectRatioInFullscreen: false
 };
 
 export default playerContextFilter(VideoDisplay, [

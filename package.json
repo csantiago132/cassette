@@ -11,6 +11,7 @@
     "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path ./example",
     "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path ./example",
     "prepare": "npm run build",
+    "prepublishOnly": "npm run lint:all",
     "prettier": "pretty-quick --staged --no-restage \"**/*.js\" \"**/*.scss\"",
     "prettier:all": "prettier --write \"**/*.js\" \"**/*.scss\"",
     "lint": "lint-staged",

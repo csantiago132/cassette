@@ -306,6 +306,10 @@ class AudioPlayer extends React.Component {
         this.delayTimeout = setTimeout(() => this.togglePause(false), delay * 1000);
       }
     }
+
+    if (!this.warnedAboutPlaylistMutation) {
+      this.lastPlaylistCopy = this.props.playlist && [...this.props.playlist];
+    }
   }
 
   componentWillUnmount () {
@@ -408,6 +412,38 @@ class AudioPlayer extends React.Component {
     if (prevProps !== this.props && !this.audio.paused) {
       // update running media session based on new props
       this.stealMediaSession();
+    }
+
+    // minimal check to see if the playlist was mutated
+    // (won't cover case where track properties are mutated directly)
+    if (
+      !this.warnedAboutPlaylistMutation &&
+      this.props.playlist &&
+      prevProps.playlist &&
+      prevProps.playlist === this.props.playlist &&
+      this.props.playlist.length && (
+        this.lastPlaylistCopy.length !== this.props.playlist.length ||
+        (
+          this.currentTrackIndex > -1 && (
+            this.lastPlaylistCopy[this.currentTrackIndex] !==
+              this.props.playlist[this.currentTrackIndex]
+          )
+        ) ||
+        this.props.playlist
+          .some((track, index) => this.lastPlaylistCopy[index] !== track)
+      )
+    ) {
+      logWarning(`
+        Making direct changes to the \`playlist\` prop is deprecated usage
+        which will stop working correctly in react-responsive-audio-player
+        v2.0.0. Instead you should make a new shallow copy of \`playlist\` and
+        pass that copy, modified, when you need to update playlist contents.
+        For more information, see:
+        https://github.com/benwiley4000/react-responsive-audio-player/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md`);
+      this.warnedAboutPlaylistMutation = true;
+    }
+    if (!this.warnedAboutPlaylistMutation) {
+      this.lastPlaylistCopy = this.props.playlist && [...this.props.playlist];
     }
   }
 

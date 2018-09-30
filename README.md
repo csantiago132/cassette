@@ -112,6 +112,8 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
   - `artwork`: The artwork for the track - corresponds to the [`MediaMetadata.artwork` property](https://wicg.github.io/mediasession/#examples)
   - `meta`: An object containing any other track-specific information you want to store
 
+  **NOTE**: Although in version 1 it works to re-render the `AudioPlayer` with a mutated `playlist` prop, this usage is now ***deprecated*** and will not work correctly in version 2. Please make a copy of the playlist instead. For more information, [see here](https://github.com/benwiley4000/react-responsive-audio-player/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md).
+
 * `controls`: an array of keyword strings which correspond to available audio control components. The order of keywords translates to the order of rendered controls. The default array is: `['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress']`. The possible keyword values are:
   - `'playpause'` (play/pause toggle button)
   - `'backskip'` (previous track skip button)

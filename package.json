@@ -10,7 +10,7 @@
     "build": "npm run build:clean && npm run build:webpack && npm run build:component_css",
     "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path ./example",
     "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path ./example",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "prettier": "pretty-quick --staged --no-restage \"**/*.js\" \"**/*.scss\"",
     "prettier:all": "prettier --write \"**/*.js\" \"**/*.scss\"",
     "lint": "lint-staged",
@@ -27,7 +27,8 @@
     "url": "https://github.com/benwiley4000/react-responsive-audio-player.git"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=6.0.0",
+    "npm": ">=5.0.0"
   },
   "keywords": [
     "audio",

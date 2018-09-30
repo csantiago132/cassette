@@ -65,6 +65,8 @@ const defaultState = {
   bufferedRanges: [],
   // array describing the already-played ranges in the loaded track
   playedRanges: [],
+  // array describing the seekable ranges in the loaded track
+  seekableRanges: [],
   // true if the audio is currently stalled pending data buffering
   stalled: false,
   // true if the active track should play on the next componentDidUpdate
@@ -464,7 +466,8 @@ class PlayerContextProvider extends Component {
 
   handleAudioProgress() {
     this.setState({
-      bufferedRanges: getTimeRangesArray(this.audio.buffered)
+      bufferedRanges: getTimeRangesArray(this.audio.buffered),
+      seekableRanges: getTimeRangesArray(this.audio.seekable)
     });
   }
 
@@ -738,6 +741,7 @@ class PlayerContextProvider extends Component {
       duration: state.duration,
       bufferedRanges: state.bufferedRanges,
       playedRanges: state.playedRanges,
+      seekableRanges: state.seekableRanges,
       volume: state.volume,
       muted: state.muted,
       shuffle: state.shuffle,

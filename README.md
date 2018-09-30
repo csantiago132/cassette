@@ -124,6 +124,8 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 
 * `autoplay`: a boolean value (`true`/`false`) that if true will cause the player to begin automatically once mounted. **false** by default.
 
+  **NOTE**: Autoplaying audio or video is considered highly annoying in most contexts and is [disabled by some browsers](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes). Please use this option judiciously!
+
 * `autoplayDelayInSeconds`: a number value that represents the number of seconds to wait until beginning autoplay. Will be ignored if `autoplay` is false. **0** by default. *NOTE:* Delay is managed by `setTimeout` and is therefore inexact. If you need to time an autoplay exactly, find a different module that uses the [WebAudio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for playback (or fork this one!).
 
 * `gapLengthInSeconds`: a number value that represents the number of seconds to wait at the end of a track before beginning the next one in the playlist. Not applicable for manually-initiated skip. **0** by default. *NOTE:* Like `autoplayDelayInSeconds`, this delay is inexact.

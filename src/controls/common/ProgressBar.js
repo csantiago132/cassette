@@ -33,6 +33,9 @@ class ProgressBar extends PureComponent {
     document.removeEventListener('touchmove', this.handleAdjustProgress);
     window.removeEventListener('mouseup', this.handleAdjustComplete);
     document.removeEventListener('touchend', this.handleAdjustComplete);
+
+    // remove noselect class in case a drag is in progress
+    document.body.classList.remove('rrap__noselect');
   }
 
   setProgressContainerRef(ref) {

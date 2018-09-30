@@ -66,7 +66,7 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.4.2/dist/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.5.0/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
@@ -75,7 +75,7 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
     <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-audio-player@1.4.2/dist/audioplayer.js"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.5.0/dist/audioplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
@@ -165,8 +165,6 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 * `mediaSessionSeekLengthInSeconds`: a number value representing the number of seconds forward or backward to seek when handling the Media Session API `seekbackward` and `seekforward` actions. **10** by default.
 
 * `getDisplayText`: a function which takes a track object and returns a string used to represent that track in the UI. By default, the track will be displayed as "[artist] - [title]".
-
-* `style`: a React style object which is applied to the outermost div in the component. **undefined** by default.
 
 * `onMediaEvent`: An object where the keys are [media event types](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) and the values are callback functions. **undefined** by default.
 

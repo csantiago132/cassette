@@ -110,6 +110,7 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
   - `artist`: The track's artist - corresponds to the [`MediaMetadata.artist` property](https://wicg.github.io/mediasession/#examples)
   - `album`: The album the track belongs to - corresponds to the [`MediaMetadata.album` property](https://wicg.github.io/mediasession/#examples)
   - `artwork`: The artwork for the track - corresponds to the [`MediaMetadata.artwork` property](https://wicg.github.io/mediasession/#examples)
+    *NOTE*: Network speed may affect how quickly album artwork shows up in system MediaSession notifications. You can try [these strategies for implementing caching](https://developers.google.com/web/updates/2017/02/media-session#make_it_play_nice_offline).
   - `meta`: An object containing any other track-specific information you want to store
 
   **NOTE**: Although in version 1 it works to re-render the `AudioPlayer` with a mutated `playlist` prop, this usage is now ***deprecated*** and will not work correctly in version 2. Please make a copy of the playlist instead. For more information, [see here](https://github.com/benwiley4000/react-responsive-audio-player/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md).

@@ -55,22 +55,25 @@
       ];
       var audioElement = {};
       ReactDOM.render(
-        React.createElement(AudioPlayer, {
-          playlist: playlist,
-          autoplay: true,
-          style: { position: 'fixed', bottom: 0 },
-          audioElementRef: function (elem) {
-            audioElement = elem;
-          },
-          onMediaEvent: {
-            'playing': function (e) {
-              console.log('Playback has started', audioElement.src);
+        React.createElement(
+          'div',
+          { style: { position: 'fixed', bottom: 0, width: '100%' } },
+          React.createElement(AudioPlayer, {
+            playlist: playlist,
+            autoplay: true,
+            audioElementRef: function (elem) {
+              audioElement = elem;
             },
-            'pause': function (e) {
-              console.log('Playback was paused', audioElement.src);
+            onMediaEvent: {
+              'playing': function (e) {
+                console.log('Playback has started', audioElement.src);
+              },
+              'pause': function (e) {
+                console.log('Playback was paused', audioElement.src);
+              }
             }
-          }
-        }),
+          })
+        ),
         document.getElementById('audio_player_container')
       );
     </script>

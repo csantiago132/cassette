@@ -66,7 +66,7 @@ The fastest way to get off the ground with this module is to paste the following
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>React Responsive Audio Player</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.4.0/dist/audioplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/react-responsive-audio-player@1.4.2/dist/audioplayer.css">
   </head>
   <body>
     <div id="audio_player_container"></div>
@@ -75,7 +75,7 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
     <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-audio-player@1.4.0/dist/audioplayer.js"></script>
+    <script src="https://unpkg.com/react-responsive-audio-player@1.4.2/dist/audioplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
@@ -120,7 +120,10 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
   - `artist`: The track's artist - corresponds to the [`MediaMetadata.artist` property](https://wicg.github.io/mediasession/#examples)
   - `album`: The album the track belongs to - corresponds to the [`MediaMetadata.album` property](https://wicg.github.io/mediasession/#examples)
   - `artwork`: The artwork for the track - corresponds to the [`MediaMetadata.artwork` property](https://wicg.github.io/mediasession/#examples)
+    *NOTE*: Network speed may affect how quickly album artwork shows up in system MediaSession notifications. You can try [these strategies for implementing caching](https://developers.google.com/web/updates/2017/02/media-session#make_it_play_nice_offline).
   - `meta`: An object containing any other track-specific information you want to store
+
+  **NOTE**: Although in version 1 it works to re-render the `AudioPlayer` with a mutated `playlist` prop, this usage is now ***deprecated*** and will not work correctly in version 2. Please make a copy of the playlist instead. For more information, [see here](https://github.com/benwiley4000/react-responsive-audio-player/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md).
 
 * `controls`: an array of keyword strings which correspond to available audio control components. The order of keywords translates to the order of rendered controls. The default array is: `['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress']`. The possible keyword values are:
   - `'playpause'` (play/pause toggle button)
@@ -134,6 +137,8 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
   - `'spacer'` (a transparent space-filling element whose default width is `10px`, although [the style of the `.spacer` class can be overridden](src/styles/_Spacer.scss))
 
 * `autoplay`: a boolean value (`true`/`false`) that if true will cause the player to begin automatically once mounted. **false** by default.
+
+  **NOTE**: Autoplaying audio or video is considered highly annoying in most contexts and is [disabled by some browsers](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes). Please use this option judiciously!
 
 * `autoplayDelayInSeconds`: a number value that represents the number of seconds to wait until beginning autoplay. Will be ignored if `autoplay` is false. **0** by default. *NOTE:* Delay is managed by `setTimeout` and is therefore inexact. If you need to time an autoplay exactly, find a different module that uses the [WebAudio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for playback (or fork this one!).
 
@@ -170,6 +175,39 @@ Options can be passed to the AudioPlayer element as props. Currently supported p
 * `crossOrigin`: A string value corresponding to the [`crossOrigin`](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) media element attribute for adjusting CORS settings.
 
 None of these options are required, though the player will be functionally disabled if no `playlist` prop is provided.
+
+## Does this work with the Web Audio API?
+
+We don't expose any special props for manipulating the Web Audio API with React.
+
+However, you *can* use the `audioElementRef` prop and [`createMediaElementSource`](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource) to process your audio before it gets sent to the speaker.
+
+For example, you could use this code to add a low pass to high pass filter transition during the first 10 seconds your audio player is mounted:
+
+```jsx
+<AudioPlayer
+  playlist={playlist}
+  audioElementRef={audio => {
+    const ctx = new AudioContext();
+
+    let source = ctx.createMediaElementSource(audio);
+
+    for (const filterType of ['lowpass', 'highpass']) {
+      const filter = ctx.createBiquadFilter();
+      filter.type = filterType;
+      filter.frequency.value = 100;
+      filter.frequency.exponentialRampToValueAtTime(3000, 10);
+      source = source.connect(filter);
+    }
+
+    source.connect(ctx.destination);
+  }},
+  crossOrigin="anonymous"
+  autoplay
+/>
+```
+
+You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
 
 ## Does this work with the Web Audio API?
 

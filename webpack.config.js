@@ -34,10 +34,20 @@ function webpackConfig(esmodules, minimize) {
   return {
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     entry: {
-      [minimize ? 'audioplayer.min' : 'audioplayer']: './src/index.js'
+      [minimize
+        ? 'audioplayer.min'
+        : 'audioplayer']: './src/responsive-media-player/index.js'
     },
     resolve: {
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx'],
+      // TODO: remove aliases when we actually move to multiple packages
+      alias: {
+        'media-player-core': path.resolve(__dirname, './src/media-player-core'),
+        'media-player-components': path.resolve(
+          __dirname,
+          './src/media-player-components'
+        )
+      }
     },
     output: {
       path: path.join(__dirname, OUTPUT_DIR),

@@ -833,6 +833,7 @@ PlayerContextProvider.propTypes = {
   startingTrackIndex: PropTypes.number.isRequired,
   loadFirstTrackOnPlaylistComplete: PropTypes.bool,
   seekMode: PlayerPropTypes.seekMode.isRequired,
+  maintainPlaybackRate: PropTypes.bool.isRequired,
   allowBackShuffle: PropTypes.bool,
   stayOnBackSkipThreshold: PropTypes.number.isRequired,
   supportedMediaSessionActions: PropTypes.arrayOf(

@@ -8,7 +8,7 @@ const fullscreenStyle = {
   height: '100%'
 };
 
-class FullscreenContextProvider extends PureComponent {
+export class FullscreenContextProvider extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

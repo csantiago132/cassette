@@ -19,7 +19,7 @@ function getNextControlKey() {
   return (nextControlKey++).toString();
 }
 
-class ResponsiveMediaPlayer extends Component {
+export class ResponsiveMediaPlayer extends Component {
   getKeyedChildren(elements) {
     // cache of keys to use in controls render
     // (to maintain state in case order changes)

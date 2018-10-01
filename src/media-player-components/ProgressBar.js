@@ -15,7 +15,7 @@ cursor: default;
   -webkit-touch-callout: none;
 `;
 
-class ProgressBar extends PureComponent {
+export class ProgressBar extends PureComponent {
   constructor(props) {
     super(props);
 

@@ -6,7 +6,7 @@ import { PlayerPropTypes } from 'media-player-core';
 import getProgressStyle from './utils/getProgressStyle';
 import getHandleStyle from './utils/getHandleStyle';
 
-class ProgressBarDisplay extends PureComponent {
+export class ProgressBarDisplay extends PureComponent {
   render() {
     const {
       className,

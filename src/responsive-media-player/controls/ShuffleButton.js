@@ -7,7 +7,7 @@ import { playerContextFilter } from 'media-player-core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
-class ShuffleButton extends PureComponent {
+export class ShuffleButton extends PureComponent {
   render() {
     const { shuffle, onToggleShuffle } = this.props;
     return (

@@ -5,7 +5,7 @@ import { MaybeMarquee } from 'media-player-components';
 
 import classNames from '../../utils/classNames';
 
-class MediaStatusBar extends PureComponent {
+export class MediaStatusBar extends PureComponent {
   render() {
     const { className, style, displayText, displayTime } = this.props;
     return (

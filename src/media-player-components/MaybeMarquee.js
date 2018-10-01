@@ -15,7 +15,7 @@ function numToPx(num) {
   return `${num}px`;
 }
 
-class MaybeMarquee extends PureComponent {
+export class MaybeMarquee extends PureComponent {
   constructor(props) {
     super(props);
 

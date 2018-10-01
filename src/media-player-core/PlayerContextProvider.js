@@ -86,7 +86,7 @@ function getGoToTrackState(prevState, index, shouldPlay = true) {
   };
 }
 
-class PlayerContextProvider extends Component {
+export class PlayerContextProvider extends Component {
   constructor(props) {
     super(props);
 
@@ -867,7 +867,7 @@ PlayerContextProvider.defaultProps = {
   mediaSessionSeekLengthInSeconds: 10
 };
 
-class PlayerContextGroupMember extends Component {
+export class PlayerContextGroupMember extends Component {
   componentDidMount() {
     this.props.groupContext.registerMediaElement(this.mediaElement);
   }

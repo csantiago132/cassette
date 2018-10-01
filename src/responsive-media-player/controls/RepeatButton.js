@@ -17,7 +17,7 @@ function getNextRepeatStrategy(repeatStrategy) {
   return repeatStrategyOptions[nextIndex];
 }
 
-class RepeatButton extends PureComponent {
+export class RepeatButton extends PureComponent {
   constructor(props) {
     super(props);
 

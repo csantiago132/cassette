@@ -18,7 +18,7 @@ const audioStatusBarStyle = {
   right: 0
 };
 
-class MediaProgress extends Component {
+export class MediaProgress extends Component {
   constructor(props) {
     super(props);
 

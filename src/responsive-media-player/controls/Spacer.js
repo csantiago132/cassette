@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import ButtonWrapper from './common/ButtonWrapper';
 
-class Spacer extends PureComponent {
+export class Spacer extends PureComponent {
   render() {
     return (
       <ButtonWrapper>

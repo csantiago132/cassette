@@ -14,7 +14,7 @@ const volumeControlStyle = {
   touchAction: 'none'
 };
 
-class VolumeControl extends PureComponent {
+export class VolumeControl extends PureComponent {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { hover, volumeBarPosition } = prevState;
     if (volumeBarPosition && !hover && !nextProps.setVolumeInProgress) {

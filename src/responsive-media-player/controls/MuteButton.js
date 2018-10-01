@@ -7,7 +7,7 @@ import ButtonWrapper from './common/ButtonWrapper';
 import getVolumeIconComponent from '../utils/getVolumeIconComponent';
 import classNames from '../utils/classNames';
 
-class MuteButton extends PureComponent {
+export class MuteButton extends PureComponent {
   render() {
     const { volume, muted, onToggleMuted } = this.props;
     const VolumeIcon = getVolumeIconComponent(volume, muted);

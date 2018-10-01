@@ -16,7 +16,7 @@ const audioStatusBarStyle = {
   right: 0
 };
 
-class MediaProgressDisplay extends Component {
+export class MediaProgressDisplay extends Component {
   render() {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;

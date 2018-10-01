@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import GroupContext from './GroupContext';
 
-class PlayerContextGroup extends Component {
+export class PlayerContextGroup extends Component {
   constructor(props) {
     super(props);
     this.registerMediaElement = this.registerMediaElement.bind(this);

@@ -6,7 +6,7 @@ import { playerContextFilter } from 'media-player-core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
-class PlayPauseButton extends PureComponent {
+export class PlayPauseButton extends PureComponent {
   render() {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;
     return (

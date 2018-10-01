@@ -5,7 +5,7 @@ import { playerContextFilter } from 'media-player-core';
 
 import SkipButton from './common/SkipButton';
 
-class ForwardSkipButton extends PureComponent {
+export class ForwardSkipButton extends PureComponent {
   render() {
     return <SkipButton onClick={this.props.onForwardSkip} />;
   }

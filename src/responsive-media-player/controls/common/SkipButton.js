@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ButtonWrapper from './ButtonWrapper';
 import classNames from '../../utils/classNames';
 
-class SkipButton extends PureComponent {
+export class SkipButton extends PureComponent {
   render() {
     const { back, onClick } = this.props;
     return (

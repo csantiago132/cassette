@@ -8,7 +8,7 @@ import { playerContextFilter } from 'media-player-core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
-class FullscreenButton extends PureComponent {
+export class FullscreenButton extends PureComponent {
   render() {
     const { fullscreen, requestFullscreen, requestExitFullscreen } = this.props;
     const IconComponent = fullscreen ? FullscreenExitIcon : FullscreenIcon;

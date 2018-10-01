@@ -35,7 +35,7 @@ function extractAspectRatio(aspectRatio) {
 
 const defaultBgColor = '#000';
 
-class VideoDisplay extends Component {
+export class VideoDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -299,7 +299,7 @@ VideoDisplay.propTypes = {
   displayHeight: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
   aspectRatio: PlayerPropTypes.aspectRatio,
-  getPlaceholderImageForTrack: PropTypes.func,
+  getPlaceholderImageForTrack: PropTypes.func.isRequired,
   shouldProcessPlaceholderImages: PropTypes.bool.isRequired,
   maintainAspectRatioInFullscreen: PropTypes.bool.isRequired
 };

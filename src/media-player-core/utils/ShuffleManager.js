@@ -8,7 +8,7 @@
  * - Able to swap source lists and maintain shuffle order for common members
  */
 
-class ShuffleManager {
+export class ShuffleManager {
   constructor(list, options = {}) {
     this._list = list;
     this._forwardStack = [];

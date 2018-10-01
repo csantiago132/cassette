@@ -12,5 +12,13 @@ module.exports = {
     '**/SkipButton.js',
     '**/MediaStatusBar.js'
   ],
-  usageMode: 'expand'
+  usageMode: 'expand',
+  handlers(componentPath) {
+    return require('react-docgen').defaultHandlers.concat(
+      require('react-docgen-external-proptypes-handler')(componentPath),
+      require('react-docgen-displayname-handler').createDisplayNameHandler(
+        componentPath
+      )
+    );
+  }
 };

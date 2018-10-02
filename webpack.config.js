@@ -36,7 +36,7 @@ function webpackConfig(esmodules, minimize) {
     entry: {
       [minimize
         ? 'mediaplayer.min'
-        : 'mediaplayer']: './src/responsive-media-player/index.js'
+        : 'mediaplayer']: './src/media-player/index.js'
     },
     resolve: {
       extensions: ['.js', '.jsx'],

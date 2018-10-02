@@ -1,4 +1,5 @@
-import ResponsiveMediaPlayer from './ResponsiveMediaPlayer';
+import MediaPlayer from './MediaPlayer';
+import MediaPlayerControls from './MediaPlayerControls';
 import PlayPauseButton from './controls/PlayPauseButton';
 import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
@@ -11,8 +12,9 @@ import MediaProgress from './controls/MediaProgress';
 import MediaProgressDisplay from './controls/MediaProgressDisplay';
 import Spacer from './controls/Spacer';
 
-export default ResponsiveMediaPlayer;
-export { ResponsiveMediaPlayer };
+export default MediaPlayer;
+export { MediaPlayer };
+export { MediaPlayerControls };
 export { PlayPauseButton };
 export { BackSkipButton };
 export { ForwardSkipButton };
@@ -26,18 +28,19 @@ export { MediaProgressDisplay };
 export { Spacer };
 
 // for browser script tag (global var) usage
-ResponsiveMediaPlayer.PlayPauseButton = PlayPauseButton;
-ResponsiveMediaPlayer.BackSkipButton = BackSkipButton;
-ResponsiveMediaPlayer.ForwardSkipButton = ForwardSkipButton;
-ResponsiveMediaPlayer.VolumeControl = VolumeControl;
-ResponsiveMediaPlayer.RepeatButton = RepeatButton;
-ResponsiveMediaPlayer.ShuffleButton = ShuffleButton;
-ResponsiveMediaPlayer.MediaProgress = MediaProgress;
+MediaPlayer.MediaPlayerControls = MediaPlayerControls;
+MediaPlayer.PlayPauseButton = PlayPauseButton;
+MediaPlayer.BackSkipButton = BackSkipButton;
+MediaPlayer.ForwardSkipButton = ForwardSkipButton;
+MediaPlayer.VolumeControl = VolumeControl;
+MediaPlayer.RepeatButton = RepeatButton;
+MediaPlayer.ShuffleButton = ShuffleButton;
+MediaPlayer.MediaProgress = MediaProgress;
 
 // TODO: remove everything below
 import {
   PlayerContextProvider,
   PlayerContextConsumer
 } from 'media-player-core';
-ResponsiveMediaPlayer.PlayerContextProvider = PlayerContextProvider;
-ResponsiveMediaPlayer.PlayerContextConsumer = PlayerContextConsumer;
+MediaPlayer.PlayerContextProvider = PlayerContextProvider;
+MediaPlayer.PlayerContextConsumer = PlayerContextConsumer;

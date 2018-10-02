@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  PlayerContextProvider,
   PlayerContextConsumer,
   FullscreenContextProvider,
   PlayerPropTypes
@@ -19,7 +18,7 @@ function getNextControlKey() {
   return (nextControlKey++).toString();
 }
 
-export class ResponsiveMediaPlayer extends Component {
+export class MediaPlayerControls extends Component {
   getKeyedChildren(elements) {
     // cache of keys to use in controls render
     // (to maintain state in case order changes)
@@ -56,54 +55,43 @@ export class ResponsiveMediaPlayer extends Component {
       controls,
       fullscreenEnabled,
       showVideo,
-      renderVideoDisplay,
-      ...rest
+      renderVideoDisplay
     } = this.props;
 
-    const mediaPlayer = playerContext => (
+    return (
       <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
         {fullscreenContext => (
-          <div className="rrap">
-            {showVideo && renderVideoDisplay(playerContext, fullscreenContext)}
-            <div
-              className="rrap__control_bar"
-              title={getDisplayText(
-                playerContext.playlist[playerContext.activeTrackIndex]
-              )}
-            >
-              {this.getKeyedChildren(
-                controls.map(control => {
-                  const renderControl = getControlRenderProp(control);
-                  return (
-                    renderControl &&
-                    renderControl(playerContext, fullscreenContext)
-                  );
-                })
-              )}
-            </div>
-          </div>
+          <PlayerContextConsumer>
+            {playerContext => (
+              <div className="rrap">
+                {showVideo &&
+                  renderVideoDisplay(playerContext, fullscreenContext)}
+                <div
+                  className="rrap__control_bar"
+                  title={getDisplayText(
+                    playerContext.playlist[playerContext.activeTrackIndex]
+                  )}
+                >
+                  {this.getKeyedChildren(
+                    controls.map(control => {
+                      const renderControl = getControlRenderProp(control);
+                      return (
+                        renderControl &&
+                        renderControl(playerContext, fullscreenContext)
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
+          </PlayerContextConsumer>
         )}
       </FullscreenContextProvider>
-    );
-
-    return (
-      <PlayerContextConsumer>
-        {ancestorPlayerContext => {
-          if (ancestorPlayerContext) {
-            return mediaPlayer(ancestorPlayerContext);
-          }
-          return (
-            <PlayerContextProvider {...rest}>
-              {playerContext => mediaPlayer(playerContext)}
-            </PlayerContextProvider>
-          );
-        }}
-      </PlayerContextConsumer>
     );
   }
 }
 
-ResponsiveMediaPlayer.propTypes = {
+MediaPlayerControls.propTypes = {
   controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
   getDisplayText: PropTypes.func.isRequired,
   fullscreenEnabled: PropTypes.bool.isRequired,
@@ -111,7 +99,7 @@ ResponsiveMediaPlayer.propTypes = {
   renderVideoDisplay: PropTypes.func.isRequired
 };
 
-ResponsiveMediaPlayer.defaultProps = {
+MediaPlayerControls.defaultProps = {
   controls: [
     'spacer',
     'backskip',
@@ -134,4 +122,4 @@ ResponsiveMediaPlayer.defaultProps = {
   }
 };
 
-export default ResponsiveMediaPlayer;
+export default MediaPlayerControls;

@@ -1,6 +1,6 @@
 # react-responsive-audio-player
 
-![https://commons.wikimedia.org/wiki/File:WWVNBSRadioStation_001.jpg](old_photo.jpg)
+<img alt="https://www.pexels.com/photo/black-lx90-cassette-tape-1228497/" src="cassette.jpg" title="Photo by Stas Knop from Pexels" />
 
 ![react-responsive-audio-player in action](demo.gif)
 

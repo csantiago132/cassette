@@ -7,7 +7,7 @@ import { logWarning } from 'media-player-core/_undocumented';
 
 /* Here is an explanation of the 4 different types of "height"/"width"
  * referenced in this file:
- *   1. displayWidth / displayHeight
+ *   1. imageResolutionX / imageResolutionY
  *     - These are optional props for determining which resolution
  *       we use to display the video. They are assigned to canvas.width
  *       and canvas.height. If one or both are left out, then we use the
@@ -16,7 +16,7 @@ import { logWarning } from 'media-player-core/_undocumented';
  *       hi-DPI (e.g. Retina) displays.
  *   2. realDisplayWidth / realDisplayHeight
  *     - These reflect whatever canvas.width and canvas.height are.
- *       This is different than displayWidth / displayHeight since
+ *       This is different than imageResolutionX / imageResolutionY since
  *       they are actual values and can't be null.
  *   3. containerWidth / containerHeight
  *     - These reflect the actual client offsetWidth and offsetHeight
@@ -55,7 +55,10 @@ export class VideoDisplay extends Component {
     this.canvas.height = 0;
 
     this.checkForBadStuff();
-    const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
+    const {
+      imageResolutionX,
+      imageResolutionY
+    } = this.getDeviceDisplayDimensions();
     const {
       endStream,
       setCanvasSize,
@@ -64,7 +67,7 @@ export class VideoDisplay extends Component {
       this.canvas,
       this.handleFrameUpdate.bind(this)
     );
-    setCanvasSize(displayWidth, displayHeight);
+    setCanvasSize(imageResolutionX, imageResolutionY);
     this.getPlaceholderImage(setPlaceholderImage);
     this.endStream = endStream;
     this.setCanvasSize = setCanvasSize;
@@ -79,8 +82,11 @@ export class VideoDisplay extends Component {
 
   componentDidUpdate() {
     this.checkForBadStuff();
-    const { displayWidth, displayHeight } = this.getDeviceDisplayDimensions();
-    this.setCanvasSize(displayWidth, displayHeight);
+    const {
+      imageResolutionX,
+      imageResolutionY
+    } = this.getDeviceDisplayDimensions();
+    this.setCanvasSize(imageResolutionX, imageResolutionY);
     this.getPlaceholderImage(this.setPlaceholderImage);
   }
 
@@ -93,13 +99,14 @@ export class VideoDisplay extends Component {
     if (
       !this.warnedAboutBadStuff &&
       this.props.processFrame &&
-      !this.props.displayWidth &&
-      !this.props.displayHeight
+      !this.props.imageResolutionX &&
+      !this.props.imageResolutionY
     ) {
       logWarning(
         'VideoDisplay: Supplying a processFrame function without also ' +
-          'giving a displayWidth or displayHeight means the video will be ' +
-          'processed at the full resolution. This may lead to a poor framerate.'
+          'giving a imageResolutionX or imageResolutionY means the video ' +
+          'will be processed at the full resolution. This may lead to a poor ' +
+          'framerate.'
       );
       this.warnedAboutBadStuff = true;
     }
@@ -123,14 +130,14 @@ export class VideoDisplay extends Component {
 
   getDeviceDisplayDimensions() {
     const {
-      displayWidth,
-      displayHeight,
+      imageResolutionX,
+      imageResolutionY,
       scaleForDevicePixelRatio
     } = this.props;
     const scale = (scaleForDevicePixelRatio && window.devicePixelRatio) || 1;
     return {
-      displayWidth: displayWidth && scale * displayWidth,
-      displayHeight: displayHeight && scale * displayHeight
+      imageResolutionX: imageResolutionX && scale * imageResolutionX,
+      imageResolutionY: imageResolutionY && scale * imageResolutionY
     };
   }
 
@@ -199,8 +206,8 @@ export class VideoDisplay extends Component {
     } = this.props;
     delete attributes.pipeVideoStreamToCanvas;
     delete attributes.processFrame;
-    delete attributes.displayWidth;
-    delete attributes.displayHeight;
+    delete attributes.imageResolutionX;
+    delete attributes.imageResolutionY;
     delete attributes.scaleForDevicePixelRatio;
     delete attributes.playlist;
     delete attributes.activeTrackIndex;
@@ -295,8 +302,8 @@ VideoDisplay.propTypes = {
     }
   */
   processFrame: PropTypes.func,
-  displayWidth: PropTypes.number,
-  displayHeight: PropTypes.number,
+  imageResolutionX: PropTypes.number,
+  imageResolutionY: PropTypes.number,
   scaleForDevicePixelRatio: PropTypes.bool.isRequired,
   aspectRatio: PlayerPropTypes.aspectRatio,
   getPlaceholderImageForTrack: PropTypes.func.isRequired,

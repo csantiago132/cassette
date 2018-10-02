@@ -1,0 +1,17 @@
+.rrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__control_bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap-reverse;
+    justify-content: center;
+    background-color: $rrap_base_bg_color;
+
+    > * {
+      height: $rrap_base_height;
+    }
+  }
+}

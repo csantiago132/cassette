@@ -1,13 +1,13 @@
 @import 'variables';
 
 .rrap {
-  &__audio_status_bar {
+  &__media_status_bar {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
   }
-  &__audio_info_marquee {
-    /* to make room for __audio_time_progress */
+  &__media_info_marquee {
+    /* to make room for __media_time_progress */
     width: $rrap_marquee_width;
     margin-left: $rrap_marquee_margin;
     font-size: $rrap_info_font_size;
@@ -25,7 +25,7 @@
       }
     }
   }
-  &__audio_time_progress {
+  &__media_time_progress {
     margin-right: $rrap_time_margin;
     align-self: center;
     color: $rrap_base_text_color;

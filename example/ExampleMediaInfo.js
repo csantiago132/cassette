@@ -1,8 +1,8 @@
-/* globals React, AudioPlayer, ExampleMuteMessage */
+/* globals React, MediaPlayer, ExampleMuteMessage */
 
 // eslint-disable-next-line no-unused-vars
 function ExampleMediaInfo() {
-  return React.createElement(AudioPlayer.PlayerContextConsumer, {}, function(
+  return React.createElement(MediaPlayer.PlayerContextConsumer, {}, function(
     playerContext
   ) {
     const currentTrack = playerContext.playlist[playerContext.activeTrackIndex];

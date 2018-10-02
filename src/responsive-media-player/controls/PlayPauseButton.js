@@ -13,7 +13,7 @@ export class PlayPauseButton extends PureComponent {
       <ButtonWrapper>
         <button
           type="button"
-          className={classNames('rrap__play_pause_button rrap__audio_button', {
+          className={classNames('rrap__play_pause_button rrap__media_button', {
             playing: !paused || awaitingResumeOnSeekComplete
           })}
           onClick={onTogglePause}

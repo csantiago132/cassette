@@ -11,7 +11,7 @@ export class SkipButton extends PureComponent {
       <ButtonWrapper>
         <button
           type="button"
-          className={classNames('rrap__skip_button rrap__audio_button', {
+          className={classNames('rrap__skip_button rrap__media_button', {
             back
           })}
           onClick={onClick}

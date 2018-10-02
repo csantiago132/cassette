@@ -42,7 +42,7 @@ class ExampleMuteMessage extends React.PureComponent {
           ? 'mute_message'
           : 'mute_message hidden'
       },
-      "(You won't hear anything until you unmute the audio.)"
+      "(You won't hear anything until you unmute the media.)"
     );
   }
 }

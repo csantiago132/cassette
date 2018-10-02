@@ -1,25 +1,25 @@
 const loopchange = 'loopchange';
 const srcrequest = 'srcrequest';
 
-function createCustomMediaElement(audio = document.createElement('audio')) {
+function createCustomMediaElement(media = document.createElement('media')) {
   new MutationObserver(() => {
-    audio.dispatchEvent(new Event(loopchange));
-  }).observe(audio, {
+    media.dispatchEvent(new Event(loopchange));
+  }).observe(media, {
     attributeFilter: ['loop']
   });
-  // Don't let the audio src property get modified directly.
+  // Don't let the media src property get modified directly.
   // Instead, when it does get set, dispatch an event to be
   // handled in a way that doesn't conflict with the loaded
   // playlist.
-  Object.defineProperty(audio, 'src', {
-    get: () => audio.currentSrc,
+  Object.defineProperty(media, 'src', {
+    get: () => media.currentSrc,
     set: src => {
       const e = new Event(srcrequest);
       e.srcRequested = src;
-      audio.dispatchEvent(e);
+      media.dispatchEvent(e);
     }
   });
-  return audio;
+  return media;
 }
 
 export default createCustomMediaElement;

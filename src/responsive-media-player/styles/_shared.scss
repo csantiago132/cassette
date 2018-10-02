@@ -1,11 +1,11 @@
 @import 'variables';
 
 .rrap {
-  &__audio_button_wrapper {
+  &__media_button_wrapper {
     display: inline-block;
   }
 
-  &__audio_button {
+  &__media_button {
     padding-left: $rrap_btn_padding;
     padding-right: $rrap_btn_padding;
     margin-left: $rrap_btn_margin;

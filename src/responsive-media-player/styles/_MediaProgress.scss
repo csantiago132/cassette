@@ -1,12 +1,12 @@
 @import 'variables';
 
 .rrap {
-  &__audio_progress_container {
+  &__media_progress_container {
     position: relative;
     flex-grow: 1;
     min-width: 300px;
   }
-  &__audio_progress_bar {
+  &__media_progress_bar {
     height: 100%;
 
     .progress {

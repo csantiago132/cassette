@@ -2,7 +2,7 @@
 
 <img alt="https://www.pexels.com/photo/black-lx90-cassette-tape-1228497/" src="cassette.jpg" title="Photo by Stas Knop from Pexels" />
 
-A zero-config-required media player component library for React. The default responsive UI works great in desktop or mobile web browsers. The flexible core handles the logical complexities of common media and video player paradigms, while allowing you to implement any UI you can come up with.
+A zero-config-required media player component library for React. The default responsive UI works great in desktop or mobile web browsers. The flexible core handles the logical complexities of common audio and video player paradigms, while allowing you to implement any UI you can come up with.
 
 ### this is version 2.0 (pre-alpha). see the current release [here](https://github.com/benwiley4000/cassette/blob/master/README.md)!
 

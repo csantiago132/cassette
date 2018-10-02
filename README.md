@@ -4,6 +4,8 @@
 
 A zero-config-required media player component library for React. The flexible core handles the logical complexities of common audio and video player paradigms, while allowing you to implement any UI you can come up with.
 
+### this is version 2.0 (pre-alpha). see the current release [here](https://github.com/benwiley4000/react-responsive-audio-player/blob/master/README.md)!
+
 ![react-responsive-audio-player in action](demo.gif)
 
 ### [see a live demo here](https://benwiley4000.github.io/react-responsive-audio-player/)

@@ -47,7 +47,7 @@ export const crossOriginAttribute = PropTypes.oneOf([
 
 export const repeatStrategy = PropTypes.oneOf(repeatStrategyOptions);
 
-export const audioSource = PropTypes.shape({
+export const mediaSource = PropTypes.shape({
   src: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired
 });
@@ -70,7 +70,7 @@ export const mediaSessionArtwork = PropTypes.shape({
 export const track = PropTypes.shape({
   url: requiredOnlyUnlessHasProp(PropTypes.string, 'sources'),
   sources: requiredOnlyUnlessHasProp(
-    PropTypes.arrayOf(audioSource.isRequired),
+    PropTypes.arrayOf(mediaSource.isRequired),
     'url'
   ),
   title: PropTypes.string.isRequired,

@@ -1,4 +1,4 @@
-/* globals React, AudioPlayer, PropTypes */
+/* globals React, MediaPlayer, PropTypes */
 
 // eslint-disable-next-line no-unused-vars
 class ExamplePlayerContextProvider extends React.Component {
@@ -6,17 +6,17 @@ class ExamplePlayerContextProvider extends React.Component {
     super(props);
     this.handleStateSnapshot = this.handleStateSnapshot.bind(this);
     this.initialStateSnapshot = JSON.parse(
-      localStorage.getItem('audio_player_snapshot')
+      localStorage.getItem('media_player_snapshot')
     );
   }
 
   handleStateSnapshot(snapshot) {
-    localStorage.setItem('audio_player_snapshot', JSON.stringify(snapshot));
+    localStorage.setItem('media_player_snapshot', JSON.stringify(snapshot));
   }
 
   render() {
     return React.createElement(
-      AudioPlayer.PlayerContextProvider,
+      MediaPlayer.PlayerContextProvider,
       {
         playlist: this.props.playlist,
         autoplay: true,

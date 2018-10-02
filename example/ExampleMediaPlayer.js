@@ -1,8 +1,8 @@
-/* globals React, AudioPlayer */
+/* globals React, MediaPlayer */
 
 // eslint-disable-next-line no-unused-vars
-function ExampleAudioPlayer() {
-  return React.createElement(AudioPlayer, {
+function ExampleMediaPlayer() {
+  return React.createElement(MediaPlayer, {
     showVideo: true,
     controls: [
       'spacer',

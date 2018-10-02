@@ -5,7 +5,7 @@ var playlist = [
       'https://ia801406.us.archive.org/9/items/BillyWilliams_288/ATaleOfParis1910_64kb.mp3',
     title: 'A Tale of Paris',
     artist: 'Billy Williams',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -28,7 +28,7 @@ var playlist = [
       'https://ia800800.us.archive.org/24/items/78_blue-skies_benny-goodman-and-his-orchestra-art-lund-berlin_gbia0019543b/Blue%20Skies%20-%20Benny%20Goodman%20and%20his%20Orchestra.mp3',
     title: 'Blue Skies',
     artist: 'Benny Goodman and his Orchestra',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -45,7 +45,7 @@ var playlist = [
       'https://ia600302.us.archive.org/28/items/sourire1906/sourire1906_64kb.mp3',
     title: "Sourire d'Avril",
     artist: 'Columbia Orchestra',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -61,7 +61,7 @@ var playlist = [
       'https://ia800200.us.archive.org/2/items/AdaJoneswithVictorLightOperaCompany/AdaJoneswithVictorLightOperaCompany-TheYamaYamaMan_2.mp3',
     title: 'Yama Yama Man',
     artist: 'Ada Jones',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src: 'https://travsd.files.wordpress.com/2011/09/q3jmb58n11d55dn.jpg'
@@ -77,7 +77,7 @@ var playlist = [
       'https://ia801400.us.archive.org/2/items/rhapblue11924/rhapblue11924_64kb.mp3',
     title: 'Rhapsody in Blue pt. 1',
     artist: 'Paul Whiteman and George Gershwin',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -93,7 +93,7 @@ var playlist = [
       'https://ia801406.us.archive.org/27/items/EDIS-SRP-0198-15/EDIS-SRP-0198-15.mp3',
     title: 'Barbara Allen',
     artist: 'Frank Luther',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -109,7 +109,7 @@ var playlist = [
       'https://ia800309.us.archive.org/14/items/rhapblue21924/rhapblue21924_64kb.mp3',
     title: 'Rhapsody in Blue pt. 2',
     artist: 'Paul Whiteman and George Gershwin',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -124,7 +124,7 @@ var playlist = [
     url:
       'https://ia601409.us.archive.org/11/items/MidsommerDansen--scandinavian/MidsommerDansen--scandinavian.mp3',
     title: 'Midsommer Schottische',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:
@@ -141,7 +141,7 @@ var playlist = [
       'https://ia800907.us.archive.org/15/items/RACHMANINOFFRhapsodyOnAThemeByPaganini-Rachmaninoff-NEWTRANSFER/Rachmaninoff-RhapsodyOnAThemeByPaganiniOp.43.mp3',
     title: 'Rhapsody on a Theme of Paganini',
     artist: 'Sergei Rachmaninoff',
-    album: 'React Responsive Audio Player',
+    album: 'Cassette',
     artwork: [
       {
         src:

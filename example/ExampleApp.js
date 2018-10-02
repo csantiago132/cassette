@@ -1,4 +1,4 @@
-/* globals React, PropTypes, ExamplePlayerContextProvider, ExampleAudioPlayer, ExampleMediaInfo */
+/* globals React, PropTypes, ExamplePlayerContextProvider, ExampleMediaPlayer, ExampleMediaInfo */
 
 // eslint-disable-next-line no-unused-vars
 function ExampleApp(props) {
@@ -10,7 +10,7 @@ function ExampleApp(props) {
       {
         playlist: props.playlist
       },
-      React.createElement(ExampleAudioPlayer),
+      React.createElement(ExampleMediaPlayer),
       React.createElement(ExampleMediaInfo)
     )
   );

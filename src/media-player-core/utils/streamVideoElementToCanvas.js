@@ -32,7 +32,7 @@ function streamVideoElementToCanvas(videoElement, canvas, callback) {
     let isVideo = true;
 
     // however if there's no video to display (usually means we're playing
-    // audio) then we want to display a placeholder image, if available
+    // media) then we want to display a placeholder image, if available
     if (!(targetWidth && targetHeight) && placeholderImage) {
       imageElement = placeholderImage;
       imageWidth = placeholderImage.naturalWidth;

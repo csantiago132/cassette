@@ -186,7 +186,7 @@ export class VolumeControl extends PureComponent {
           ref={this.setMuteToggleRef}
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__audio_button rrap__mute_btn',
+            'rrap__material_toggle rrap__media_button rrap__mute_btn',
             {
               highlight: hover,
               on: !muted

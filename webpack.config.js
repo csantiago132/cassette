@@ -35,8 +35,8 @@ function webpackConfig(esmodules, minimize) {
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     entry: {
       [minimize
-        ? 'audioplayer.min'
-        : 'audioplayer']: './src/responsive-media-player/index.js'
+        ? 'mediaplayer.min'
+        : 'mediaplayer']: './src/responsive-media-player/index.js'
     },
     resolve: {
       extensions: ['.js', '.jsx'],
@@ -54,7 +54,7 @@ function webpackConfig(esmodules, minimize) {
       publicPath: '/dist',
       libraryTarget: 'umd',
       libraryExport: 'default',
-      library: 'AudioPlayer',
+      library: 'MediaPlayer',
       filename: `${esmodules ? 'esm/' : 'es5/'}[name].js`
     },
     module: {

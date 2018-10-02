@@ -10,13 +10,13 @@ export class MediaStatusBar extends PureComponent {
     const { className, style, displayText, displayTime } = this.props;
     return (
       <div
-        className={classNames('rrap__audio_status_bar', className)}
+        className={classNames('rrap__media_status_bar', className)}
         style={style}
       >
-        <div className="rrap__audio_info_marquee">
+        <div className="rrap__media_info_marquee">
           <MaybeMarquee content={displayText} />
         </div>
-        <div className="rrap__audio_time_progress">{displayTime}</div>
+        <div className="rrap__media_time_progress">{displayTime}</div>
       </div>
     );
   }

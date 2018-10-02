@@ -8,7 +8,7 @@ import MediaStatusBar from './common/MediaStatusBar';
 import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
 
-const audioStatusBarStyle = {
+const mediaStatusBarStyle = {
   position: 'absolute',
   top: 0,
   bottom: 0,
@@ -21,14 +21,14 @@ export class MediaProgressDisplay extends Component {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;
     return (
-      <div className="rrap__audio_progress_container">
+      <div className="rrap__media_progress_container">
         <ProgressBarDisplay
-          className="rrap__audio_progress_bar"
+          className="rrap__media_progress_bar"
           progressClassName="progress"
           progress={progress}
         />
         <MediaStatusBar
-          style={audioStatusBarStyle}
+          style={mediaStatusBarStyle}
           displayText={getDisplayText(playlist[activeTrackIndex]) || ''}
           displayTime={`${convertToTime(currentTime)} / ${convertToTime(
             duration

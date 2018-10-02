@@ -15,7 +15,7 @@ export class ShuffleButton extends PureComponent {
         <button
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__audio_button rrap__shuffle_btn',
+            'rrap__material_toggle rrap__media_button rrap__shuffle_btn',
             { on: shuffle }
           )}
           onClick={onToggleShuffle}

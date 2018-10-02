@@ -2,7 +2,7 @@
 
 <img alt="https://www.pexels.com/photo/black-lx90-cassette-tape-1228497/" src="cassette.jpg" title="Photo by Stas Knop from Pexels" />
 
-A zero-config-required media player component library for React. The flexible core smooths over the quirks of media state management in the browser, while allowing you to implement any UI you can imagine.
+A zero-config-required media player component library for React. The flexible core handles the logical complexities of common audio and video player paradigms, while allowing you to implement any UI you can come up with.
 
 ![react-responsive-audio-player in action](demo.gif)
 

@@ -19,7 +19,7 @@ function getNextControlKey() {
   return (nextControlKey++).toString();
 }
 
-export class ResponsiveMediaPlayer extends Component {
+export class MediaPlayer extends Component {
   getKeyedChildren(elements) {
     // cache of keys to use in controls render
     // (to maintain state in case order changes)
@@ -103,7 +103,7 @@ export class ResponsiveMediaPlayer extends Component {
   }
 }
 
-ResponsiveMediaPlayer.propTypes = {
+MediaPlayer.propTypes = {
   controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
   getDisplayText: PropTypes.func.isRequired,
   fullscreenEnabled: PropTypes.bool.isRequired,
@@ -111,7 +111,7 @@ ResponsiveMediaPlayer.propTypes = {
   renderVideoDisplay: PropTypes.func.isRequired
 };
 
-ResponsiveMediaPlayer.defaultProps = {
+MediaPlayer.defaultProps = {
   controls: [
     'spacer',
     'backskip',
@@ -134,4 +134,4 @@ ResponsiveMediaPlayer.defaultProps = {
   }
 };
 
-export default ResponsiveMediaPlayer;
+export default MediaPlayer;

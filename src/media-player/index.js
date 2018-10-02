@@ -1,4 +1,5 @@
 import MediaPlayer from './MediaPlayer';
+import MediaPlayerControls from './MediaPlayerControls';
 import PlayPauseButton from './controls/PlayPauseButton';
 import BackSkipButton from './controls/BackSkipButton';
 import ForwardSkipButton from './controls/ForwardSkipButton';
@@ -13,6 +14,7 @@ import Spacer from './controls/Spacer';
 
 export default MediaPlayer;
 export { MediaPlayer };
+export { MediaPlayerControls };
 export { PlayPauseButton };
 export { BackSkipButton };
 export { ForwardSkipButton };
@@ -26,6 +28,7 @@ export { MediaProgressDisplay };
 export { Spacer };
 
 // for browser script tag (global var) usage
+MediaPlayer.MediaPlayerControls = MediaPlayerControls;
 MediaPlayer.PlayPauseButton = PlayPauseButton;
 MediaPlayer.BackSkipButton = BackSkipButton;
 MediaPlayer.ForwardSkipButton = ForwardSkipButton;

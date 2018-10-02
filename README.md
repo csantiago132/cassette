@@ -4,19 +4,19 @@
 
 A zero-config-required media player component library for React. The default responsive UI works great in desktop or mobile web browsers. The flexible core handles the logical complexities of common media and video player paradigms, while allowing you to implement any UI you can come up with.
 
-### this is version 2.0 (pre-alpha). see the current release [here](https://github.com/benwiley4000/react-responsive-media-player/blob/master/README.md)!
+### this is version 2.0 (pre-alpha). see the current release [here](https://github.com/benwiley4000/cassette/blob/master/README.md)!
 
-![react-responsive-media-player in action](demo.gif)
+![cassette in action](demo.gif)
 
-### [see a live demo here](https://benwiley4000.github.io/react-responsive-media-player/)
+### [see a live demo here](https://benwiley4000.github.io/cassette/)
 
 ## the replaceable responsive media player
 
 React Component wrapper for the HTML media tag. Out of the box, provides a featured, clean-looking media player which works great on desktop and mobile. Offers a powerful API for building a rich, totally customized media player UI.
 
-[![NPM](https://nodei.co/npm/react-responsive-media-player.png)](https://npmjs.org/package/react-responsive-media-player)
+[![NPM](https://nodei.co/npm/cassette.png)](https://npmjs.org/package/cassette)
 
-**If you're not using npm and you need production-ready scripts to include in your project, check out [the releases](https://github.com/benwiley4000/react-responsive-media-player/releases).**
+**If you're not using npm and you need production-ready scripts to include in your project, check out [the releases](https://github.com/benwiley4000/cassette/releases).**
 
 ## Usage
 HTML:
@@ -35,7 +35,7 @@ JavaScript (with JSX):
 // dist/main.js
 var React = require('react');
 var ReactDOM = require('react-dom');
-var MediaPlayer = require('react-responsive-media-player');
+var MediaPlayer = require('cassette');
 
 var playlist =
   [{ url: 'media/track1.mp3',
@@ -68,9 +68,9 @@ The fastest way to get off the ground with this module is to paste the following
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>React Responsive Media Player</title>
+    <title>Cassette</title>
     <style> html, body { margin: 0; background: lightseagreen; } </style>
-    <link rel="stylesheet" href="https://unpkg.com/react-responsive-media-player@1.5.0/dist/mediaplayer.css">
+    <link rel="stylesheet" href="https://unpkg.com/cassette@1.5.0/dist/mediaplayer.css">
   </head>
   <body>
     <div id="media_player_container"></div>
@@ -79,7 +79,7 @@ The fastest way to get off the ground with this module is to paste the following
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/prop-types/prop-types.js"></script>
     <script src="https://unpkg.com/resize-observer-polyfill"></script>
-    <script src="https://unpkg.com/react-responsive-media-player@1.5.0/dist/mediaplayer.js"></script>
+    <script src="https://unpkg.com/cassette@1.5.0/dist/mediaplayer.js"></script>
     <script>
       var playlist =
         [{ url: 'song1.mp3', title: 'Track 1 - a track to remember' },
@@ -106,14 +106,14 @@ Of course you'll need to include paths to actual media files, or the player will
 ### Package installation
 If you use [npm](https://www.npmjs.com/) and a front-end package bundling system like [Browserify](http://browserify.org/) or [webpack](https://webpack.github.io/), it's recommended that you install the package and its dependencies in your project:
 ```
-npm install --save react-responsive-media-player react react-dom
+npm install --save cassette react react-dom
 ```
 While `react-dom` isn't technically a peer dependency, you'll need it if you plan to place the media player in the DOM, which you probably will.
 
 When you first include the component in your project it might not look how you're expecting. Be sure to check the **Styling** section below.
 
 ### Pre-built releases
-If you prefer not to use a package bundler, you can find built releases to download [here](https://github.com/benwiley4000/react-responsive-media-player/releases).
+If you prefer not to use a package bundler, you can find built releases to download [here](https://github.com/benwiley4000/cassette/releases).
 
 ## Options
 Options can be passed to the MediaPlayer element as props. Currently supported props are:
@@ -130,7 +130,7 @@ Options can be passed to the MediaPlayer element as props. Currently supported p
     *NOTE*: Network speed may affect how quickly album artwork shows up in system MediaSession notifications. You can try [these strategies for implementing caching](https://developers.google.com/web/updates/2017/02/media-session#make_it_play_nice_offline).
   - `meta`: An object containing any other track-specific information you want to store
 
-  **NOTE**: Re-rendering the `MediaPlayer` with a mutated `playlist` prop will not work as expected. Please make a copy of the playlist instead. For more information, [see here](https://github.com/benwiley4000/react-responsive-media-player/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md).
+  **NOTE**: Re-rendering the `MediaPlayer` with a mutated `playlist` prop will not work as expected. Please make a copy of the playlist instead. For more information, [see here](https://github.com/benwiley4000/cassette/blob/bcab159f365bd82ad25ee9e0288224e0d174b886/docs/playlist_in_progress.md).
 
 * `controls`: an array of keyword strings which correspond to available media control components. The order of keywords translates to the order of rendered controls. The default array is: `['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress']`. The possible keyword values are:
   - `'playpause'` (play/pause toggle button)
@@ -249,7 +249,7 @@ You might need to set the `crossOrigin` prop in order for Web Audio API processi
 
 ## Styling
 
-In order to use the default stylings you'll need to grab the compiled `mediaplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/react-responsive-media-player/releases).
+In order to use the default stylings you'll need to grab the compiled `mediaplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/cassette/releases).
 
 It's easy to override the default styles with CSS. Alternatively, for styles which only affect the outer element, you can use [React inline styles](https://facebook.github.io/react/docs/dom-elements.html#style).
 
@@ -283,7 +283,7 @@ The `!default` flag means you can override these variable definitions before the
 $media_player_base_bg_color: firebrick;
 
 // Using webpack css/sass module import syntax
-@import '~react-responsive-media-player/src/index';
+@import '~cassette/src/index';
 
 // include other overrides afterward
 .media_player {

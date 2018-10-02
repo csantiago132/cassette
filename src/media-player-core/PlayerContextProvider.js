@@ -643,7 +643,7 @@ export class PlayerContextProvider extends Component {
       /* we'll update currentTime on the media listener hook anyway,
        * but that might not happen for a bit... so the optimistic update
        * helps us avoid the progress bar jumping around and confusing the user.
-       * https://github.com/benwiley4000/react-responsive-media-player/issues/209
+       * https://github.com/benwiley4000/cassette/issues/209
        */
       currentTime: seekPreviewTime
     });

@@ -176,7 +176,7 @@ export class VolumeControl extends PureComponent {
     return (
       <ButtonWrapper
         ref={this.setVolumeControlRef}
-        className="rrap__volume_control"
+        className="cassette__volume_control"
         style={volumeControlStyle}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
@@ -186,7 +186,7 @@ export class VolumeControl extends PureComponent {
           ref={this.setMuteToggleRef}
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__media_button rrap__mute_btn',
+            'cassette__material_toggle cassette__media_button cassette__mute_btn',
             {
               highlight: hover,
               on: !muted
@@ -202,13 +202,13 @@ export class VolumeControl extends PureComponent {
           hidden={!volumeBarPosition}
           ref={this.setVolumeBarContainerRef}
           className={classNames(
-            'rrap__volume_control__volume_bar_container',
+            'cassette__volume_control__volume_bar_container',
             volumeBarPosition
           )}
         >
           <ProgressBar
             className={classNames(
-              'rrap__volume_control__volume_bar',
+              'cassette__volume_control__volume_bar',
               volumeBarPosition
             )}
             progressClassName="volume"

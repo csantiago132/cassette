@@ -13,9 +13,12 @@ export class PlayPauseButton extends PureComponent {
       <ButtonWrapper>
         <button
           type="button"
-          className={classNames('rrap__play_pause_button rrap__media_button', {
-            playing: !paused || awaitingResumeOnSeekComplete
-          })}
+          className={classNames(
+            'cassette__play_pause_button cassette__media_button',
+            {
+              playing: !paused || awaitingResumeOnSeekComplete
+            }
+          )}
           onClick={onTogglePause}
         >
           <div className="foreground">

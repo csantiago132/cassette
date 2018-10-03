@@ -7,7 +7,7 @@ const ButtonWrapper = forwardRef(({ className, children, ...rest }, ref) => {
   return (
     <div
       ref={ref}
-      className={classNames('rrap__media_button_wrapper', className)}
+      className={classNames('cassette__media_button_wrapper', className)}
       {...rest}
     >
       {children}

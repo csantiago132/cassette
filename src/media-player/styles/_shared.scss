@@ -1,31 +1,31 @@
 @import 'variables';
 
-.rrap {
+.cassette {
   &__media_button_wrapper {
     display: inline-block;
   }
 
   &__media_button {
-    padding-left: $rrap_btn_padding;
-    padding-right: $rrap_btn_padding;
-    margin-left: $rrap_btn_margin;
-    margin-right: $rrap_btn_margin;
+    padding-left: $cassette_btn_padding;
+    padding-right: $cassette_btn_padding;
+    margin-left: $cassette_btn_margin;
+    margin-right: $cassette_btn_margin;
     cursor: pointer;
     align-self: center;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    height: $rrap_btn_height;
+    height: $cassette_btn_height;
 
     .foreground {
-      opacity: $rrap_btn_normal_opacity;
+      opacity: $cassette_btn_normal_opacity;
     }
     &:hover .foreground,
     &.highlight .foreground {
-      opacity: $rrap_btn_hover_opacity;
+      opacity: $cassette_btn_hover_opacity;
     }
     &:active .foreground {
-      opacity: $rrap_btn_active_opacity;
+      opacity: $cassette_btn_active_opacity;
     }
   }
 }

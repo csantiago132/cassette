@@ -1,6 +1,6 @@
 @import 'variables';
 
-.rrap {
+.cassette {
   /* https://codepen.io/OxyDesign/pen/ojpepQ */
   &__play_pause_button {
     background: none;
@@ -8,8 +8,8 @@
 
     .foreground {
       position: relative;
-      width: $rrap_play_btn_width;
-      height: $rrap_play_btn_height;
+      width: $cassette_play_btn_width;
+      height: $cassette_play_btn_height;
     }
 
     .left,
@@ -17,8 +17,8 @@
       position: absolute;
       top: 0;
       transition-property: width;
-      transition-duration: $rrap_play_btn_transition_duration;
-      transition-timing-function: $rrap_play_btn_transition_timing_function;
+      transition-duration: $cassette_play_btn_transition_duration;
+      transition-timing-function: $cassette_play_btn_transition_timing_function;
       width: 50%;
       height: 100%;
       overflow: hidden;
@@ -29,11 +29,12 @@
         position: absolute;
         top: 0;
         transition-property: border, height;
-        transition-duration: $rrap_play_btn_transition_duration;
-        transition-timing-function: $rrap_play_btn_transition_timing_function;
+        transition-duration: $cassette_play_btn_transition_duration;
+        transition-timing-function: $cassette_play_btn_transition_timing_function;
         border-style: solid;
-        border-width: $rrap_play_btn_height/2 $rrap_play_btn_width;
-        border-color: transparent transparent transparent $rrap_play_btn_color;
+        border-width: $cassette_play_btn_height/2 $cassette_play_btn_width;
+        border-color: transparent transparent transparent
+          $cassette_play_btn_color;
         width: 0;
         height: 0;
       }
@@ -51,18 +52,18 @@
       right: 0;
 
       &::after {
-        right: 0 - $rrap_play_btn_width;
+        right: 0 - $cassette_play_btn_width;
       }
     }
 
     &.playing {
       .left,
       .right {
-        width: $rrap_play_btn_pause_bar_width;
+        width: $cassette_play_btn_pause_bar_width;
 
         &::after {
-          border-width: 0 $rrap_play_btn_width;
-          height: $rrap_play_btn_height;
+          border-width: 0 $cassette_play_btn_width;
+          height: $cassette_play_btn_height;
         }
       }
     }

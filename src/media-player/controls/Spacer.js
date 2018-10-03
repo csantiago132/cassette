@@ -6,7 +6,7 @@ export class Spacer extends PureComponent {
   render() {
     return (
       <ButtonWrapper>
-        <div className="rrap__spacer" />
+        <div className="cassette__spacer" />
       </ButtonWrapper>
     );
   }

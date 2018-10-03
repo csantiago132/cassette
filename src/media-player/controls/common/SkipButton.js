@@ -11,9 +11,12 @@ export class SkipButton extends PureComponent {
       <ButtonWrapper>
         <button
           type="button"
-          className={classNames('rrap__skip_button rrap__media_button', {
-            back
-          })}
+          className={classNames(
+            'cassette__skip_button cassette__media_button',
+            {
+              back
+            }
+          )}
           onClick={onClick}
         >
           <div className="skip_button_inner foreground">

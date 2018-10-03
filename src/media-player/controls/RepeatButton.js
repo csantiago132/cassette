@@ -39,7 +39,7 @@ export class RepeatButton extends PureComponent {
         <button
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__media_button rrap__repeat_btn',
+            'cassette__material_toggle cassette__media_button cassette__repeat_btn',
             { on: repeatStrategy !== 'none' }
           )}
           onClick={this.handleNextRepeatStrategy}

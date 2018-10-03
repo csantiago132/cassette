@@ -38,9 +38,9 @@ export class MediaProgress extends PureComponent {
     const time = seekInProgress ? seekPreviewTime : currentTime;
     const displayedProgress = duration ? time / duration : 0;
     return (
-      <div className="rrap__media_progress_container">
+      <div className="cassette__media_progress_container">
         <ProgressBar
-          className="rrap__media_progress_bar"
+          className="cassette__media_progress_bar"
           progressClassName="progress"
           progress={displayedProgress}
           progressDirection="right"

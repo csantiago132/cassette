@@ -63,11 +63,11 @@ export class MediaPlayerControls extends Component {
         {fullscreenContext => (
           <PlayerContextConsumer>
             {playerContext => (
-              <div className="rrap">
+              <div className="cassette">
                 {showVideo &&
                   renderVideoDisplay(playerContext, fullscreenContext)}
                 <div
-                  className="rrap__control_bar"
+                  className="cassette__control_bar"
                   title={getDisplayText(
                     playerContext.playlist[playerContext.activeTrackIndex]
                   )}
@@ -115,7 +115,7 @@ MediaPlayerControls.defaultProps = {
   renderVideoDisplay(playerContext, fullscreenContext) {
     return (
       <VideoDisplay
-        className="rrap__video_display_container"
+        className="cassette__video_display_container"
         onClick={playerContext.onTogglePause}
       />
     );

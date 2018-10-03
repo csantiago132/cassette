@@ -17,7 +17,7 @@ export class FullscreenButton extends PureComponent {
         <button
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__media_button rrap__fullscreen_btn',
+            'cassette__material_toggle cassette__media_button cassette__fullscreen_btn',
             { on: fullscreen }
           )}
           onClick={fullscreen ? requestExitFullscreen : requestFullscreen}

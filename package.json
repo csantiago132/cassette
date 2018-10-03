@@ -1,21 +1,21 @@
 {
-  "name": "react-responsive-audio-player",
-  "version": "1.5.0",
+  "name": "cassette",
+  "private": true,
+  "version": "2.0.0-alpha.0",
   "description": "A simple, clean, and responsive visual wrapper for the HTML audio tag, built with React.",
   "main": "dist/audioplayer.js",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "build:clean": "rimraf dist",
-    "build:webpack": "BUILD_MODE=all webpack --progress",
-    "build:component_css": "gulp styles",
-    "build": "npm run build:clean && npm run build:webpack && npm run build:component_css",
-    "dev": "BUILD_MODE=unminimized webpack-serve --open --open-path ./example",
-    "dev:network": "BUILD_MODE=unminimized webpack-serve --host 0.0.0.0 --open --open-path ./example",
+    "build:example": "webpack --progress",
+    "dev": "webpack-serve --open --open-path ./example",
+    "dev:network": "webpack-serve --host 0.0.0.0 --open --open-path ./example/",
     "docs": "styleguidist build",
     "docs:serve": "styleguidist server",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint:all",
+    "preversion": "npm run lint:all",
     "prettier": "pretty-quick --staged --no-restage \"**/*.js\" \"**/*.scss\"",
     "prettier:all": "prettier --write \"**/*.js\" \"**/*.scss\"",
+    "publish": "lerna publish",
     "lint": "lint-staged",
     "lint:all": "eslint \"**/*.js\" && node prettier-check.js \"**/*.scss\"",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/benwiley4000/react-responsive-audio-player.git"
+    "url": "https://github.com/benwiley4000/cassette.git"
   },
   "engines": {
     "node": ">=6.0.0",
@@ -35,12 +35,17 @@
   },
   "keywords": [
     "audio",
-    "html5",
+    "video",
+    "media",
+    "ui",
     "react",
     "reactjs",
     "responsive",
     "music",
-    "player"
+    "player",
+    "html5",
+    "component",
+    "components"
   ],
   "author": {
     "name": "Ben Wiley",
@@ -48,16 +53,12 @@
     "url": "http://benwiley.org/"
   },
   "license": "MIT",
-  "peerDependencies": {
-    "react": "^16.3.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.41",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.41",
     "@babel/preset-env": "^7.0.0-beta.41",
     "@babel/preset-react": "^7.0.0-beta.41",
     "@benwiley4000/svg-react-loader": "^0.4.5-fix-vulnerabilities",
-    "array-find-index": "^1.0.2",
     "autoprefixer": "^7.1.1",
     "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.0-beta.2",
@@ -76,14 +77,15 @@
     "gulp-sass": "^3.1.0",
     "gulp-uglifycss": "^1.0.8",
     "husky": "^1.0.0-rc.14",
+    "lerna": "^3.4.0",
     "lint-staged": "^7.2.2",
-    "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "^0.2.0",
     "node-sass": "^4.9.3",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "postcss-loader": "^2.0.5",
     "prettier": "1.14.2",
     "pretty-quick": "^1.7.0",
+    "prop-types": "^15.5.10",
     "react": "^16.3.2",
     "react-docgen-external-proptypes-handler": "^1.0.0",
     "react-dom": "^16.3.3",
@@ -93,9 +95,5 @@
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-serve": "^2.0.2"
-  },
-  "dependencies": {
-    "prop-types": "^15.5.10",
-    "resize-observer-polyfill": "^1.4.2"
   }
 }

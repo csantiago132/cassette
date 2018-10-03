@@ -3,16 +3,11 @@ import PropTypes from 'prop-types';
 
 import { MaybeMarquee } from 'media-player-components';
 
-import classNames from '../../utils/classNames';
-
 export class MediaStatusBar extends PureComponent {
   render() {
-    const { className, style, displayText, displayTime } = this.props;
+    const { style, displayText, displayTime } = this.props;
     return (
-      <div
-        className={classNames('rrap__media_status_bar', className)}
-        style={style}
-      >
+      <div className="rrap__media_status_bar" style={style}>
         <div className="rrap__media_info_marquee">
           <MaybeMarquee content={displayText} />
         </div>
@@ -23,7 +18,6 @@ export class MediaStatusBar extends PureComponent {
 }
 
 MediaStatusBar.propTypes = {
-  className: PropTypes.string,
   style: PropTypes.object,
   displayText: PropTypes.string.isRequired,
   displayTime: PropTypes.string.isRequired

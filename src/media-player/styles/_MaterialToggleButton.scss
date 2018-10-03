@@ -2,7 +2,7 @@
 
 @import 'variables';
 
-.rrap {
+.cassette {
   &__material_toggle {
     background: none;
     border: none;
@@ -14,10 +14,10 @@
       height: 42px;
     }
     svg {
-      fill: $rrap_material_toggle_btn_off_color;
+      fill: $cassette_material_toggle_btn_off_color;
     }
     &.on svg {
-      fill: $rrap_material_toggle_btn_on_color;
+      fill: $cassette_material_toggle_btn_on_color;
     }
   }
 }

@@ -119,7 +119,7 @@ export class ProgressBar extends PureComponent {
   handleAdjustComplete(event) {
     const { adjusting, onAdjustComplete } = this.props;
     /* this function is activated when the user lets go of
-     * the mouse, so if .rrap__noselect was applied
+     * the mouse, so if noselect was applied
      * to the document body, get rid of it.
      */
     this.toggleNoselect(false);

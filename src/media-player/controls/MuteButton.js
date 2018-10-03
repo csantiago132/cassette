@@ -16,7 +16,7 @@ export class MuteButton extends PureComponent {
         <button
           type="button"
           className={classNames(
-            'rrap__material_toggle rrap__media_button rrap__mute_btn',
+            'cassette__material_toggle cassette__media_button cassette__mute_btn',
             { on: !muted }
           )}
           onClick={onToggleMuted}

@@ -21,9 +21,9 @@ export class MediaProgressDisplay extends PureComponent {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;
     return (
-      <div className="rrap__media_progress_container">
+      <div className="cassette__media_progress_container">
         <ProgressBarDisplay
-          className="rrap__media_progress_bar"
+          className="cassette__media_progress_bar"
           progressClassName="progress"
           progress={progress}
         />

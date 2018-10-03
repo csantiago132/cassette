@@ -1,4 +1,4 @@
-.rrap {
+.cassette {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -8,10 +8,10 @@
     flex-direction: row;
     flex-wrap: wrap-reverse;
     justify-content: center;
-    background-color: $rrap_base_bg_color;
+    background-color: $cassette_base_bg_color;
 
     > * {
-      height: $rrap_base_height;
+      height: $cassette_base_height;
     }
   }
 }

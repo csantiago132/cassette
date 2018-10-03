@@ -1,6 +1,6 @@
 @import 'variables';
 
-.rrap {
+.cassette {
   &__media_status_bar {
     display: flex;
     flex-direction: row;
@@ -13,10 +13,10 @@
   }
   &__media_info_marquee {
     /* to make room for __media_time_progress */
-    width: $rrap_marquee_width;
-    margin-left: $rrap_marquee_margin;
-    font-size: $rrap_info_font_size;
-    color: $rrap_base_text_color;
+    width: $cassette_marquee_width;
+    margin-left: $cassette_marquee_margin;
+    font-size: $cassette_info_font_size;
+    color: $cassette_base_text_color;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -31,9 +31,9 @@
     }
   }
   &__media_time_progress {
-    margin-right: $rrap_time_margin;
+    margin-right: $cassette_time_margin;
     align-self: center;
-    color: $rrap_base_text_color;
-    font-size: $rrap_time_font_size;
+    color: $cassette_base_text_color;
+    font-size: $cassette_time_font_size;
   }
 }

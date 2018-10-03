@@ -1,8 +1,8 @@
 @import 'variables';
 
-.rrap {
+.cassette {
   &__volume_control {
-    height: $rrap_volume_control_height;
+    height: $cassette_volume_control_height;
     position: relative;
 
     &__volume_bar_container {
@@ -18,77 +18,80 @@
       &.hiddenup,
       &.upabove {
         width: 100%;
-        height: $rrap_volume_bar_height + $rrap_volume_bar_gutter_close +
-          $rrap_volume_bar_gutter_far;
+        height: $cassette_volume_bar_height + $cassette_volume_bar_gutter_close +
+          $cassette_volume_bar_gutter_far;
       }
       &.hiddenright,
       &.rightabove,
       &.rightbelow {
-        width: $rrap_volume_bar_height + $rrap_volume_bar_gutter_far * 2;
-        height: $rrap_volume_bar_width + $rrap_volume_bar_gutter_close * 2;
+        width: $cassette_volume_bar_height + $cassette_volume_bar_gutter_far * 2;
+        height: $cassette_volume_bar_width + $cassette_volume_bar_gutter_close *
+          2;
       }
       &.hiddenup,
       &.hiddenright,
       &.upabove,
       &.rightabove {
-        bottom: $rrap_volume_control_height;
+        bottom: $cassette_volume_control_height;
       }
       &.rightbelow {
-        top: $rrap_volume_control_height;
+        top: $cassette_volume_control_height;
       }
     }
     &__volume_bar {
       position: absolute;
-      border-radius: $rrap_volume_bar_width / 2;
-      background-color: $rrap_base_bg_color;
-      box-shadow: $rrap_volume_bar_box_shadow;
+      border-radius: $cassette_volume_bar_width / 2;
+      background-color: $cassette_base_bg_color;
+      box-shadow: $cassette_volume_bar_box_shadow;
 
       &.hiddenup,
       &.upabove {
-        bottom: $rrap_volume_bar_gutter_close;
-        top: $rrap_volume_bar_gutter_far;
+        bottom: $cassette_volume_bar_gutter_close;
+        top: $cassette_volume_bar_gutter_far;
         left: 50%;
         transform: translateX(-50%);
-        width: $rrap_volume_bar_width;
+        width: $cassette_volume_bar_width;
       }
       &.hiddenright,
       &.rightabove,
       &.rightbelow {
-        bottom: $rrap_volume_bar_gutter_close;
-        top: $rrap_volume_bar_gutter_close;
-        left: $rrap_volume_bar_gutter_far;
-        right: $rrap_volume_bar_gutter_far;
+        bottom: $cassette_volume_bar_gutter_close;
+        top: $cassette_volume_bar_gutter_close;
+        left: $cassette_volume_bar_gutter_far;
+        right: $cassette_volume_bar_gutter_far;
       }
 
       .volume {
-        border-radius: $rrap_volume_bar_width / 2;
-        background-color: $rrap_volume_bar_color;
+        border-radius: $cassette_volume_bar_width / 2;
+        background-color: $cassette_volume_bar_color;
       }
       .handle {
         cursor: pointer;
-        width: $rrap_volume_handle_size + $rrap_volume_handle_border_width * 2;
-        height: $rrap_volume_handle_size + $rrap_volume_handle_border_width * 2;
+        width: $cassette_volume_handle_size +
+          $cassette_volume_handle_border_width * 2;
+        height: $cassette_volume_handle_size +
+          $cassette_volume_handle_border_width * 2;
         border-radius: 50%;
-        background-color: $rrap_volume_bar_color;
-        box-shadow: $rrap_volume_handle_box_shadow;
+        background-color: $cassette_volume_bar_color;
+        box-shadow: $cassette_volume_handle_box_shadow;
         position: relative;
 
         > div {
           position: absolute;
-          top: $rrap_volume_handle_border_width;
-          left: $rrap_volume_handle_border_width;
-          width: $rrap_volume_handle_size;
-          height: $rrap_volume_handle_size;
+          top: $cassette_volume_handle_border_width;
+          left: $cassette_volume_handle_border_width;
+          width: $cassette_volume_handle_size;
+          height: $cassette_volume_handle_size;
           border-radius: 50%;
-          background-color: $rrap_volume_handle_color;
-          opacity: $rrap_volume_handle_normal_opacity;
+          background-color: $cassette_volume_handle_color;
+          opacity: $cassette_volume_handle_normal_opacity;
         }
         &:hover > div,
         &.highlight > div {
-          opacity: $rrap_volume_handle_hover_opacity;
+          opacity: $cassette_volume_handle_hover_opacity;
         }
         &:active > div {
-          opacity: $rrap_volume_handle_active_opacity;
+          opacity: $cassette_volume_handle_active_opacity;
         }
       }
     }

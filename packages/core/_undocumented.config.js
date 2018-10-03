@@ -37,6 +37,7 @@ module.exports = {
   },
   devtool: 'source-map',
   optimization: {
-    noEmitOnErrors: true
+    noEmitOnErrors: true,
+    minimize: false
   }
 };

@@ -94,7 +94,7 @@ const styleLoaders = [
 const stylePlugins = [
   new MiniCssExtractPlugin({
     filename: 'css/[name].css',
-    path: path.join(__dirname, OUTPUT_DIR, 'css')
+    path: path.join(process.cwd(), OUTPUT_DIR, 'css')
   }),
   new OptimizeCSSAssetsPlugin({
     assetNameRegExp: /\.min\.css$/
@@ -119,7 +119,7 @@ function webpackConfig({
       extensions: ['.js', '.jsx']
     },
     output: {
-      path: path.join(__dirname, OUTPUT_DIR),
+      path: path.join(process.cwd(), OUTPUT_DIR),
       publicPath: '/dist',
       libraryTarget: 'umd',
       libraryExport: 'default',

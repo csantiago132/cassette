@@ -10,12 +10,7 @@ import convertToTime from '../utils/convertToTime';
 import getDisplayText from '../utils/getDisplayText';
 
 const mediaStatusBarStyle = {
-  pointerEvents: 'none',
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0
+  pointerEvents: 'none'
 };
 
 export class MediaProgress extends PureComponent {

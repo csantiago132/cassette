@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { PlayerPropTypes } from 'media-player-core';
@@ -6,30 +6,20 @@ import { PlayerPropTypes } from 'media-player-core';
 import getProgressStyle from './utils/getProgressStyle';
 import getHandleStyle from './utils/getHandleStyle';
 
-export class ProgressBarDisplay extends PureComponent {
-  render() {
-    const {
-      className,
+export const ProgressBarDisplay = forwardRef(
+  (
+    {
       progressClassName,
-      style,
       progressStyle,
       progress,
       progressDirection,
       handle,
-      onMouseDown,
-      onTouchStart,
-      onClick,
-      progressBarRef
-    } = this.props;
+      ...rest
+    },
+    ref
+  ) => {
     return (
-      <div
-        ref={progressBarRef}
-        className={className}
-        style={style}
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        onClick={onClick}
-      >
+      <div {...rest} ref={ref}>
         <div
           style={{
             position: 'relative',
@@ -54,20 +44,14 @@ export class ProgressBarDisplay extends PureComponent {
       </div>
     );
   }
-}
+);
 
 ProgressBarDisplay.propTypes = {
-  className: PropTypes.string,
   progressClassName: PropTypes.string,
-  style: PropTypes.object,
   progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
   progressDirection: PlayerPropTypes.progressDirection.isRequired,
-  handle: PropTypes.element,
-  onMouseDown: PropTypes.func,
-  onTouchStart: PropTypes.func,
-  onClick: PropTypes.func,
-  progressBarRef: PropTypes.func
+  handle: PropTypes.element
 };
 
 export default ProgressBarDisplay;

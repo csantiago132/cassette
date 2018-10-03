@@ -107,20 +107,25 @@ export class MaybeMarquee extends PureComponent {
   }
 
   render() {
+    const { content, ...attributes } = this.props;
+    delete attributes.pixelsPerSecond;
+    delete attributes.scrollDirection;
     return (
       <div
+        {...attributes}
         ref={elem => (this.marqueeContainerElement = elem)}
         style={{
           position: 'relative',
           overflow: 'hidden',
-          height: this.state.contentHeight
+          height: this.state.contentHeight,
+          ...(attributes.style || {})
         }}
       >
         <div
           ref={elem => (this.movingContentContainerElement = elem)}
           style={{ position: 'absolute', whiteSpace: 'nowrap' }}
         >
-          {this.props.content}
+          {content}
         </div>
       </div>
     );

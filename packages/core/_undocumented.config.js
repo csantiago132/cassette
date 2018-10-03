@@ -1,6 +1,6 @@
 var path = require('path');
 
-var OUTPUT_DIR = './_undocumented';
+var OUTPUT_DIR = './dist';
 
 module.exports = {
   mode: 'production',
@@ -10,7 +10,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, OUTPUT_DIR),
-    filename: 'index.js'
+    filename: '_undocumented.js'
   },
   module: {
     rules: [

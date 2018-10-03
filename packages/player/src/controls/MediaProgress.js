@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { ProgressBar } from '@cassette/components';
 import { playerContextFilter, PlayerPropTypes } from '@cassette/core';
-import { isPlaylistValid } from '@cassette/core/_undocumented';
+import { isPlaylistValid } from '@cassette/core/dist/_undocumented';
 
 import MediaStatusBar from './common/MediaStatusBar';
 import convertToTime from '../utils/convertToTime';

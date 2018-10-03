@@ -137,20 +137,22 @@ export class ProgressBar extends PureComponent {
 
   render() {
     const {
-      className,
       progressClassName,
-      style,
       progressStyle,
       progress,
       progressDirection,
-      handle
+      handle,
+      ...attributes
     } = this.props;
+    delete attributes.adjusting;
+    delete attributes.readonly;
+    delete attributes.onAdjustProgress;
+    delete attributes.onAdjustComplete;
     return (
       <ProgressBarDisplay
-        progressBarRef={this.setProgressContainerRef}
-        className={className}
+        {...attributes}
+        ref={this.setProgressContainerRef}
         progressClassName={progressClassName}
-        style={style}
         progressStyle={progressStyle}
         progress={progress}
         progressDirection={progressDirection}
@@ -163,9 +165,7 @@ export class ProgressBar extends PureComponent {
 }
 
 ProgressBar.propTypes = {
-  className: PropTypes.string,
   progressClassName: PropTypes.string,
-  style: PropTypes.object,
   progressStyle: PropTypes.object,
   progress: PropTypes.number.isRequired,
   progressDirection: PlayerPropTypes.progressDirection.isRequired,

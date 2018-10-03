@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -35,7 +35,7 @@ function extractAspectRatio(aspectRatio) {
 
 const defaultBgColor = '#000';
 
-export class VideoDisplay extends Component {
+export class VideoDisplay extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

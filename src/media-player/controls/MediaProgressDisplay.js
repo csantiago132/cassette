@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import { ProgressBarDisplay } from 'media-player-components';
@@ -16,7 +16,7 @@ const mediaStatusBarStyle = {
   right: 0
 };
 
-export class MediaProgressDisplay extends Component {
+export class MediaProgressDisplay extends PureComponent {
   render() {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;
     const progress = duration ? currentTime / duration : 0;

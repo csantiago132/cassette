@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import { ProgressBar } from 'media-player-components';
@@ -18,7 +18,7 @@ const mediaStatusBarStyle = {
   right: 0
 };
 
-export class MediaProgress extends Component {
+export class MediaProgress extends PureComponent {
   constructor(props) {
     super(props);
 

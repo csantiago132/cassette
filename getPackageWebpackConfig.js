@@ -122,7 +122,6 @@ function webpackConfig({
       path: path.join(process.cwd(), OUTPUT_DIR),
       publicPath: '/dist',
       libraryTarget: 'umd',
-      libraryExport: 'default',
       library: packages[packageName].library,
       filename: `${esmodules ? 'esm/' : 'es5/'}[name].js`
     },

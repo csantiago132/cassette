@@ -2,8 +2,11 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 
-import { playerContextFilter, PlayerPropTypes } from '@cassette/core';
-import { logWarning } from '@cassette/core/dist/_undocumented';
+import {
+  playerContextFilter,
+  PlayerPropTypes,
+  logWarning
+} from '@cassette/core';
 
 /* Here is an explanation of the 4 different types of "height"/"width"
  * referenced in this file:

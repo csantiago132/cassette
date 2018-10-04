@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import RepeatIcon from '@benwiley4000/svg-react-loader?name=RepeatIcon!material-design-icons/av/svg/design/ic_repeat_48px.svg?';
 import RepeatOneIcon from '@benwiley4000/svg-react-loader?name=RepeatOneIcon!material-design-icons/av/svg/design/ic_repeat_one_48px.svg?';
 
-import { playerContextFilter, PlayerPropTypes } from '@cassette/core';
-import { repeatStrategyOptions } from '@cassette/core/dist/_undocumented';
+import {
+  playerContextFilter,
+  PlayerPropTypes,
+  repeatStrategyOptions
+} from '@cassette/core';
 
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';

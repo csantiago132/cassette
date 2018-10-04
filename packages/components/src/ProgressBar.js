@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { PlayerPropTypes } from '@cassette/core';
-import { convertToNumberWithinIntervalBounds } from '@cassette/core/dist/_undocumented';
+import {
+  PlayerPropTypes,
+  convertToNumberWithinIntervalBounds
+} from '@cassette/core';
 
 import ProgressBarDisplay from './ProgressBarDisplay';
 

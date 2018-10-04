@@ -6,8 +6,7 @@
   "scripts": {
     "build:clean": "rimraf dist",
     "build:webpack": "BUILD_MODE=all webpack --progress",
-    "build:_undocumented": "webpack --progress --config _undocumented.config.js",
-    "build": "npm run build:clean && npm run build:webpack && npm run build:_undocumented",
+    "build": "npm run build:clean && npm run build:webpack",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

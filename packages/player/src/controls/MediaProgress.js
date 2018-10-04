@@ -2,8 +2,11 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import { ProgressBar } from '@cassette/components';
-import { playerContextFilter, PlayerPropTypes } from '@cassette/core';
-import { isPlaylistValid } from '@cassette/core/dist/_undocumented';
+import {
+  playerContextFilter,
+  PlayerPropTypes,
+  isPlaylistValid
+} from '@cassette/core';
 
 import MediaStatusBar from './common/MediaStatusBar';
 import convertToTime from '../utils/convertToTime';

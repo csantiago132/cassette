@@ -214,39 +214,6 @@ For example, you could use this code to add a low pass to high pass filter trans
 
 You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
 
-## Does this work with the Web Audio API?
-
-We don't expose any special props for manipulating the Web Audio API with React.
-
-However, you *can* use the `mediaElementRef` prop and [`createMediaElementSource`](https://developer.mozilla.org/en-US/docs/Web/API/MediaContext/createMediaElementSource) to process your media before it gets sent to the speaker.
-
-For example, you could use this code to add a low pass to high pass filter transition during the first 10 seconds your media player is mounted:
-
-```jsx
-<MediaPlayer
-  playlist={playlist}
-  mediaElementRef={media => {
-    const ctx = new MediaContext();
-
-    let source = ctx.createMediaElementSource(media);
-
-    for (const filterType of ['lowpass', 'highpass']) {
-      const filter = ctx.createBiquadFilter();
-      filter.type = filterType;
-      filter.frequency.value = 100;
-      filter.frequency.exponentialRampToValueAtTime(3000, 10);
-      source = source.connect(filter);
-    }
-
-    source.connect(ctx.destination);
-  }},
-  crossOrigin="anonymous"
-  autoplay
-/>
-```
-
-You might need to set the `crossOrigin` prop in order for Web Audio API processing to work correctly.
-
 ## Styling
 
 In order to use the default stylings you'll need to grab the compiled `mediaplayer.css` sheet from the module's `dist/` directory. Again, if you're not using npm, you can get the sheet [here](https://github.com/benwiley4000/cassette/releases).

@@ -1,4 +1,4 @@
-/* globals React, MediaPlayer, PropTypes */
+/* globals React, cassetteCore, PropTypes */
 
 // eslint-disable-next-line no-unused-vars
 class ExamplePlayerContextProvider extends React.Component {
@@ -16,7 +16,7 @@ class ExamplePlayerContextProvider extends React.Component {
 
   render() {
     return React.createElement(
-      MediaPlayer.PlayerContextProvider,
+      cassetteCore.PlayerContextProvider,
       {
         playlist: this.props.playlist,
         autoplay: true,

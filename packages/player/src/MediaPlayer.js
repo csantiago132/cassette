@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import { PlayerContextProvider } from '@cassette/core';
+import {
+  PlayerContextProvider,
+  FullscreenContextProvider
+} from '@cassette/core';
 
 import MediaPlayerControls from './MediaPlayerControls';
 
@@ -9,33 +13,36 @@ export class MediaPlayer extends Component {
     const {
       getDisplayText,
       controls,
-      fullscreenEnabled,
       showVideo,
       renderVideoDisplay,
+      fullscreenEnabled,
       ...rest
     } = this.props;
     return (
-      <PlayerContextProvider {...rest}>
-        <MediaPlayerControls
-          getDisplayText={getDisplayText}
-          controls={controls}
-          fullscreenEnabled={fullscreenEnabled}
-          showVideo={showVideo}
-          renderVideoDisplay={renderVideoDisplay}
-        />
-      </PlayerContextProvider>
+      <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
+        <PlayerContextProvider {...rest}>
+          <MediaPlayerControls
+            getDisplayText={getDisplayText}
+            controls={controls}
+            showVideo={showVideo}
+            renderVideoDisplay={renderVideoDisplay}
+          />
+        </PlayerContextProvider>
+      </FullscreenContextProvider>
     );
   }
 }
 
 MediaPlayer.propTypes = {
   ...PlayerContextProvider.propTypes,
-  ...MediaPlayerControls.propTypes
+  ...MediaPlayerControls.propTypes,
+  fullscreenEnabled: PropTypes.bool.isRequired
 };
 
 MediaPlayer.defaultProps = {
   ...PlayerContextProvider.defaultProps,
-  ...MediaPlayerControls.defaultProps
+  ...MediaPlayerControls.defaultProps,
+  fullscreenEnabled: true
 };
 
 export default MediaPlayer;

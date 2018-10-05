@@ -39,7 +39,29 @@ const contextPropNames = [
 ];
 
 module.exports = {
-  components: 'packages/*/src/**/[A-Z]*.js',
+  sections: [
+    {
+      name: '@cassette/core',
+      components: 'packages/core/src/[A-Z]*.js'
+    },
+    {
+      name: '@cassette/components',
+      components: 'packages/components/src/[A-Z]*.js'
+    },
+    {
+      name: '@cassette/player',
+      sections: [
+        {
+          name: 'Player Components',
+          components: 'packages/player/src/[A-Z]*.js'
+        },
+        {
+          name: 'Control Components',
+          components: 'packages/player/src/controls/[A-Z]*.js'
+        }
+      ]
+    }
+  ],
   webpackConfig: {
     resolve: {
       extensions: ['.js', '.jsx'],

@@ -1,6 +1,6 @@
 {
   "name": "@cassette/components",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A simple, clean, and responsive visual wrapper for the HTML audio tag, built with React.",
   "main": "dist/es5/cassette-components.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "react": "^16.3.0"
   },
   "devDependencies": {
-    "@cassette/core": "^2.0.0-alpha.2",
+    "@cassette/core": "^2.0.0-alpha.3",
     "rimraf": "^2.5.4",
     "webpack": "^4.17.1"
   },

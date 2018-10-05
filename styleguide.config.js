@@ -1,5 +1,43 @@
 var path = require('path');
 
+const contextPropNames = [
+  'playlist',
+  'activeTrackIndex',
+  'trackLoading',
+  'paused',
+  'currentTime',
+  'seekPreviewTime',
+  'seekInProgress',
+  'awaitingResumeOnSeekComplete',
+  'duration',
+  'bufferedRanges',
+  'playedRanges',
+  'seekableRanges',
+  'volume',
+  'muted',
+  'shuffle',
+  'stalled',
+  'playbackRate',
+  'setVolumeInProgress',
+  'repeatStrategy',
+  'pipeVideoStreamToCanvas',
+  'onTogglePause',
+  'onSelectTrackIndex',
+  'onBackSkip',
+  'onForwardSkip',
+  'onSeekPreview',
+  'onSeekComplete',
+  'onSetVolume',
+  'onSetVolumeComplete',
+  'onToggleMuted',
+  'onToggleShuffle',
+  'onSetRepeatStrategy',
+  'onSetPlaybackRate',
+  'fullscreen',
+  'requestFullscreen',
+  'requestExitFullscreen'
+];
+
 module.exports = {
   components: 'packages/*/src/**/[A-Z]*.js',
   webpackConfig: {
@@ -50,6 +88,20 @@ module.exports = {
     '**/MediaStatusBar.js'
   ],
   usageMode: 'expand',
+  propsParser(filePath, source, resolver, handlers) {
+    const parsed = require('react-docgen').parse(source, resolver, handlers);
+    for (const p of parsed) {
+      for (const key of Object.keys(p.props || {})) {
+        if (contextPropNames.indexOf(key) !== -1) {
+          delete p.props[key];
+        }
+      }
+      if (p.props && Object.keys(p.props).length === 0) {
+        delete p.props;
+      }
+    }
+    return parsed;
+  },
   handlers(componentPath) {
     return require('react-docgen').defaultHandlers.concat(
       require('react-docgen-external-proptypes-handler')(componentPath),

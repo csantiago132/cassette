@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   PlayerContextConsumer,
-  FullscreenContextProvider,
+  FullscreenContextConsumer,
   PlayerPropTypes
 } from '@cassette/core';
 import { VideoDisplay } from '@cassette/components';
@@ -53,13 +53,12 @@ export class MediaPlayerControls extends Component {
     const {
       getDisplayText,
       controls,
-      fullscreenEnabled,
       showVideo,
       renderVideoDisplay
     } = this.props;
 
     return (
-      <FullscreenContextProvider fullscreenEnabled={fullscreenEnabled}>
+      <FullscreenContextConsumer>
         {fullscreenContext => (
           <PlayerContextConsumer>
             {playerContext => (
@@ -86,7 +85,7 @@ export class MediaPlayerControls extends Component {
             )}
           </PlayerContextConsumer>
         )}
-      </FullscreenContextProvider>
+      </FullscreenContextConsumer>
     );
   }
 }
@@ -94,7 +93,6 @@ export class MediaPlayerControls extends Component {
 MediaPlayerControls.propTypes = {
   controls: PropTypes.arrayOf(PlayerPropTypes.control.isRequired).isRequired,
   getDisplayText: PropTypes.func.isRequired,
-  fullscreenEnabled: PropTypes.bool.isRequired,
   showVideo: PropTypes.bool.isRequired,
   renderVideoDisplay: PropTypes.func.isRequired
 };
@@ -109,7 +107,6 @@ MediaPlayerControls.defaultProps = {
     'progress'
   ],
   getDisplayText: getDisplayText,
-  fullscreenEnabled: true,
   showVideo: false,
   // eslint-disable-next-line no-unused-vars
   renderVideoDisplay(playerContext, fullscreenContext) {

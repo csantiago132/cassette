@@ -8,6 +8,9 @@ const fullscreenStyle = {
   height: '100%'
 };
 
+/**
+ * Wraps an area which should be fullscreen-able
+ */
 export class FullscreenContextProvider extends PureComponent {
   constructor(props) {
     super(props);

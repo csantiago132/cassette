@@ -42,14 +42,65 @@ module.exports = {
   sections: [
     {
       name: '@cassette/core',
-      components: 'packages/core/src/[A-Z]*.js'
+      description:
+        '**`@cassette/core`** provides [React Context](https://reactjs.org/docs/context.html)-based components which expose an API for consuming and updating media player state. The API abstraction maps very closely to the set of actions that would be available to an end user of a conventional media player, while remaining flexible enough to accommodate varying media player design paradigms.',
+      sections: [
+        {
+          name: 'Provider Components',
+          components: 'packages/core/src/[A-Z]*.js'
+        },
+        {
+          name: 'Consuming Context',
+          content: 'packages/core/src/consuming-context.md',
+          sections: [
+            {
+              name: 'FullscreenContextConsumer',
+              description:
+                'Used to read and update the state of the surrounding [`fullscreenContext`](#fullscreencontext)'
+              // TODO: add content
+              // content: ''
+            },
+            {
+              name: 'PlayerContextConsumer',
+              description:
+                'Used to read and update the state of the surrounding [`playerContext`](#playercontext)'
+              // TODO: add content
+              // content: ''
+            },
+            {
+              name: 'playerContextFilter',
+              description:
+                'consumes the surrounding [`fullscreenContext`](#fullscreencontext) and [`playerContext`](#playercontext) and passes only a specified subset of the context, as well as any additional props, to the given child component'
+              // TODO: add content
+              // content: ''
+            }
+          ]
+        },
+        {
+          name: 'fullscreenContext',
+          sections: []
+        },
+        {
+          name: 'playerContext',
+          sections: []
+        }
+      ]
     },
     {
       name: '@cassette/components',
-      components: 'packages/components/src/[A-Z]*.js'
+      description:
+        '**`@cassette/components`** contains some convenient React component building blocks which can be used in media player user interfaces created with [`@cassette/core`](#cassettecore).',
+      sections: [
+        {
+          name: 'Components',
+          components: 'packages/components/src/[A-Z]*.js'
+        }
+      ]
     },
     {
       name: '@cassette/player',
+      description:
+        '**`@cassette/player`** provides a responsive, zero-config-needed React media player component, implemented with [`@cassette/core`](#cassettecore). Its control components can also be consumed directly.',
       sections: [
         {
           name: 'Player Components',

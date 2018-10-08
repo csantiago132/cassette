@@ -15,6 +15,9 @@ function numToPx(num) {
   return `${num}px`;
 }
 
+/**
+ * Used to make content scroll in marquee fashion, only when the container area is too small for all the content to be displayed at once
+ */
 export class MaybeMarquee extends PureComponent {
   constructor(props) {
     super(props);

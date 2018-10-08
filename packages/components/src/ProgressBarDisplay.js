@@ -6,6 +6,9 @@ import { PlayerPropTypes } from '@cassette/core';
 import getProgressStyle from './utils/getProgressStyle';
 import getHandleStyle from './utils/getHandleStyle';
 
+/**
+ * A non-interactive version of [`ProgressBar`](#progressbar)
+ */
 export const ProgressBarDisplay = forwardRef(
   (
     {

@@ -16,6 +16,9 @@ const mediaStatusBarStyle = {
   right: 0
 };
 
+/**
+ * A non-interactive version of [`MediaProgress`](#mediaprogress)
+ */
 export class MediaProgressDisplay extends PureComponent {
   render() {
     const { playlist, activeTrackIndex, currentTime, duration } = this.props;

@@ -8,6 +8,9 @@ import {
 
 import MediaPlayerControls from './MediaPlayerControls';
 
+/**
+ * A media player component which plays a provided playlist of media
+ */
 export class MediaPlayer extends Component {
   render() {
     const {

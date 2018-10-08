@@ -7,6 +7,9 @@ import { playerContextFilter } from '@cassette/core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
+/**
+ * A button which, when clicked, toggles whether the playlist is being played in specified order or in shuffle order
+ */
 export class ShuffleButton extends PureComponent {
   render() {
     const { shuffle, onToggleShuffle } = this.props;

@@ -7,6 +7,9 @@ import ButtonWrapper from './common/ButtonWrapper';
 import getVolumeIconComponent from '../utils/getVolumeIconComponent';
 import classNames from '../utils/classNames';
 
+/**
+ * A button which, when clicked, toggles whether the media's audio is muted
+ */
 export class MuteButton extends PureComponent {
   render() {
     const { volume, muted, onToggleMuted } = this.props;

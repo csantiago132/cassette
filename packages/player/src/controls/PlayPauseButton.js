@@ -6,6 +6,9 @@ import { playerContextFilter } from '@cassette/core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
+/**
+ * A button which, when clicked, toggles whether the media is paused
+ */
 export class PlayPauseButton extends PureComponent {
   render() {
     const { paused, awaitingResumeOnSeekComplete, onTogglePause } = this.props;

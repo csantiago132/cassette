@@ -38,6 +38,9 @@ function extractAspectRatio(aspectRatio) {
 
 const defaultBgColor = '#000';
 
+/**
+ * A display canvas for the video content from the surrounding [`playerContext`](#playercontext)
+ */
 export class VideoDisplay extends PureComponent {
   constructor(props) {
     super(props);

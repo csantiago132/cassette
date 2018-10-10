@@ -17,7 +17,7 @@ const mediaStatusBarStyle = {
 };
 
 /**
- * A non-interactive version of [`MediaProgress`](#mediaprogress)
+ * A non-interactive version of [`MediaProgress`](#mediaprogress) which always the `currentTime` of the playing media (which may differ from the `seekPreviewTime` if your app also displays an interactive seek bar)
  */
 export class MediaProgressDisplay extends PureComponent {
   render() {
@@ -29,6 +29,7 @@ export class MediaProgressDisplay extends PureComponent {
           className="cassette__media_progress_bar"
           progressClassName="progress"
           progress={progress}
+          progressDirection="right"
         />
         <MediaStatusBar
           style={mediaStatusBarStyle}

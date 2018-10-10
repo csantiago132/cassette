@@ -1,0 +1,12 @@
+.cassette__material_toggle {
+  background: none;
+  border: none; }
+  .cassette__material_toggle .inner {
+    margin-left: -8px;
+    margin-right: -8px;
+    width: 48px;
+    height: 42px; }
+  .cassette__material_toggle svg {
+    fill: rgba(255, 255, 255, 0.5); }
+  .cassette__material_toggle.on svg {
+    fill: #fff; }

@@ -1,0 +1,48 @@
+.cassette {
+  /* https://codepen.io/OxyDesign/pen/ojpepQ */ }
+  .cassette__play_pause_button {
+    background: none;
+    border: none; }
+    .cassette__play_pause_button .foreground {
+      position: relative;
+      width: 30px;
+      height: 30px; }
+    .cassette__play_pause_button .left,
+    .cassette__play_pause_button .right {
+      position: absolute;
+      top: 0;
+      transition-property: width;
+      transition-duration: 0.25s;
+      transition-timing-function: ease;
+      width: 50%;
+      height: 100%;
+      overflow: hidden; }
+      .cassette__play_pause_button .left::after,
+      .cassette__play_pause_button .right::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        transition-property: border, height;
+        transition-duration: 0.25s;
+        transition-timing-function: ease;
+        border-style: solid;
+        border-width: 15px 30px;
+        border-color: transparent transparent transparent #fff;
+        width: 0;
+        height: 0; }
+    .cassette__play_pause_button .left {
+      left: 0; }
+      .cassette__play_pause_button .left::after {
+        left: 0; }
+    .cassette__play_pause_button .right {
+      right: 0; }
+      .cassette__play_pause_button .right::after {
+        right: -30px; }
+    .cassette__play_pause_button.playing .left,
+    .cassette__play_pause_button.playing .right {
+      width: 36%; }
+      .cassette__play_pause_button.playing .left::after,
+      .cassette__play_pause_button.playing .right::after {
+        border-width: 0 30px;
+        height: 30px; }

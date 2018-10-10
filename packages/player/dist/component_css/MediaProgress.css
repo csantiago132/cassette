@@ -1,0 +1,10 @@
+.cassette__media_progress_container {
+  position: relative;
+  -webkit-box-flex: 1;
+          flex-grow: 1;
+  min-width: 300px; }
+
+.cassette__media_progress_bar {
+  height: 100%; }
+  .cassette__media_progress_bar .progress {
+    background-color: rgba(127, 127, 127, 0.295); }

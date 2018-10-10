@@ -1,0 +1,25 @@
+.cassette__skip_button {
+  background: none;
+  border: none; }
+  .cassette__skip_button.back {
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg); }
+  .cassette__skip_button .skip_button_inner {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+            flex-direction: row; }
+  .cassette__skip_button .right_facing_triangle {
+    width: 0;
+    height: 0;
+    border-left: 16px solid #fff;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; }
+  .cassette__skip_button .vertical_bar {
+    width: 0;
+    height: 0;
+    margin-left: -3px;
+    border-left: 3px solid #fff;
+    border-top: 10px solid #fff;
+    border-bottom: 10px solid #fff; }

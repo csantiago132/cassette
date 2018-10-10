@@ -31,6 +31,10 @@ export class MediaPlayerControls extends Component {
     const elementsRendered = new Map();
 
     return elements.map(element => {
+      if (!element) {
+        return element;
+      }
+
       // support React | Preact | Inferno
       const type = element.type || element.nodeName || element.tag || '';
 
@@ -48,7 +52,7 @@ export class MediaPlayerControls extends Component {
         this.controlKeys.set(type, keysForType.concat(key));
       }
 
-      return element && React.cloneElement(element, { key });
+      return React.cloneElement(element, { key });
     });
   }
 

@@ -44167,7 +44167,7 @@ module.exports = [
     },
     {
         'type': 'code',
-        'content': 'const { VideoDisplay } = require(\'@cassette/components\');\n<VideoDisplay\n  imageResolutionX={480}\n  style={{ width: 600 }}\n  processFrame={frameData => {\n    for (let i = 0; i < frameData.data.length; i += 4) {\n      // weight toward green\n      const g = frameData.data[i + 1];\n      frameData.data[i + 1] = g * 1.5;\n\n      const r = frameData.data[i + 0];\n      frameData.data[i + 0] = r * 0.75;\n      const g = frameData.data[i + 2];\n      frameData.data[i + 2] = g * 0.75;\n    }\n    return frameData;\n  }}\n/>;',
+        'content': 'const { VideoDisplay } = require(\'@cassette/components\');\n<VideoDisplay\n  imageResolutionX={480}\n  style={{ width: 600 }}\n  processFrame={frameData => {\n    for (let i = 0; i < frameData.data.length; i += 4) {\n      // weight toward green\n      const g = frameData.data[i + 1];\n      frameData.data[i + 1] = g * 1.5;\n\n      const r = frameData.data[i + 0];\n      frameData.data[i + 0] = r * 0.75;\n      const b = frameData.data[i + 2];\n      frameData.data[i + 2] = b * 0.75;\n    }\n    return frameData;\n  }}\n/>;',
         'settings': {},
         'evalInContext': evalInContext
     },

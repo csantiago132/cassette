@@ -40,8 +40,8 @@ const { VideoDisplay } = require('@cassette/components');
 
       const r = frameData.data[i + 0];
       frameData.data[i + 0] = r * 0.75;
-      const g = frameData.data[i + 2];
-      frameData.data[i + 2] = g * 0.75;
+      const b = frameData.data[i + 2];
+      frameData.data[i + 2] = b * 0.75;
     }
     return frameData;
   }}

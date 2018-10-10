@@ -290,23 +290,6 @@ VideoDisplay.propTypes = {
   playlist: PropTypes.arrayOf(PlayerPropTypes.track.isRequired).isRequired,
   activeTrackIndex: PropTypes.number.isRequired,
   fullscreen: PropTypes.bool,
-  /* TODO: for documentation
-  We might want to use this grayscale function in an example
-    processFrame: function (frameData) {
-      for (let i = 0; i < frameData.data.length; i += 4) {
-        const r = frameData.data[i + 0];
-        const g = frameData.data[i + 1];
-        const b = frameData.data[i + 2];
-
-        // convert to simple grayscale
-        const average = (r + g + b) / 3;
-        frameData.data[i + 0] = average;
-        frameData.data[i + 1] = average;
-        frameData.data[i + 2] = average;
-      }
-      return frameData;
-    }
-  */
   processFrame: PropTypes.func,
   imageResolutionX: PropTypes.number,
   imageResolutionY: PropTypes.number,

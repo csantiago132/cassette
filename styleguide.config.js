@@ -51,7 +51,6 @@ module.exports = {
         },
         {
           name: 'Consuming Context',
-          content: 'packages/core/src/consuming-context.md',
           sections: [
             {
               name: 'FullscreenContextConsumer',
@@ -117,8 +116,14 @@ module.exports = {
     resolve: {
       extensions: ['.js', '.jsx'],
       alias: {
+        '@cassette/core/src': path.join(__dirname, 'packages/core/src'),
         '@cassette/core': path.join(__dirname, 'packages/core/src'),
+        '@cassette/components/src': path.join(
+          __dirname,
+          'packages/components/src'
+        ),
         '@cassette/components': path.join(__dirname, 'packages/components/src'),
+        '@cassette/player/src': path.join(__dirname, 'packages/player/src'),
         '@cassette/player': path.join(__dirname, 'packages/player/src')
       }
     },
@@ -182,5 +187,26 @@ module.exports = {
         componentPath
       )
     );
+  },
+  getExampleFilename(componentPath) {
+    return componentPath.replace('src', 'docs').replace(/\.jsx?$/, '.md');
+  },
+  styleguideComponents: {
+    StyleGuideRenderer: path.join(__dirname, 'docs_helpers', 'DocsWrapper'),
+    Wrapper: path.join(__dirname, 'docs_helpers', 'ExampleWrapper')
+  },
+  template: {
+    head: {
+      links: [
+        {
+          rel: 'stylesheet',
+          href: '../packages/player/dist/css/cassette-player.css'
+        },
+        {
+          rel: 'stylesheet',
+          href: '../docs_helpers/styleguide_extra.css'
+        }
+      ]
+    }
   }
 };

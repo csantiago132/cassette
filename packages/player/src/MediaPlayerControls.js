@@ -18,6 +18,9 @@ function getNextControlKey() {
   return (nextControlKey++).toString();
 }
 
+/**
+ * The UI component of [`MediaPlayer`](#mediaplayer), which requires an ancestor [`PlayerContextProvider`](#playercontextprovider) (and optional ancestor [`FullscreenContextProvider`](#fullscreencontextprovider)) in order to work (use this if you need to access the [`playerContext`](#playercontext) or [`fullscreenContext`](#fullscreencontext) from outside the media player UI)
+ */
 export class MediaPlayerControls extends Component {
   getKeyedChildren(elements) {
     // cache of keys to use in controls render
@@ -28,6 +31,10 @@ export class MediaPlayerControls extends Component {
     const elementsRendered = new Map();
 
     return elements.map(element => {
+      if (!element) {
+        return element;
+      }
+
       // support React | Preact | Inferno
       const type = element.type || element.nodeName || element.tag || '';
 
@@ -45,7 +52,7 @@ export class MediaPlayerControls extends Component {
         this.controlKeys.set(type, keysForType.concat(key));
       }
 
-      return element && React.cloneElement(element, { key });
+      return React.cloneElement(element, { key });
     });
   }
 

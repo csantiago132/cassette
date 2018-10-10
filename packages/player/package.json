@@ -1,8 +1,8 @@
 {
   "name": "@cassette/player",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A simple, clean, and responsive visual wrapper for the HTML audio tag, built with React.",
-  "main": "dist/cassette-player.js",
+  "main": "dist/es5/cassette-player.js",
   "scripts": {
     "build:clean": "rimraf dist",
     "build:webpack": "BUILD_MODE=all webpack --progress",
@@ -40,18 +40,18 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@cassette/core": "2.0.0-alpha.0",
+    "@cassette/core": "2.0.0-alpha.3",
     "react": "^16.3.0"
   },
   "devDependencies": {
-    "@cassette/core": "^2.0.0-alpha.2",
+    "@cassette/core": "^2.0.0-alpha.3",
     "gulp-cli": "^2.0.1",
     "material-design-icons": "^3.0.1",
     "rimraf": "^2.5.4",
     "webpack": "^4.17.1"
   },
   "dependencies": {
-    "@cassette/components": "^2.0.0-alpha.2",
+    "@cassette/components": "^2.0.0-alpha.3",
     "prop-types": "^15.5.10"
   },
   "publishConfig": {

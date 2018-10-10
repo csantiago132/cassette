@@ -8,6 +8,9 @@ import { playerContextFilter } from '@cassette/core';
 import ButtonWrapper from './common/ButtonWrapper';
 import classNames from '../utils/classNames';
 
+/**
+ * A button which, when clicked, tells the surrounding [`FullscreenContextProvider`](#fullscreencontextprovider) (if present) to toggle fullscreen mode
+ */
 export class FullscreenButton extends PureComponent {
   render() {
     const { fullscreen, requestFullscreen, requestExitFullscreen } = this.props;

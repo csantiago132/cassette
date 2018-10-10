@@ -2,19 +2,20 @@
 
 <img alt="https://www.pexels.com/photo/black-lx90-cassette-tape-1228497/" src="cassette.jpg" title="Photo by Stas Knop from Pexels" />
 
-A zero-config-required media player component library for React. The default responsive UI works great in desktop or mobile web browsers. The flexible core handles the logical complexities of common audio and video player paradigms, while allowing you to implement any UI you can come up with.
+Cassette is a zero-config-required media player component library for React. The default responsive UI works great in desktop or mobile web browsers. The flexible core handles the logical complexities of common audio and video player paradigms, while allowing you to implement any UI you can come up with.
 
-### this is version 2.0 (pre-alpha). see the current release [here](https://github.com/benwiley4000/cassette/blob/master/README.md)!
+### This is Cassette v2, which is in alpha.
 
-![cassette in action](demo.gif)
+See version 1 (also known as `react-responsive-audio-player`) [here](https://github.com/benwiley4000/cassette/blob/master/README.md)!
 
-### [see a live demo here](https://benwiley4000.github.io/cassette/)
+## Cassette is split into three packages
+* [`@cassette/core`](/packages/core) provides React Context-based components which expose an API for consuming and updating media player state
+* [`@cassette/components`](/packages/components) contains some convenient React component building blocks which can be used in media player user interfaces created with `@cassette/core`
+* [`@cassette/player`](/packages/player) provides a responsive, zero-config-needed React media player component, implemented with `@cassette/core`
 
-## the replaceable responsive media player
+### [See a live demo here](https://benwiley4000.github.io/cassette/)
 
-React Component wrapper for the HTML media tag. Out of the box, provides a featured, clean-looking media player which works great on desktop and mobile. Offers a powerful API for building a rich, totally customized media player UI.
-
-[![NPM](https://nodei.co/npm/cassette.png)](https://npmjs.org/package/cassette)
+### [See full documentation here](https://benwiley4000.github.io/cassette/styleguide)
 
 **If you're not using npm and you need production-ready scripts to include in your project, check out [the releases](https://github.com/benwiley4000/cassette/releases).**
 

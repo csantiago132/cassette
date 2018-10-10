@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 import GroupContext from './GroupContext';
 
+/**
+ * A wrapper which can be used to share configuration among multiple descendant [`PlayerContextProvider`](#playercontextprovider) instances as well as prevent multiple media elements from playing audio simultaneously
+ */
 export class PlayerContextGroup extends Component {
   constructor(props) {
     super(props);

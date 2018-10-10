@@ -14,6 +14,9 @@ const volumeControlStyle = {
   touchAction: 'none'
 };
 
+/**
+ * A [`MuteButton`](#mutebutton) which, when hovered (with a mouse) or initially tapped (on touch screens), displays a bar for adjusting media volume
+ */
 export class VolumeControl extends PureComponent {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { hover, volumeBarPosition } = prevState;

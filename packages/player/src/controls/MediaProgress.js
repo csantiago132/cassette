@@ -16,6 +16,9 @@ const mediaStatusBarStyle = {
   pointerEvents: 'none'
 };
 
+/**
+ * An interactive media progress bar which can be adjusted by dragging, along with a text overlay of the current track metadata and the elapsed time
+ */
 export class MediaProgress extends PureComponent {
   constructor(props) {
     super(props);

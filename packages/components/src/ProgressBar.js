@@ -17,6 +17,9 @@ cursor: default;
   -webkit-touch-callout: none;
 `;
 
+/**
+ * A vertical or horizontal progress bar element which can be manipulated by mouse or touch
+ */
 export class ProgressBar extends PureComponent {
   constructor(props) {
     super(props);

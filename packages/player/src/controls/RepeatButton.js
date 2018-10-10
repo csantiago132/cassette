@@ -20,6 +20,9 @@ function getNextRepeatStrategy(repeatStrategy) {
   return repeatStrategyOptions[nextIndex];
 }
 
+/**
+ * A button which, when clicked, cycles to the next `repeatStrategy` (`none`, `playlist` or `track`)
+ */
 export class RepeatButton extends PureComponent {
   constructor(props) {
     super(props);

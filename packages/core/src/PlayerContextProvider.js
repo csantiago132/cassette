@@ -86,6 +86,9 @@ function getGoToTrackState(prevState, index, shouldPlay = true) {
   };
 }
 
+/**
+ * Wraps an area which shares a common [`playerContext`](#playercontext)
+ */
 export class PlayerContextProvider extends Component {
   constructor(props) {
     super(props);

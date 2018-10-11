@@ -168,25 +168,30 @@ module.exports = {
   usageMode: 'expand',
   propsParser(filePath, source, resolver, handlers) {
     const parsed = require('react-docgen').parse(source, resolver, handlers);
-    for (const p of parsed) {
-      for (const key of Object.keys(p.props || {})) {
-        if (contextPropNames.indexOf(key) !== -1) {
-          delete p.props[key];
+
+    if (filePath.indexOf('packages/core') === -1) {
+      // for non-core modules we can assume any prop names from context
+      // are going to be provided by the playerContextFilter HOC.
+      for (const p of parsed) {
+        for (const key of Object.keys(p.props || {})) {
+          if (contextPropNames.indexOf(key) !== -1) {
+            delete p.props[key];
+          }
+        }
+        if (p.props && Object.keys(p.props).length === 0) {
+          delete p.props;
         }
       }
-      if (p.props && Object.keys(p.props).length === 0) {
-        delete p.props;
+    }
+
+    // let's replace any "custom" types with the actual custom type name
+    for (const p of parsed) {
+      for (const key of Object.keys(p.props || {})) {
+        useCustomPropTypeNames(p.props[key].type);
       }
     }
+
     return parsed;
-  },
-  handlers(componentPath) {
-    return require('react-docgen').defaultHandlers.concat(
-      require('react-docgen-external-proptypes-handler')(componentPath),
-      require('react-docgen-displayname-handler').createDisplayNameHandler(
-        componentPath
-      )
-    );
   },
   getExampleFilename(componentPath) {
     return componentPath.replace('src', 'docs').replace(/\.jsx?$/, '.md');
@@ -210,3 +215,16 @@ module.exports = {
     }
   }
 };
+
+function useCustomPropTypeNames(propType) {
+  if (propType.name === 'custom' && propType.raw) {
+    propType.name = propType.raw
+      .replace('PlayerPropTypes.', '')
+      .replace('.isRequired', '');
+  } else {
+    Object.keys(propType)
+      .filter(key => typeof propType[key] === 'object')
+      .map(key => propType[key])
+      .forEach(useCustomPropTypeNames);
+  }
+}

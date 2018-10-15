@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { PureComponent, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { PlayerPropTypes } from '@cassette/core';
@@ -9,20 +9,19 @@ import getHandleStyle from './utils/getHandleStyle';
 /**
  * A non-interactive version of [`ProgressBar`](#progressbar)
  */
-export const ProgressBarDisplay = forwardRef(
-  (
-    {
+export class ProgressBarDisplay extends PureComponent {
+  render() {
+    const {
       progressClassName,
       progressStyle,
       progress,
       progressDirection,
       handle,
+      progressBarRef,
       ...rest
-    },
-    ref
-  ) => {
+    } = this.props;
     return (
-      <div {...rest} ref={ref}>
+      <div {...rest} ref={progressBarRef}>
         <div
           style={{
             position: 'relative',
@@ -47,7 +46,7 @@ export const ProgressBarDisplay = forwardRef(
       </div>
     );
   }
-);
+}
 
 ProgressBarDisplay.propTypes = {
   progressClassName: PropTypes.string,
@@ -57,4 +56,6 @@ ProgressBarDisplay.propTypes = {
   handle: PropTypes.element
 };
 
-export default ProgressBarDisplay;
+export default forwardRef((props, ref) => {
+  return <ProgressBarDisplay {...props} progressBarRef={ref} />;
+});

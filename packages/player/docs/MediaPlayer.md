@@ -1,3 +1,5 @@
+`MediaPlayer` takes all the non-`children` props (including prop requirements) of [`MediaPlayer`](#mediaplayer), [`PlayerContextProvider`](#playercontextprovider) and [`FullscreenContextProvider`](#fullscreencontextprovider).
+
 ```jsx
 const { MediaPlayer } = require('@cassette/player');
 const playlist = [

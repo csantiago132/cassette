@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   PlayerContextProvider,
@@ -39,13 +38,15 @@ export class MediaPlayer extends Component {
 MediaPlayer.propTypes = {
   ...PlayerContextProvider.propTypes,
   ...MediaPlayerControls.propTypes,
-  fullscreenEnabled: PropTypes.bool.isRequired
+  ...FullscreenContextProvider.propTypes
 };
+delete MediaPlayer.propTypes.children;
 
 MediaPlayer.defaultProps = {
   ...PlayerContextProvider.defaultProps,
   ...MediaPlayerControls.defaultProps,
-  fullscreenEnabled: true
+  ...FullscreenContextProvider.defaultProps
 };
+delete MediaPlayer.defaultProps.children;
 
 export default MediaPlayer;

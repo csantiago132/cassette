@@ -55,33 +55,34 @@ module.exports = {
             {
               name: 'FullscreenContextConsumer',
               description:
-                'Used to read and update the state of the surrounding [`fullscreenContext`](#fullscreencontext)'
-              // TODO: add content
-              // content: ''
+                'Used to read and update the state of the surrounding [`fullscreenContext`](#fullscreencontext)',
+              content: 'packages/core/docs/FullscreenContextConsumer.md'
             },
             {
               name: 'PlayerContextConsumer',
               description:
-                'Used to read and update the state of the surrounding [`playerContext`](#playercontext)'
-              // TODO: add content
-              // content: ''
+                'Used to read and update the state of the surrounding [`playerContext`](#playercontext)',
+              content: 'packages/core/docs/PlayerContextConsumer.md'
             },
             {
               name: 'playerContextFilter',
               description:
-                'consumes the surrounding [`fullscreenContext`](#fullscreencontext) and [`playerContext`](#playercontext) and passes only a specified subset of the context, as well as any additional props, to the given child component'
-              // TODO: add content
-              // content: ''
+                'Consumes the surrounding [`fullscreenContext`](#fullscreencontext) and [`playerContext`](#playercontext) and passes only a specified subset of the context, as well as any additional props, to the given child component',
+              content: 'packages/core/docs/playerContextFilter.md'
             }
           ]
         },
         {
           name: 'fullscreenContext',
-          sections: []
+          content: 'packages/core/docs/fullscreenContext.md'
         },
         {
           name: 'playerContext',
-          sections: []
+          content: 'packages/core/docs/playerContext.md'
+        },
+        {
+          name: 'Types',
+          content: 'packages/core/docs/Types.md'
         }
       ]
     },

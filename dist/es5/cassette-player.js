@@ -389,6 +389,10 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 
 
 
+/**
+ * A button which, when clicked, toggles whether the media is paused
+ */
+
 var PlayPauseButton_PlayPauseButton =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -481,6 +485,10 @@ function BackSkipButton_inheritsLoose(subClass, superClass) { subClass.prototype
 
 
 
+/**
+ * A button which, when clicked, either skips to the previous track in the playlist or to the beginning of the current playing track, depending upon the current elapsed time
+ */
+
 var BackSkipButton_BackSkipButton =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -511,6 +519,10 @@ function ForwardSkipButton_inheritsLoose(subClass, superClass) { subClass.protot
 
 
 
+
+/**
+ * A button which, when clicked, skips to the next track in the playlist
+ */
 
 var ForwardSkipButton_ForwardSkipButton =
 /*#__PURE__*/
@@ -613,6 +625,10 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 var volumeControlStyle = {
   touchAction: 'none'
 };
+/**
+ * A [`MuteButton`](#mutebutton) which, when hovered (with a mouse) or initially tapped (on touch screens), displays a bar for adjusting media volume
+ */
+
 var VolumeControl_VolumeControl =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -822,6 +838,10 @@ function MuteButton_inheritsLoose(subClass, superClass) { subClass.prototype = O
 
 
 
+/**
+ * A button which, when clicked, toggles whether the media's audio is muted
+ */
+
 var MuteButton_MuteButton =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -891,6 +911,10 @@ function getNextRepeatStrategy(repeatStrategy) {
 
   return core_["repeatStrategyOptions"][nextIndex];
 }
+/**
+ * A button which, when clicked, cycles to the next `repeatStrategy` (`none`, `playlist` or `track`)
+ */
+
 
 var RepeatButton_RepeatButton =
 /*#__PURE__*/
@@ -948,6 +972,10 @@ function ShuffleButton_inheritsLoose(subClass, superClass) { subClass.prototype 
 
 
 
+
+/**
+ * A button which, when clicked, toggles whether the playlist is being played in specified order or in shuffle order
+ */
 
 var ShuffleButton_ShuffleButton =
 /*#__PURE__*/
@@ -1053,6 +1081,10 @@ function MediaProgress_assertThisInitialized(self) { if (self === void 0) { thro
 var mediaStatusBarStyle = {
   pointerEvents: 'none'
 };
+/**
+ * An interactive media progress bar which can be adjusted by dragging, along with a text overlay of the current track metadata and the elapsed time
+ */
+
 var MediaProgress_MediaProgress =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -1132,6 +1164,10 @@ var MediaProgressDisplay_mediaStatusBarStyle = {
   left: 0,
   right: 0
 };
+/**
+ * A non-interactive version of [`MediaProgress`](#mediaprogress) which always the `currentTime` of the playing media (which may differ from the `seekPreviewTime` if your app also displays an interactive seek bar)
+ */
+
 var MediaProgressDisplay_MediaProgressDisplay =
 /*#__PURE__*/
 function (_PureComponent) {
@@ -1155,7 +1191,8 @@ function (_PureComponent) {
     }, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(components_["ProgressBarDisplay"], {
       className: "cassette__media_progress_bar",
       progressClassName: "progress",
-      progress: progress
+      progress: progress,
+      progressDirection: "right"
     }), external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(common_MediaStatusBar, {
       style: MediaProgressDisplay_mediaStatusBarStyle,
       displayText: utils_getDisplayText(playlist[activeTrackIndex]) || '',
@@ -1189,6 +1226,10 @@ function FullscreenButton_inheritsLoose(subClass, superClass) { subClass.prototy
 
 
 
+
+/**
+ * A button which, when clicked, tells the surrounding [`FullscreenContextProvider`](#fullscreencontextprovider) (if present) to toggle fullscreen mode
+ */
 
 var FullscreenButton_FullscreenButton =
 /*#__PURE__*/
@@ -1233,6 +1274,10 @@ FullscreenButton_FullscreenButton.propTypes = {
 function Spacer_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 
+
+/**
+ * Provides a buffer between control components
+ */
 
 var Spacer_Spacer =
 /*#__PURE__*/
@@ -1326,6 +1371,10 @@ var nextControlKey = 0;
 function getNextControlKey() {
   return (nextControlKey++).toString();
 }
+/**
+ * The UI component of [`MediaPlayer`](#mediaplayer), which requires an ancestor [`PlayerContextProvider`](#playercontextprovider) (and optional ancestor [`FullscreenContextProvider`](#fullscreencontextprovider)) in order to work (use this if you need to access the [`playerContext`](#playercontext) or [`fullscreenContext`](#fullscreencontext) from outside the media player UI)
+ */
+
 
 var MediaPlayerControls_MediaPlayerControls =
 /*#__PURE__*/
@@ -1347,7 +1396,11 @@ function (_Component) {
 
     var elementsRendered = new Map();
     return elements.map(function (element) {
-      // support React | Preact | Inferno
+      if (!element) {
+        return element;
+      } // support React | Preact | Inferno
+
+
       var type = element.type || element.nodeName || element.tag || ''; // index within list of keys by type
 
       var keyIndex = elementsRendered.get(type) || 0;
@@ -1363,7 +1416,7 @@ function (_Component) {
         _this.controlKeys.set(type, keysForType.concat(key));
       }
 
-      return element && external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.cloneElement(element, {
+      return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.cloneElement(element, {
         key: key
       });
     });
@@ -1375,12 +1428,9 @@ function (_Component) {
     var _props = this.props,
         getDisplayText = _props.getDisplayText,
         controls = _props.controls,
-        fullscreenEnabled = _props.fullscreenEnabled,
         showVideo = _props.showVideo,
         renderVideoDisplay = _props.renderVideoDisplay;
-    return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["FullscreenContextProvider"], {
-      fullscreenEnabled: fullscreenEnabled
-    }, function (fullscreenContext) {
+    return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["FullscreenContextConsumer"], null, function (fullscreenContext) {
       return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["PlayerContextConsumer"], null, function (playerContext) {
         return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
           className: "cassette"
@@ -1400,14 +1450,12 @@ function (_Component) {
 MediaPlayerControls_MediaPlayerControls.propTypes = {
   controls: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.arrayOf(core_["PlayerPropTypes"].control.isRequired).isRequired,
   getDisplayText: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.func.isRequired,
-  fullscreenEnabled: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.bool.isRequired,
   showVideo: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.bool.isRequired,
   renderVideoDisplay: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.func.isRequired
 };
 MediaPlayerControls_MediaPlayerControls.defaultProps = {
   controls: ['spacer', 'backskip', 'playpause', 'forwardskip', 'spacer', 'progress'],
   getDisplayText: utils_getDisplayText,
-  fullscreenEnabled: true,
   showVideo: false,
   // eslint-disable-next-line no-unused-vars
   renderVideoDisplay: function renderVideoDisplay(playerContext, fullscreenContext) {
@@ -1430,6 +1478,10 @@ function MediaPlayer_inheritsLoose(subClass, superClass) { subClass.prototype = 
 
 
 
+/**
+ * A media player component which plays a provided playlist of media
+ */
+
 var MediaPlayer_MediaPlayer =
 /*#__PURE__*/
 function (_Component) {
@@ -1445,24 +1497,27 @@ function (_Component) {
     var _props = this.props,
         getDisplayText = _props.getDisplayText,
         controls = _props.controls,
-        fullscreenEnabled = _props.fullscreenEnabled,
         showVideo = _props.showVideo,
         renderVideoDisplay = _props.renderVideoDisplay,
-        rest = MediaPlayer_objectWithoutProperties(_props, ["getDisplayText", "controls", "fullscreenEnabled", "showVideo", "renderVideoDisplay"]);
+        fullscreenEnabled = _props.fullscreenEnabled,
+        rest = MediaPlayer_objectWithoutProperties(_props, ["getDisplayText", "controls", "showVideo", "renderVideoDisplay", "fullscreenEnabled"]);
 
-    return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["PlayerContextProvider"], rest, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(src_MediaPlayerControls, {
+    return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["FullscreenContextProvider"], {
+      fullscreenEnabled: fullscreenEnabled
+    }, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(core_["PlayerContextProvider"], rest, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(src_MediaPlayerControls, {
       getDisplayText: getDisplayText,
       controls: controls,
-      fullscreenEnabled: fullscreenEnabled,
       showVideo: showVideo,
       renderVideoDisplay: renderVideoDisplay
-    }));
+    })));
   };
 
   return MediaPlayer;
 }(external_root_React_commonjs_react_commonjs2_react_amd_react_["Component"]);
-MediaPlayer_MediaPlayer.propTypes = _objectSpread({}, core_["PlayerContextProvider"].propTypes, src_MediaPlayerControls.propTypes);
-MediaPlayer_MediaPlayer.defaultProps = _objectSpread({}, core_["PlayerContextProvider"].defaultProps, src_MediaPlayerControls.defaultProps);
+MediaPlayer_MediaPlayer.propTypes = _objectSpread({}, core_["PlayerContextProvider"].propTypes, src_MediaPlayerControls.propTypes, core_["FullscreenContextProvider"].propTypes);
+delete MediaPlayer_MediaPlayer.propTypes.children;
+MediaPlayer_MediaPlayer.defaultProps = _objectSpread({}, core_["PlayerContextProvider"].defaultProps, src_MediaPlayerControls.defaultProps, core_["FullscreenContextProvider"].defaultProps);
+delete MediaPlayer_MediaPlayer.defaultProps.children;
 /* harmony default export */ var src_MediaPlayer = (MediaPlayer_MediaPlayer);
 // CONCATENATED MODULE: ./packages/player/src/index.js
 /* concated harmony reexport MediaPlayer */__webpack_require__.d(__webpack_exports__, "MediaPlayer", function() { return src_MediaPlayer; });

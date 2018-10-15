@@ -158,6 +158,10 @@ function pxToNum(px) {
 function numToPx(num) {
   return `${num}px`;
 }
+/**
+ * Used to make content scroll in marquee fashion, only when the container area is too small for all the content to be displayed at once
+ */
+
 
 class MaybeMarquee_MaybeMarquee extends external_root_React_commonjs_react_commonjs2_react_amd_react_["PureComponent"] {
   constructor(props) {
@@ -372,38 +376,51 @@ function ProgressBarDisplay_objectWithoutProperties(source, excluded) { if (sour
 
 
 
-const ProgressBarDisplay = Object(external_root_React_commonjs_react_commonjs2_react_amd_react_["forwardRef"])((_ref, ref) => {
-  let progressClassName = _ref.progressClassName,
-      progressStyle = _ref.progressStyle,
-      progress = _ref.progress,
-      progressDirection = _ref.progressDirection,
-      handle = _ref.handle,
-      rest = ProgressBarDisplay_objectWithoutProperties(_ref, ["progressClassName", "progressStyle", "progress", "progressDirection", "handle"]);
+/**
+ * A non-interactive version of [`ProgressBar`](#progressbar)
+ */
 
-  return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", ProgressBarDisplay_extends({}, rest, {
-    ref: ref
-  }), external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
-    style: {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      touchAction: 'none'
-    }
-  }, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
-    className: progressClassName,
-    style: ProgressBarDisplay_objectSpread({}, utils_getProgressStyle(progress, progressDirection), progressStyle || {})
-  }), handle && external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
-    style: utils_getHandleStyle(progress, progressDirection)
-  }, handle)));
-});
-ProgressBarDisplay.propTypes = {
+class ProgressBarDisplay_ProgressBarDisplay extends external_root_React_commonjs_react_commonjs2_react_amd_react_["PureComponent"] {
+  render() {
+    const _props = this.props,
+          progressClassName = _props.progressClassName,
+          progressStyle = _props.progressStyle,
+          progress = _props.progress,
+          progressDirection = _props.progressDirection,
+          handle = _props.handle,
+          progressBarRef = _props.progressBarRef,
+          rest = ProgressBarDisplay_objectWithoutProperties(_props, ["progressClassName", "progressStyle", "progress", "progressDirection", "handle", "progressBarRef"]);
+
+    return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", ProgressBarDisplay_extends({}, rest, {
+      ref: progressBarRef
+    }), external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
+      style: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        touchAction: 'none'
+      }
+    }, external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
+      className: progressClassName,
+      style: ProgressBarDisplay_objectSpread({}, utils_getProgressStyle(progress, progressDirection), progressStyle || {})
+    }), handle && external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement("div", {
+      style: utils_getHandleStyle(progress, progressDirection)
+    }, handle)));
+  }
+
+}
+ProgressBarDisplay_ProgressBarDisplay.propTypes = {
   progressClassName: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.string,
   progressStyle: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.object,
   progress: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.number.isRequired,
   progressDirection: core_["PlayerPropTypes"].progressDirection.isRequired,
   handle: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.element
 };
-/* harmony default export */ var src_ProgressBarDisplay = (ProgressBarDisplay);
+/* harmony default export */ var src_ProgressBarDisplay = (Object(external_root_React_commonjs_react_commonjs2_react_amd_react_["forwardRef"])((props, ref) => {
+  return external_root_React_commonjs_react_commonjs2_react_amd_react_default.a.createElement(ProgressBarDisplay_ProgressBarDisplay, ProgressBarDisplay_extends({}, props, {
+    progressBarRef: ref
+  }));
+}));
 // CONCATENATED MODULE: ./packages/components/src/ProgressBar.js
 function ProgressBar_extends() { ProgressBar_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return ProgressBar_extends.apply(this, arguments); }
 
@@ -421,6 +438,10 @@ cursor: default;
           user-select: none;
   -webkit-touch-callout: none;
 `;
+/**
+ * A vertical or horizontal progress bar element which can be manipulated by mouse or touch
+ */
+
 class ProgressBar_ProgressBar extends external_root_React_commonjs_react_commonjs2_react_amd_react_["PureComponent"] {
   constructor(props) {
     super(props);
@@ -633,6 +654,10 @@ function extractAspectRatio(aspectRatio) {
 }
 
 const defaultBgColor = '#000';
+/**
+ * A display canvas for the video content from the surrounding [`playerContext`](#playercontext)
+ */
+
 class VideoDisplay_VideoDisplay extends external_root_React_commonjs_react_commonjs2_react_amd_react_["PureComponent"] {
   constructor(props) {
     super(props);
@@ -854,23 +879,6 @@ VideoDisplay_VideoDisplay.propTypes = {
   playlist: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.arrayOf(core_["PlayerPropTypes"].track.isRequired).isRequired,
   activeTrackIndex: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.number.isRequired,
   fullscreen: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.bool,
-
-  /* TODO: for documentation
-  We might want to use this grayscale function in an example
-    processFrame: function (frameData) {
-      for (let i = 0; i < frameData.data.length; i += 4) {
-        const r = frameData.data[i + 0];
-        const g = frameData.data[i + 1];
-        const b = frameData.data[i + 2];
-         // convert to simple grayscale
-        const average = (r + g + b) / 3;
-        frameData.data[i + 0] = average;
-        frameData.data[i + 1] = average;
-        frameData.data[i + 2] = average;
-      }
-      return frameData;
-    }
-  */
   processFrame: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.func,
   imageResolutionX: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.number,
   imageResolutionY: external_root_PropTypes_commonjs_prop_types_commonjs2_prop_types_amd_prop_types_default.a.number,

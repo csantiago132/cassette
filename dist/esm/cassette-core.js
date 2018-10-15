@@ -791,6 +791,10 @@ function getGoToTrackState(prevState, index, shouldPlay = true) {
     paused: !shouldPlay
   };
 }
+/**
+ * Wraps an area which shares a common [`playerContext`](#playercontext)
+ */
+
 
 class PlayerContextProvider_PlayerContextProvider extends external_root_React_commonjs_react_commonjs2_react_amd_react_["Component"] {
   constructor(props) {
@@ -1644,6 +1648,10 @@ function PlayerContextGroup_defineProperty(obj, key, value) { if (key in obj) { 
 
 
 
+/**
+ * A wrapper which can be used to share configuration among multiple descendant [`PlayerContextProvider`](#playercontextprovider) instances as well as prevent multiple media elements from playing audio simultaneously
+ */
+
 class PlayerContextGroup_PlayerContextGroup extends external_root_React_commonjs_react_commonjs2_react_amd_react_["Component"] {
   constructor(props) {
     super(props);
@@ -1726,6 +1734,10 @@ const fullscreenStyle = {
   width: '100%',
   height: '100%'
 };
+/**
+ * Wraps an area which should be fullscreen-able
+ */
+
 class FullscreenContextProvider_FullscreenContextProvider extends external_root_React_commonjs_react_commonjs2_react_amd_react_["PureComponent"] {
   constructor(props) {
     super(props);

@@ -823,6 +823,10 @@ function getGoToTrackState(prevState, index, shouldPlay) {
     paused: !shouldPlay
   };
 }
+/**
+ * Wraps an area which shares a common [`playerContext`](#playercontext)
+ */
+
 
 var PlayerContextProvider_PlayerContextProvider =
 /*#__PURE__*/
@@ -1743,6 +1747,10 @@ function PlayerContextGroup_assertThisInitialized(self) { if (self === void 0) {
 
 
 
+/**
+ * A wrapper which can be used to share configuration among multiple descendant [`PlayerContextProvider`](#playercontextprovider) instances as well as prevent multiple media elements from playing audio simultaneously
+ */
+
 var PlayerContextGroup_PlayerContextGroup =
 /*#__PURE__*/
 function (_Component) {
@@ -1853,6 +1861,10 @@ var fullscreenStyle = {
   width: '100%',
   height: '100%'
 };
+/**
+ * Wraps an area which should be fullscreen-able
+ */
+
 var FullscreenContextProvider_FullscreenContextProvider =
 /*#__PURE__*/
 function (_PureComponent) {

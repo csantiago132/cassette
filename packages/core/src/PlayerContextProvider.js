@@ -791,6 +791,7 @@ export class PlayerContextProvider extends Component {
       <Fragment>
         <video
           hidden
+          playsInline
           ref={this.setMediaElementRef}
           crossOrigin={this.props.crossOrigin}
           preload="metadata"

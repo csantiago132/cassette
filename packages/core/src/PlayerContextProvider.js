@@ -631,13 +631,14 @@ export class PlayerContextProvider extends Component {
     }
   }
 
-  seekComplete() {
+  seekComplete(targetTime) {
     const { seekPreviewTime, awaitingResumeOnSeekComplete } = this.state;
     const baseStateUpdate = {
       seekInProgress: false,
       awaitingResumeOnSeekComplete: false
     };
-    if (isNaN(seekPreviewTime)) {
+    const currenTime = targetTime ? targetTime : seekPreviewTime
+    if (isNaN(currenTime)) {
       this.setState(baseStateUpdate);
       return;
     }
@@ -648,9 +649,9 @@ export class PlayerContextProvider extends Component {
        * helps us avoid the progress bar jumping around and confusing the user.
        * https://github.com/benwiley4000/cassette/issues/209
        */
-      currentTime: seekPreviewTime
+      currentTime
     });
-    this.media.currentTime = seekPreviewTime;
+    this.media.currentTime = currenTime;
     if (awaitingResumeOnSeekComplete) {
       if (this.media.ended) {
         this.forwardSkip();

@@ -637,8 +637,10 @@ export class PlayerContextProvider extends Component {
       seekInProgress: false,
       awaitingResumeOnSeekComplete: false
     };
-    const currenTime = targetTime ? targetTime : seekPreviewTime
-    if (isNaN(currenTime)) {
+    const currentTime =
+      typeof targetTime === 'number' ? targetTime : seekPreviewTime;
+
+    if (isNaN(currentTime)) {
       this.setState(baseStateUpdate);
       return;
     }
@@ -651,7 +653,7 @@ export class PlayerContextProvider extends Component {
        */
       currentTime
     });
-    this.media.currentTime = currenTime;
+    this.media.currentTime = currentTime;
     if (awaitingResumeOnSeekComplete) {
       if (this.media.ended) {
         this.forwardSkip();

@@ -39,15 +39,14 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@cassette/core": "2.0.0-alpha.3",
     "react": "^16.3.0"
   },
   "devDependencies": {
-    "@cassette/core": "^2.0.0-alpha.6",
     "rimraf": "^2.5.4",
     "webpack": "^4.17.1"
   },
   "dependencies": {
+    "@cassette/core": "^2.0.0-alpha.6",
     "prop-types": "^15.5.10",
     "resize-observer-polyfill": "^1.4.2"
   },

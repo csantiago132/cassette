@@ -663,8 +663,8 @@ export class PlayerContextProvider extends Component {
     }
   }
 
-  setVolume(volume) {
-    if (!this.state.setVolumeInProgress) {
+  setVolume(volume, inProgress = true) {
+    if (inProgress && !this.state.setVolumeInProgress) {
       this.setState({
         setVolumeInProgress: true
       });
@@ -674,7 +674,10 @@ export class PlayerContextProvider extends Component {
     this.media.volume = volumeInBounds;
   }
 
-  setVolumeComplete() {
+  setVolumeComplete(volume) {
+    if (typeof volume === 'number') {
+      this.setVolume(volume, false);
+    }
     this.setState({
       setVolumeInProgress: false
     });
